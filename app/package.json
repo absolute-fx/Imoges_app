@@ -5,7 +5,10 @@
   "main": "main.js",
   "author": "AfxLab",
   "license": "ISC",
-  "repository": "Imoges_app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/absolute-fx/Imoges_app.git"
+  },
   "dependencies": {
     "bootstrap": "^3.3.7",
     "electron-is-dev": "^0.3.0",

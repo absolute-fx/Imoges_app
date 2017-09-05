@@ -12,6 +12,10 @@
         "repo": "Imoges_app"
       }
     ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/absolute-fx/Imoges_app.git"
+    },
     "win": {
       "target": "nsis"
     },
