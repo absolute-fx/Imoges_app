@@ -1,11 +1,11 @@
 {
-  "name": "website_updater",
+  "name": "Imoges_app",
   "version": "1.0.0",
   "description": "Mise à jour du slideshow du site web Vietamine",
   "main": "main.js",
   "author": "AfxLab",
   "license": "ISC",
-  "repository": "",
+  "repository": "Imoges_app",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "electron-is-dev": "^0.3.0",
