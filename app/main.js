@@ -8,15 +8,15 @@ let win
 
 function createWindow () {
     // Create the browser window.
-    win = new BrowserWindow({width: 1200, height: 800, resizable: false, icon: "icon.ico"})
+    win = new BrowserWindow({width: 1200, height: 800, icon: "icon.ico"})
 
     // Crée le menu
-    const template = require('./menuTemplate')(win)
+    const template = require('./view/js/menuTemplate')(win)
     const menu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(menu)
 
     // Jquery hack
-    win.$ = win.jQuery = require('jquery');
+    //win.$ = win.jQuery = require('jquery');
 
     // and load the index.html of the app.
     win.loadURL(url.format({

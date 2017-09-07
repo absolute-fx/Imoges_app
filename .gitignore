@@ -1,6 +1,8 @@
 node_modules
 .idea
 app/node_modules
+app/view/fonts
+app/view/js/plugins
 dist
 npm-debug.log
 app/files
