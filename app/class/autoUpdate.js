@@ -27,7 +27,7 @@ class autoUpdate
         });
         this.autoUpdater.on('error', (err) => {
             console.log(err);
-            Tools.sendStatusToWindow(this.window, 'message', 'Error in auto-updater');
+            Tools.sendStatusToWindow(this.window, 'message', 'Error in auto-updater '+err.toString());
         });
         this.autoUpdater.on('download-progress', (progressObj) => {
             Tools.sendStatusToWindow(this.window, 'message', Math.round(progressObj.percent)+'%');

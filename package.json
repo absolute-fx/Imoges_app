@@ -8,7 +8,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "AfxLab",
+        "owner": "absolute-fx",
         "repo": "Imoges_app"
       }
     ],
