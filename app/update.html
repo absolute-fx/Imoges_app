@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Auto-Updater</title>
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 </head>
 <body class="homepage">
     <section id="middle">
@@ -24,9 +24,15 @@
 
                             </div>
                         </div>
-                </div><!--/.col-sm-6-->
+                    </div><!--/.col-sm-6-->
 
-            </div><!--/.row-->
+                </div><!--/.row-->
+                <div class="row">
+                    <div class="col-sm-12 wow fadeInDown">
+                        <div class="skill" id="message">
+                        </div><!--/.col-sm-6-->
+
+                    </div><!--/.row-->
         </div><!--/.container-->
     </section><!--/#middle-->
 
@@ -45,7 +51,7 @@
             $('#messages').html(progressObj.bytesPerSecond+' (' + progressObj.transferred + '/' + progressObj.total+')');
         });
     </script>
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
 
 </body>

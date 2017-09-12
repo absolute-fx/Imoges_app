@@ -42,7 +42,8 @@ class autoUpdate
         this.autoUpdater.on('update-downloaded', (info) => {
             setTimeout(function() {
                 this.autoUpdater.quitAndInstall();
-            }, 1000)
+            }, 1000);
+
         });
 
     }
