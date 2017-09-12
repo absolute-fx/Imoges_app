@@ -29,7 +29,10 @@
                 </div><!--/.row-->
                 <div class="row">
                     <div class="col-sm-12 wow fadeInDown">
-                        <div class="skill" id="message">
+                        <div class="skill"><h2>Messages</h2>
+                            <div class="progress-wrap" id="message">
+
+                            </div>
                         </div><!--/.col-sm-6-->
 
                     </div><!--/.row-->
@@ -48,7 +51,10 @@
             $('#progress').attr('style', 'width: '+progressObj.percent);
             $('#progress').attr('aria-valuenow', progressObj.percentValue);
             $('#progress').html(progressObj.percent);
-            $('#messages').html(progressObj.bytesPerSecond+' (' + progressObj.transferred + '/' + progressObj.total+')');
+            $('#messages').html(progressObj.bytesPerSecond+'/s (' + progressObj.transferred + '/' + progressObj.total+')');
+        });
+        ipcRenderer.on('message', function(event, progressObj) {
+            $('#message').html(progressObj);
         });
     </script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>

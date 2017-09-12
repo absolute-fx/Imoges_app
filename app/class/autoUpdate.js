@@ -40,9 +40,8 @@ class autoUpdate
             });
         });
         this.autoUpdater.on('update-downloaded', (info) => {
-            setTimeout(function() {
-                this.autoUpdater.quitAndInstall();
-            }, 1000);
+            Tools.sendStatusToWindow(this.window, 'message', JSON.stringify(info));
+            this.autoUpdater.quitAndInstall();
 
         });
 

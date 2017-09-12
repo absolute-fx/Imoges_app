@@ -2,7 +2,7 @@ const {app, BrowserWindow, Menu} = require('electron');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
-const autoUpdaterClass = require('./Class/autoUpdate').autoUpdate;
+const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 
 let win
 
