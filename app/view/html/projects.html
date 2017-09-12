@@ -1,1 +1,36 @@
-<h3>Liste des projets</h3>
+<script type="text/javascript"> $.getScript("./view/js/pages/projects.js", function(data){return data;});</script>
+
+<div id="projects-wrapper">
+
+</div>
+
+<script id="projectListTpl" type="text/x-handlebars-template">
+    {{#each projectRow}}
+    <div class="row">
+        {{#each projects}}
+        <div class="col-md-{{colSize}}">
+            <div class="tile-projects">
+                <div class="tile-projects-heading clearfix">
+                    <div class="pull-left">
+                        <h2>{{projectLabel}}</h2>
+                    </div>
+                </div>
+                <div class="tile-projects-body"><img src="{{projectImage}}" alt="{{projectLabel}}" class="img-responsive"></div>
+                <div class="tile-projects-footer">
+                    <div class="btn-group  dropup" role="group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-pencil-square-o"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{# each navigation}}
+                            <li><a href="#" id="pro-infos-{{id}}">{{navLabel}}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    {{/each}}
+</script>
