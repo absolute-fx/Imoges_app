@@ -23,6 +23,7 @@ const menuItems = [
         {'label': 'A propos', 'page': 'about'},
         {'label': 'Charte de qualité', 'page': 'qualityChart'},
         {'label': 'Actualités', 'page': 'actualities'},
+        {'label': 'F.A.Q.', 'page': 'faq'},
         {'type' : 'separator'},
         {'label': 'Utilisateurs', 'page': 'websiteUsers'},
     ]},

@@ -1,4 +1,5 @@
-const enquire = require("enquire.js")
+const enquire = require("enquire.js");
+const nanoScroller = require('nanoscroller');
 // ------------------------------
 // Browser Detection Plugin
 // https://github.com/gabceb/jquery-browser-plugin/

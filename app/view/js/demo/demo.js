@@ -1,3 +1,7 @@
+const bootstrapSwitch = require('bootstrap-switch');
+const iCheck = require('icheck');
+const {popover, tooltip} = require('bootstrap');
+
 $(function() {
 
 	prettyPrint(); //Apply Code Prettifier

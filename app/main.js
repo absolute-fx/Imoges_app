@@ -5,7 +5,13 @@ const isDev = require('electron-is-dev');
 let win;
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let win
+
 function createWindow () {
+    // Create the browser window.
+    win = new BrowserWindow({width: 1200, height: 800, icon: "icon.ico"})
 
     win = new BrowserWindow({width: 1200, height: 800, icon: "icon.ico"});
 

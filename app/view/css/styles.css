@@ -41715,4 +41715,47 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active
     font-size: 11px;
 }
 
+/* projects */
+.tile-projects
+{
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    position: relative;
+    margin-bottom: 24px;
+}
 
+.tile-projects .tile-projects-heading
+{
+    padding: 10px;
+}
+
+.tile-projects .tile-projects-heading h2
+{
+    font-size: 20px;
+    margin: 0;
+    float: none;
+}
+
+.tile-projects .tile-projects-body
+{
+    padding: 10px;
+}
+
+.tile-projects .tile-projects-footer
+{
+    padding: 10px;
+    background: #fafafa;
+    border-top: 1px solid #eeeeee;
+    border-radius: 0 0 2px 2px;
+}
+
+::-webkit-scrollbar {
+    background-color: #f0f0f0;
+    width: .8em
+}
+
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-thumb {
+    background:  #a8a8a8;
+}
