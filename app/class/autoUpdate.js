@@ -15,21 +15,22 @@ class autoUpdate
     }
 
     init(){
-        this.autoUpdater.on('checking-for-update', () => {
+        var autoUpdater = this.autoUpdater;
+        autoUpdater.on('checking-for-update', () => {
             Tools.sendStatusToWindow(this.window, 'message', 'Checking for update...');
         });
-        this.autoUpdater.on('update-available', (info) => {
+        autoUpdater.on('update-available', (info) => {
             Tools.sendStatusToWindow(this.window, 'message', 'checking-for-update');
             this.window.webContents.send('update-available');
         });
-        this.autoUpdater.on('update-not-available', (info) => {
+        autoUpdater.on('update-not-available', (info) => {
             Tools.sendStatusToWindow(this.window, 'message', 'Update not available.');
         });
-        this.autoUpdater.on('error', (err) => {
+        autoUpdater.on('error', (err) => {
             console.log(err);
             Tools.sendStatusToWindow(this.window, 'message', 'Error in auto-updater '+err.toString());
         });
-        this.autoUpdater.on('download-progress', (progressObj) => {
+        autoUpdater.on('download-progress', (progressObj) => {
             Tools.sendStatusToWindow(this.window, 'message', Math.round(progressObj.percent)+'%');
             Tools.sendStatusToWindow(this.window, 'download-progress', {
                 'bytesPerSecond': Tools.FileConvertSize(progressObj.bytesPerSecond),
@@ -39,9 +40,11 @@ class autoUpdate
                 'total' : Tools.FileConvertSize(progressObj.total)
             });
         });
-        this.autoUpdater.on('update-downloaded', (info) => {
+        autoUpdater.on('update-downloaded', (info) => {
             Tools.sendStatusToWindow(this.window, 'message', JSON.stringify(info));
-            this.autoUpdater.quitAndInstall();
+            setTimeout(function() {
+                autoUpdater.quitAndInstall();
+            }, 3000);
 
         });
 
