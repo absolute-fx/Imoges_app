@@ -5,14 +5,17 @@ const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
 
 $(document).ready(function() {
-    $('#actual-year').html(actualYear.getFullYear());
     getPageData();
+    initPage();
+});
 
+function initPage()
+{
+    $('#actual-year').html(actualYear.getFullYear());
     $('#core-app').load('view/html/' + menuItems[0].page + '.html', ()=>{
 
     }).hide().fadeIn();
-});
-
+}
 
 function getPageData() {
     let pItem;
