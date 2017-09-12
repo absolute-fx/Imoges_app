@@ -20,11 +20,13 @@ class autoUpdate
         });
         this.autoUpdater.on('update-available', (info) => {
             Tools.sendStatusToWindow(this.window, 'message', 'checking-for-update');
+            this.window.webContents.send('update-available');
         });
         this.autoUpdater.on('update-not-available', (info) => {
             Tools.sendStatusToWindow(this.window, 'message', 'Update not available.');
         });
         this.autoUpdater.on('error', (err) => {
+            console.log(err);
             Tools.sendStatusToWindow(this.window, 'message', 'Error in auto-updater');
         });
         this.autoUpdater.on('download-progress', (progressObj) => {

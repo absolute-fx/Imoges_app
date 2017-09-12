@@ -250,7 +250,6 @@
                         <div id="core-app"></div>
                     </div>
                     <div class="container-fluid">
-                        <div id="version">version</div>
                     </div>
                     <div class="container-fluid">
                     <div id="messages"></div>
@@ -265,7 +264,7 @@
                 <div class="clearfix">
                     <ul class="list-unstyled list-inline pull-left">
                         <li>
-                            <h6 style="margin: 0;"> © <span id="actual-year"></span> IMOGES</h6>
+                            <h6 style="margin: 0;"> © <span id="actual-year"></span> IMOGES <span id="version"></span></h6>
                         </li>
                     </ul>
                     <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top">
@@ -287,20 +286,16 @@
 
 <script>
     $('#version').html(window.location.hash.substring(1));
-    const ipc = electron.ipcRenderer;
     ipc.on('message', function(event, text) {
         var container = document.getElementById('messages');
         var message = document.createElement('div');
         message.innerHTML = text;
         container.appendChild(message);
-    })
-
-    $('#close').click(function() {
-        const remote = require('electron').remote;
-        var window = remote.getCurrentWindow();
-        window.close();
     });
 
+    ipc.on('update-available', function (event, args) {
+        window.location.replace("update.html#"+window.location.hash.substring(1));
+    });
 </script>
 
 </body>
