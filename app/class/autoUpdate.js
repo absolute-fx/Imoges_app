@@ -17,14 +17,14 @@ class autoUpdate
     init(){
         var autoUpdater = this.autoUpdater;
         autoUpdater.on('checking-for-update', () => {
-            Tools.sendStatusToWindow(this.window, 'message', 'Checking for update...');
+            Tools.sendStatusToWindow(this.window, 'message', 'Vérification des mises à jour');
         });
         autoUpdater.on('update-available', (info) => {
-            Tools.sendStatusToWindow(this.window, 'message', 'checking-for-update');
+            Tools.sendStatusToWindow(this.window, 'message', 'Mise à jour détectée');
             this.window.webContents.send('update-available');
         });
         autoUpdater.on('update-not-available', (info) => {
-            Tools.sendStatusToWindow(this.window, 'message', 'Update not available.');
+            Tools.sendStatusToWindow(this.window, 'message', 'Vous utilisez la dernière version de ImmoEngine');
         });
         autoUpdater.on('error', (err) => {
             console.log(err);

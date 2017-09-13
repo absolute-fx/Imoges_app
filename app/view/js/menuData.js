@@ -13,7 +13,8 @@ const menuItems = [
     {'label': 'Comptabilité', 'children': [
         {'label': 'Devis', 'page': 'quotes'},
         {'label': 'Factures', 'page': 'invoices'},
-        {'label': 'Notes de crédit', 'page': 'creditNotes'}
+        {'label': 'Notes de crédit', 'page': 'creditNotes'},
+        {'label': 'Supplément', 'page': 'sup'}
     ]},
     {'label': 'Partenaires', 'page': 'partners'},
     {'label': 'Site web', 'children': [

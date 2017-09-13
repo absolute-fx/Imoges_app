@@ -7,7 +7,7 @@ const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 let win
 
 function createWindow () {
-    win = new BrowserWindow({width: 1200, height: 800, icon: "icon.ico"});
+    win = new BrowserWindow({width: 1200, height: 860, icon: "icon.ico"});
 
     const template = require('./view/js/menuTemplate')(win);
     const menu = Menu.buildFromTemplate(template);
@@ -20,9 +20,12 @@ function createWindow () {
         hash: 'v'+app.getVersion()
     }));
 
+    win.maximize();
+
     win.on('closed', () => {
         win = null
     });
+
     if (!isDev) {
         const autoUpdater = new autoUpdaterClass(win);
         autoUpdater.autoUpdater.checkForUpdates();
@@ -33,14 +36,14 @@ app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-    app.quit()
-}
+        app.quit()
+    }
 });
 
 app.on('activate', () => {
     if (win === null) {
-    createWindow()
-}
+        createWindow()
+    }
 });
 
 

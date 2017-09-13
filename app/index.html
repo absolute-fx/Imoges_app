@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Imoges - Administration</title>
+    <title>Imoges Private Office</title>
     <link type="text/css" rel="stylesheet" href="view/css/styles.css">
     <link type="text/css" rel="stylesheet" href="view/js/plugins/codeprettifier/prettify.css">
     <link type="text/css" rel="stylesheet" href="view/fonts/font-awesome/css/font-awesome.min.css">
@@ -233,7 +233,7 @@
                                     <a href="#"><i class="fa fa-cogs"></i><span>Paramètres</span></a>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fa fa-info"></i><span>Logs</span></a>
+                                    <a id="logsSideBtn" href="#"><i class="fa fa-info"></i><span>Logs</span></a>
                                 </li>
                             </ul>
                         </nav>
@@ -253,7 +253,7 @@
                     <div class="container-fluid">
                     </div>
                     <div class="container-fluid">
-                    <div id="messages"></div>
+                    <!--<div id="messages"></div>-->
                 </div>
 
 
@@ -265,7 +265,7 @@
                 <div class="clearfix">
                     <ul class="list-unstyled list-inline pull-left">
                         <li>
-                            <h6 style="margin: 0;"> © <span id="actual-year"></span> IMOGES <span id="version"></span></h6>
+                            <h6 style="margin: 0;"> © <span id="actualYear"></span> ImmoEngine <span id="appVersion"></span></h6>
                         </li>
                     </ul>
                     <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top">
@@ -286,12 +286,14 @@
 <script src="view/js/app.js"></script>
 
 <script>
-    $('#version').html(window.location.hash.substring(1));
     ipc.on('message', function(event, text) {
+        /*
         var container = document.getElementById('messages');
         var message = document.createElement('div');
         message.innerHTML = text;
         container.appendChild(message);
+        */
+        notifyMe(message);
     });
 
     ipc.on('update-available', function (event, args) {
