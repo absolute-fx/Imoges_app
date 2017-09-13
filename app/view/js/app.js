@@ -4,7 +4,7 @@ const ipc = electron.ipcRenderer;
 const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
 const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
-const pjson = require('../package.json');
+//const pjson = require('../package.json');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 $(document).ready(function() {
@@ -17,7 +17,7 @@ function initPage()
     $('body').append('<div id="sideMenuTpl"></div>');
     $('#sideMenuTpl').load('view/html/widgets/SideMenu.html');
     $('#actualYear').html(actualYear.getFullYear());
-    $('#appVersion').html('V' + pjson.version);
+    //$('#appVersion').html('V' + pjson.version);
 
     $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
 
