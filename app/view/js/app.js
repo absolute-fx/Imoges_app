@@ -3,7 +3,7 @@ const electron = require('electron');
 const ipc = electron.ipcRenderer;
 const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
-const sideMenu = require('./view/js/widgets/sideMenu').SideMenu;
+const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 
 $(document).ready(function() {
     getPageData();
