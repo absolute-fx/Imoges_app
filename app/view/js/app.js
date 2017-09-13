@@ -3,16 +3,21 @@ const electron = require('electron');
 const ipc = electron.ipcRenderer;
 const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
+const sideMenu = require('./view/js/widgets/sideMenu').SideMenu;
 
 $(document).ready(function() {
     getPageData();
+    //const sideMenu = new _sideMenu();
     initPage();
 });
 
 function initPage()
 {
+    $('body').append('<div id="sideMenuTpl"></div>');
+    $('#sideMenuTpl').load('view/html/widgets/SideMenu.html');
     $('#actual-year').html(actualYear.getFullYear());
-    $('#core-app').load('view/html/' + menuItems[0].page + '.html', ()=>{
+
+    $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
 
     }).hide().fadeIn();
 }
@@ -31,8 +36,8 @@ function setPageElement(menuItems, pItem)
     if(menuItems.page != null)
     {
         ipc.on(menuItems.page, function (event, args) {
-            $('#core-app').load('view/html/' + menuItems.page + '.html', ()=>{
-                $('#page-heading').html(menuItems.label).hide().fadeIn()
+            $('#core-app').load('view/html/pages/' + menuItems.page + '.html', ()=>{
+                $('#page-heading').html(menuItems.label).hide().fadeIn();
             }).hide().fadeIn()
         });
     }

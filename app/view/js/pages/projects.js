@@ -18,6 +18,12 @@ var projectsNavigationData = [
 
 $(document).ready(()=>{
     setProjectsBoxes();
+    sideMenu.setSideMenu(
+        'Outils',
+        [
+            {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
+            {label: 'Statistiques', icon: 'fa fa-bar-chart-o', action: 'stat'}
+        ]);
 });
 
 function setProjectsBoxes() {
@@ -44,8 +50,7 @@ function setProjectsBoxes() {
     }
     //console.log(projectList);
     $('#projects-wrapper').html(tpl(projectList));
-    let projectId;
-    let projectAction;
+    let projectId, projectAction;
     $('#projects-wrapper a').each(function(){
         $(this).click(()=>{
             projectId = $(this).closest('.projectBox').attr('data-projectId');
@@ -57,8 +62,6 @@ function setProjectsBoxes() {
 
 function projectsNavigation(action, id)
 {
-    //console.log('-> action: ' + action + ' -> id: '+ id);
-
     switch (action)
     {
         case 'infos':

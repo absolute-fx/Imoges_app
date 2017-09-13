@@ -41759,3 +41759,14 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active
 ::-webkit-scrollbar-thumb {
     background:  #a8a8a8;
 }
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    cursor: default;
+}

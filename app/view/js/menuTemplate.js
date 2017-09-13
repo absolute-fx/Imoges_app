@@ -21,7 +21,7 @@ function setItemElement(window, menuItem, mItem)
             mItem.type = 'separator';
             break;
         case 'version':
-            mItem.label = 'Vesion ' + pjson.version;
+            mItem.label = 'Version ' + pjson.version;
             mItem.enabled = menuItem.enabled;
             break;
         case 'afxLabSupport':

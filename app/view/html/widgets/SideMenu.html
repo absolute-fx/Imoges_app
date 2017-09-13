@@ -1,0 +1,14 @@
+<script id="sideMenuTemplate" type="text/x-handlebars-template">
+    <div class="widget stay-on-collapse" id="widget-sidebar">
+        <nav role="navigation" class="widget-body">
+            <ul id="sideContextMenuList" class="acc-menu">
+                <li class="nav-separator">{{sideMenuTitle}}</li>
+                {{#each sideMenuItems}}
+                <li>
+                    <a href="#" data-action="{{action}}"><i class="{{icon}}"></i><span>{{label}}</span></a>
+                </li>
+                {{/each}}
+            </ul>
+        </nav>
+    </div>
+</script>
