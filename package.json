@@ -1,6 +1,6 @@
 {
   "name": "Imoges_app",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "",
   "main": "main.js",
   "build": {
@@ -60,6 +60,7 @@
     "electron-log": "^2.2.7",
     "electron-updater": "^2.9.3",
     "enquire.js": "^2.1.6",
+    "grunt": "^1.0.1",
     "handlebars": "^4.0.10",
     "icheck": "^1.0.2",
     "jquery": "^3.2.1",
