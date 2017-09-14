@@ -31,7 +31,7 @@ class autoUpdate
             Tools.sendStatusToWindow(this.window, 'message', 'Error in auto-updater '+err.toString());
         });
         autoUpdater.on('download-progress', (progressObj) => {
-            Tools.sendStatusToWindow(this.window, 'message', Math.round(progressObj.percent)+'%');
+            //Tools.sendStatusToWindow(this.window, 'message', Math.round(progressObj.percent)+'%');
             Tools.sendStatusToWindow(this.window, 'download-progress', {
                 'bytesPerSecond': Tools.FileConvertSize(progressObj.bytesPerSecond),
                 'percentValue' : Math.round(progressObj.percent),
