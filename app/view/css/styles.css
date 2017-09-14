@@ -22208,10 +22208,10 @@ body.coming-soon .coming-soon-wrapper p
 }
 
 body.coming-soon .coming-soon-wrapper .container
-{
-    text-align: center;
-    max-width: 500px;
-}
+ {
+     text-align: center;
+     max-width: 500px;
+ }
 
 body.error {
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("../demo/stockphoto/blog_04.jpg");
@@ -41769,4 +41769,34 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active
     user-select: none;
 
     cursor: default;
+}
+
+/* Updater page*/
+body.updater {
+    background-attachment: fixed;
+    background-color: #37474f;
+    background-size: cover;
+}
+
+@media (min-width: 768px) {
+    body.updater .updater-wrapper {
+        margin-top: -250px;
+        position: relative;
+        top: 50%;
+    }
+}
+
+body.updater .updater-wrapper {
+    border-radius: 2px;
+    margin-bottom: 20px;
+    padding: 20px 0;
+}
+
+body.updater .updater-wrapper .container
+{
+    max-width: 500px;
+}
+
+body.updater #loaderCallback{
+    font-weight: bold;
 }

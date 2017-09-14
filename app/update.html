@@ -4,14 +4,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Auto-Updater</title>
-    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <title>IMOGES Private Office - Updater</title>
+    <link type="text/css" rel="stylesheet" href="view/css/styles.css">
+    <link type="text/css" rel="stylesheet" href="view/js/plugins/codeprettifier/prettify.css">
+    <link type="text/css" rel="stylesheet" href="view/fonts/font-awesome/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=RobotoDraft:300,400,400italic,500,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,700' rel='stylesheet' type='text/css'>
 </head>
-<body class="homepage">
-    <section id="middle">
+<body class="updater">
+    <script>
+        const $ = jQuery = require('jquery');
+    </script>
+    <div class="updater-wrapper">
         <div class="container">
-            <div class="row">
-                <div class="col-sm-12 wow fadeInDown">
+           <!-- <h1>Téléchargement de la mise-à-jour</h1>-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Téléchargement de la mise-à-jour</h2>
+                </div>
+                <div class="panel-body">
+                    <p class="m0">
+                        Une nouvelle version a été détectée et est en cours de téléchargement. ImmoEgine redémarrera après l'installation de la mise à jour.
+                    </p>
+                    <div class="contextual-progress">
+                        <div class="clearfix">
+                            <div id="loaderCallback" class="progress-title">0 Ko/s (0Ko/OKo)</div>
+                            <div id="preloadPercent" class="progress-percentage">0%</div>
+                        </div>
+                        <div class="progress progress-striped active">
+                            <div id="preloadPercentBar" class="progress-bar progress-bar-info" style="width: 1%"></div>
+                        </div>
+                    </div>
+                    <div id="message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+                <!--
                     <div class="skill">
                         <h2>Téléchargement de la mise-à-jour...</h2>
 
@@ -24,40 +55,39 @@
 
                             </div>
                         </div>
-                    </div><!--/.col-sm-6-->
+                    </div>
 
-                </div><!--/.row-->
+
                 <div class="row">
                     <div class="col-sm-12 wow fadeInDown">
                         <div class="skill"><h2>Messages</h2>
                             <div class="progress-wrap" id="message">
 
                             </div>
-                        </div><!--/.col-sm-6-->
+                        </div>
 
-                    </div><!--/.row-->
-        </div><!--/.container-->
-    </section><!--/#middle-->
-
+                    </div>
+        -->
 
 
 
 
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script>
 
-        const $ = jQuery = require('jquery');
         const {ipcRenderer} = require('electron');
         ipcRenderer.on('download-progress', function(event, progressObj) {
-            $('#progress').attr('style', 'width: '+progressObj.percent);
-            $('#progress').attr('aria-valuenow', progressObj.percentValue);
-            $('#progress').html(progressObj.percent);
-            $('#messages').html(progressObj.bytesPerSecond+'/s (' + progressObj.transferred + '/' + progressObj.total+')');
+            //$('#progress').attr('style', 'width: '+progressObj.percent);
+            //$('#progress').attr('aria-valuenow', progressObj.percentValue);
+            //$('#progress').html(progressObj.percent);
+            $('#preloadPercentBar').attr('style', 'width: ' + progressObj.percent);
+            $('#preloadPercent').html(progressObj.percent);
+            $('#loaderCallback').html(progressObj.bytesPerSecond+'/s (' + progressObj.transferred + '/' + progressObj.total+')');
         });
         ipcRenderer.on('message', function(event, progressObj) {
             $('#message').html(progressObj);
         });
     </script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
 
 </body>

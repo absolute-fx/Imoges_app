@@ -17,6 +17,7 @@ class SideMenu{
 
             $(button).click(function(){
                 console.log($(button).attr('data-action'));
+                return false;
             });
         });
     }
