@@ -64,7 +64,7 @@ module.exports = function (grunt) {
         },
         gitcommit: {
             options: {
-                // Target-specific options go here.
+                message: "v<%= pkg.version %>"
             },
             files: {
                 // Specify the files you want to commit
@@ -77,7 +77,7 @@ module.exports = function (grunt) {
         },
         gitpush: {
             options: {
-                // Target-specific options go here.
+                all:true
             }
         },
     });

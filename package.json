@@ -47,11 +47,9 @@
     "build": "electron-packager app/ --out=dist --asar --overwrite --all",
     "dist:mac": "build --mac",
     "dist:win": "grunt before --force && build --win",
-    "dist:release:win": "grunt before --force && build --win && grunt after --force",
-    "version:patch": "grunt version::patch --force && grunt git --force",
-    "version:minor": "grunt version::minor --force",
-    "version:major": "grunt version::major --force",
-    "git": "grunt gitadd --force"
+    "dist:release:patch:win": "grunt before --force && grunt version::patch --force && grunt gitadd --force && grunt gitcommit --force && grunt gitpull --force && grunt gitpush --force && build --win && grunt after --force",
+    "dist:release:minor:win": "grunt before --force && grunt version::minor --force && grunt gitadd --force && grunt gitcommit --force && grunt gitpull --force && grunt gitpush --force && build --win && grunt after --force",
+    "dist:release:major:win": "grunt before --force && grunt version::major --force && grunt gitadd --force && grunt gitcommit --force && grunt gitpull --force && grunt gitpush --force && build --win && grunt after --force"
   },
   "author": "AfxLab",
   "license": "ISC",
