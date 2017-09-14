@@ -1,6 +1,26 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        version: {
+            patch: {
+                options: {
+                    release: 'patch'
+                },
+                src: ['app/package.json', 'package.json']
+            },
+            minor: {
+                options: {
+                    release: 'minor'
+                },
+                src: ['app/package.json', 'package.json']
+            },
+            major: {
+                options: {
+                    release: 'major'
+                },
+                src: ['app/package.json', 'package.json']
+            }
+        },
         jshint: {
             files: ['app/class/*.js', 'app/view/js/page/*.js', 'app/view/js/widgets/*.js', 'app/view/js/menuData.js', 'app/view/js/menuTemplate.js', 'app/view/js/app.js'],
             options: {
@@ -35,12 +55,39 @@ module.exports = function (grunt) {
 
 
         },
-    });
+        gitadd: {
+            task: {
+                options: {
+                    all: true
+                }
+            }
+        },
+        gitcommit: {
+            options: {
+                // Target-specific options go here.
+            },
+            files: {
+                // Specify the files you want to commit
+            }
+        },
+        gitpull: {
+            options: {
 
+            }
+        },
+        gitpush: {
+            options: {
+                // Target-specific options go here.
+            }
+        },
+    });
+    grunt.loadNpmTasks('grunt-version');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.registerTask('before', ['jshint','clean']);
     grunt.loadNpmTasks('grunt-rename-util');
     grunt.loadNpmTasks('grunt-github-releaser');
     grunt.registerTask('after', ['rename', 'github-release']);
+    grunt.loadNpmTasks('grunt-git');
+
 };

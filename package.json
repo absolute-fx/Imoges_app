@@ -1,6 +1,6 @@
 {
   "name": "Imoges_app",
-  "version": "0.1.13",
+  "version": "0.1.15",
   "description": "",
   "main": "main.js",
   "build": {
@@ -47,7 +47,11 @@
     "build": "electron-packager app/ --out=dist --asar --overwrite --all",
     "dist:mac": "build --mac",
     "dist:win": "grunt before --force && build --win",
-    "dist:release:win": "grunt before --force && build --win && grunt after --force"
+    "dist:release:win": "grunt before --force && build --win && grunt after --force",
+    "version:patch": "grunt version::patch --force && grunt git --force",
+    "version:minor": "grunt version::minor --force",
+    "version:major": "grunt version::major --force",
+    "git": "grunt gitadd --force"
   },
   "author": "AfxLab",
   "license": "ISC",
@@ -77,8 +81,10 @@
     "electron-packager": "^8.7.2",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
+    "grunt-git": "^1.0.6",
     "grunt-github-releaser": "^0.1.18",
     "grunt-rename-util": "^1.0.0",
+    "grunt-version": "^1.2.1",
     "xo": "^0.18.2"
   },
   "repository": {
