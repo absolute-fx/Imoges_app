@@ -5,7 +5,7 @@ const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
 const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 //const pjson = require('../package.json');
-const WindowsBalloon = require('node-notifier').WindowsBalloon;
+const WindowsBalloon = require('node-notifier/notifiers/balloon');
 
 $(document).ready(function() {
     getPageData();
@@ -56,6 +56,7 @@ function setPageElement(menuItems, pItem)
 
 function notifyMe(message)
 {
+
     var notifier = new WindowsBalloon({
         withFallback: false, // Try Windows Toast and Growl first?
         customPath: void 0 // Relative/Absolute path if you want to use your fork of notifu
@@ -73,6 +74,19 @@ function notifyMe(message)
     });
 }
 
+ipc.on('message', function(event, text) {
+    /*
+    var container = document.getElementById('messages');
+    var message = document.createElement('div');
+    message.innerHTML = text;
+    container.appendChild(message);
+    */
+    //notifyMe(text);
+});
+
+ipc.on('update-available', function (event, args) {
+    window.location.replace("update.html#"+window.location.hash.substring(1));
+});
 
 
 $('#logsSideBtn').click(function () {

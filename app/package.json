@@ -1,6 +1,6 @@
 {
   "name": "Imoges_app",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Mise à jour du slideshow du site web Vietamine",
   "main": "main.js",
   "author": "AfxLab",
@@ -10,6 +10,7 @@
     "url": "https://github.com/absolute-fx/Imoges_app.git"
   },
   "dependencies": {
+    "bluebird": "^3.5.0",
     "bootbox": "^4.4.0",
     "bootstrap": "^3.3.7",
     "bootstrap-switch": "^3.3.4",

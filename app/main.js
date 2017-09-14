@@ -7,7 +7,7 @@ const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 let win
 
 function createWindow () {
-    win = new BrowserWindow({width: 1200, height: 860, icon: "icon.ico"});
+    win = new BrowserWindow({width: 1200, height: 860, icon: "icon.ico", backgroundColor: "#37474f"});
 
     const template = require('./view/js/menuTemplate')(win);
     const menu = Menu.buildFromTemplate(template);
@@ -45,5 +45,3 @@ app.on('activate', () => {
         createWindow()
     }
 });
-
-

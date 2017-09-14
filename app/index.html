@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Imoges Private Office</title>
+    <title>IMOGES Private Office</title>
     <link type="text/css" rel="stylesheet" href="view/css/styles.css">
     <link type="text/css" rel="stylesheet" href="view/js/plugins/codeprettifier/prettify.css">
     <link type="text/css" rel="stylesheet" href="view/fonts/font-awesome/css/font-awesome.min.css">
@@ -284,22 +284,6 @@
 
 
 <script src="view/js/app.js"></script>
-
-<script>
-    ipc.on('message', function(event, text) {
-        /*
-        var container = document.getElementById('messages');
-        var message = document.createElement('div');
-        message.innerHTML = text;
-        container.appendChild(message);
-        */
-        notifyMe(text);
-    });
-
-    ipc.on('update-available', function (event, args) {
-        window.location.replace("update.html#"+window.location.hash.substring(1));
-    });
-</script>
 
 </body>
 </html>

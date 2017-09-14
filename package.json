@@ -1,6 +1,6 @@
 {
   "name": "Imoges_app",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "main": "main.js",
   "build": {
@@ -55,6 +55,7 @@
   "author": "AfxLab",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "bootbox": "^4.4.0",
     "bootstrap": "^3.3.7",
     "bootstrap-switch": "^3.3.4",

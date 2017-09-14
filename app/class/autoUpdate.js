@@ -1,4 +1,5 @@
 Tools = require("./Tools").Tools;
+const WindowsBalloon = require('node-notifier/notifiers/balloon');
 
 class autoUpdate
 {
