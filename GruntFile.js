@@ -18,19 +18,21 @@ module.exports = function (grunt) {
             }
         },
         "github-release": {
-            "tag_name": "v<%= pkg.version %>",
-            "name": "v<%= pkg.version %>",
-            draft: true,
             options: {
                 repository: 'absolute-fx/Imoges_app', // Path to repository
                 auth: {   // Auth credentials
                     user: 'Proglab',
                     password: 'lapin324468'
                 },
+                release: {
+                    "tag_name": "v<%= pkg.version %>",
+                    "name": "v<%= pkg.version %>",
+                }
             },
             files: {
                 src: ['dist/*.*']
-            }
+            },
+
 
         },
     });
