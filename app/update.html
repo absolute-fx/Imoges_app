@@ -10,7 +10,6 @@
     <link type="text/css" rel="stylesheet" href="view/fonts/font-awesome/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=RobotoDraft:300,400,400italic,500,700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,700' rel='stylesheet' type='text/css'>
-    <link type="text/css" href="view/js/plugins/progress-skylo/skylo.css" rel="stylesheet">
 </head>
 <body class="updater">
     <script>
@@ -27,7 +26,15 @@
                     <p class="m0">
                         Une nouvelle version a été détectée et est en cours de téléchargement. ImmoEgine redémarrera après l'installation de la mise à jour.
                     </p>
-                    <div id="loaderCallback">0 Ko/s (0Ko/OKo)</div>
+                    <div class="contextual-progress">
+                        <div class="clearfix">
+                            <div id="loaderCallback" class="progress-title">0 Ko/s (0Ko/OKo)</div>
+                            <div id="preloadPercent" class="progress-percentage">0%</div>
+                        </div>
+                        <div class="progress progress-striped active">
+                            <div id="preloadPercentBar" class="progress-bar progress-bar-info" style="width: 1%"></div>
+                        </div>
+                    </div>
                     <div id="message"></div>
                 </div>
             </div>
@@ -66,22 +73,16 @@
 
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
-    <script type="text/javascript" src="view/js/plugins/progress-skylo/skylo.js"></script>
     <script>
-
-        $(document).ready(function () {
-            $(document).skylo('start');
-        });
-
 
         const {ipcRenderer} = require('electron');
         ipcRenderer.on('download-progress', function(event, progressObj) {
             //$('#progress').attr('style', 'width: '+progressObj.percent);
             //$('#progress').attr('aria-valuenow', progressObj.percentValue);
             //$('#progress').html(progressObj.percent);
+            $('#preloadPercentBar').attr('style', 'width: ' + progressObj.percent);
+            $('#preloadPercent').html(progressObj.percent);
             $('#loaderCallback').html(progressObj.bytesPerSecond+'/s (' + progressObj.transferred + '/' + progressObj.total+')');
-            $(document).skylo('set',progressObj.percent);
-            if(progressObj.percent == 99) $(document).skylo('set','end');
         });
         ipcRenderer.on('message', function(event, progressObj) {
             $('#message').html(progressObj);

@@ -1,5 +1,4 @@
 Tools = require("./Tools").Tools;
-const WindowsBalloon = require('node-notifier/notifiers/balloon');
 
 class autoUpdate
 {
@@ -42,10 +41,14 @@ class autoUpdate
             });
         });
         autoUpdater.on('update-downloaded', (info) => {
-            Tools.sendStatusToWindow(this.window, 'message', JSON.stringify(info));
+            //Tools.sendStatusToWindow(this.window, 'message', JSON.stringify(info));
+            var releaseVersion = info.version ;
+            var releaseName = info.releaseName;
+            var versionInfos = "Version " + releaseVersion + " | " + releaseName;
+            Tools.sendStatusToWindow(this.window, 'message', versionInfos);
             setTimeout(function() {
                 autoUpdater.quitAndInstall();
-            }, 3000);
+            }, 5000);
 
         });
 
