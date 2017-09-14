@@ -71,13 +71,17 @@ module.exports = function (grunt) {
             }
         },
         gitpull: {
-            options: {
+            master: {
+                options: {
 
+                }
             }
         },
         gitpush: {
-            options: {
-                all:true
+            master: {
+                options: {
+                    all:true
+                }
             }
         },
     });
