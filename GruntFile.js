@@ -28,5 +28,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.registerTask('before', ['jshint','clean']);
     grunt.loadNpmTasks('grunt-github-releaser');
-    grunt.registerTask('after', ['github-releaser']);
+    grunt.registerTask('after', ['github-release']);
 };
