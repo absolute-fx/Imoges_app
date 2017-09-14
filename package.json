@@ -1,6 +1,6 @@
 {
   "name": "Imoges_app",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "",
   "main": "main.js",
   "build": {
@@ -71,13 +71,14 @@
   "devDependencies": {
     "asar": "^0.13.0",
     "devtron": "^1.4.0",
-    "electron": "^1.7.6",
-    "electron-builder": "^19.24.1",
+    "electron": "^1.8.0",
+    "electron-builder": "^19.28.4",
     "electron-debug": "^1.4.0",
     "electron-packager": "^8.7.2",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-github-releaser": "^0.1.18",
+    "grunt-rename-util": "^1.0.0",
     "xo": "^0.18.2"
   },
   "repository": {
