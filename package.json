@@ -46,7 +46,8 @@
     "test": "xo",
     "build": "electron-packager app/ --out=dist --asar --overwrite --all",
     "dist:mac": "build --mac",
-    "dist:win": "grunt before --force && build --win && grunt after --force"
+    "dist:win": "grunt before --force && build --win",
+    "dist:release:win": "grunt before --force && build --win && grunt after --force"
   },
   "author": "AfxLab",
   "license": "ISC",
@@ -57,7 +58,7 @@
     "bootstrap-switch": "^3.3.4",
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.7",
-    "electron-updater": "^2.8.7",
+    "electron-updater": "^2.9.3",
     "enquire.js": "^2.1.6",
     "handlebars": "^4.0.10",
     "icheck": "^1.0.2",
@@ -75,12 +76,7 @@
     "electron-packager": "^8.7.2",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
-    "grunt-electron-builder": "^0.2.1",
-    "grunt-electron-installer-windows": "^0.2.0",
-    "grunt-electron-packager": "^0.1.1",
     "grunt-github-releaser": "^0.1.18",
-    "load-grunt-tasks": "^3.5.2",
-    "winresourcer": "^0.9.0",
     "xo": "^0.18.2"
   },
   "repository": {
