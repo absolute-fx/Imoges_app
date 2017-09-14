@@ -27,13 +27,13 @@ function setItemElement(window, menuItem, mItem)
         case 'afxLabSupport':
             mItem.label = menuItem.label;
             mItem.click = () => {
-                            contactSupport()
+                            contactSupport();
                         };
             break;
         case 'goToSite':
             mItem.label = menuItem.label;
             mItem.click = () => {
-                            goToWebsite()
+                            goToWebsite();
                         };
             break;
         default:
@@ -43,16 +43,16 @@ function setItemElement(window, menuItem, mItem)
             {
                 mItem.click =  () => {
                                 window.webContents.send(menuItem.page);
-                            }
-            };
+                            };
+            }
             if(menuItem.role != null)
             {
                 mItem.role = menuItem.role;
-            };
+            }
             if(menuItem.enabled != null)
             {
                 mItem.enabled = menuItem.enabled;
-            };
+            }
             if(menuItem.children != null)
             {
                 let mItemB;
@@ -62,9 +62,9 @@ function setItemElement(window, menuItem, mItem)
                     mItemB = {};
                     mItem.submenu.push(setItemElement(window, menuItem.children[i], mItemB));
                 }
-            };
+            }
 
-    };
+    }
     return mItem;
 }
 

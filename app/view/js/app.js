@@ -38,7 +38,7 @@ function setPageElement(menuItems, pItem)
         ipc.on(menuItems.page, function (event, args) {
             $('#core-app').load('view/html/pages/' + menuItems.page + '.html', ()=>{
                 $('#page-heading').html(menuItems.label).hide().fadeIn();
-            }).hide().fadeIn()
+            }).hide().fadeIn();
         });
     }
 
@@ -46,7 +46,7 @@ function setPageElement(menuItems, pItem)
     {
         for (let i in menuItems.children)
         {
-            setPageElement(menuItems.children[i], pItem)
+            setPageElement(menuItems.children[i], pItem);
         }
     }
     return pItem;
