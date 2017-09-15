@@ -61,7 +61,7 @@ function notifyMe(title, message, duration)
         message: message,
         duration: duration,
         icon: 'file://' + __dirname + '/view/images/notification-icon.png'
-    })
+    });
 }
 
 ipc.on('message', function(event, text) {

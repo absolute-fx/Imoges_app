@@ -42,9 +42,10 @@ class autoUpdate
         });
         autoUpdater.on('update-downloaded', (info) => {
             //Tools.sendStatusToWindow(this.window, 'message', JSON.stringify(info));
+            console.log(JSON.stringify(info));
             var releaseVersion = info.version ;
             var releaseName = info.releaseName;
-            var releaseDescription = info.releaseDescription;
+            var releaseDescription = info.releaseMessage;
             var versionInfos = "<p>Version " + releaseVersion + " | " + releaseName + "</p>";
             if(releaseDescription != "") versionInfos += "<p>" + releaseDescription + "</p>";
             Tools.sendStatusToWindow(this.window, 'message', versionInfos);
