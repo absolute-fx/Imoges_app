@@ -44,7 +44,9 @@ class autoUpdate
             //Tools.sendStatusToWindow(this.window, 'message', JSON.stringify(info));
             var releaseVersion = info.version ;
             var releaseName = info.releaseName;
-            var versionInfos = "Version " + releaseVersion + " | " + releaseName;
+            var releaseDescription = info.releaseDescription;
+            var versionInfos = "<p>Version " + releaseVersion + " | " + releaseName + "</p>";
+            if(releaseDescription != "") versionInfos += "<p>" + releaseDescription + "</p>";
             Tools.sendStatusToWindow(this.window, 'message', versionInfos);
             setTimeout(function() {
                 autoUpdater.quitAndInstall();

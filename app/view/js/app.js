@@ -5,11 +5,12 @@ const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
 const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 //const pjson = require('../package.json');
-const WindowsBalloon = require('node-notifier/notifiers/balloon');
+const notifier = require('electron-notification-desktop');
 
 $(document).ready(function() {
     getPageData();
     initPage();
+    //notifyMe('blabla', 'bloblo', 10);
 });
 
 function initPage()
@@ -54,24 +55,13 @@ function setPageElement(menuItems, pItem)
     return pItem;
 }
 
-function notifyMe(message)
+function notifyMe(title, message, duration)
 {
-
-    var notifier = new WindowsBalloon({
-        withFallback: false, // Try Windows Toast and Growl first?
-        customPath: void 0 // Relative/Absolute path if you want to use your fork of notifu
-    });
-
-    notifier.notify({
-        title: 'ImmoEngine updater',
+    notifier.notify(title, {
         message: message,
-        sound: true, // true | false.
-        time: 10000, // How long to show balloon in ms
-        wait: false, // Wait for User Action against Notification
-        type: 'info' // The notification type : info | warn | error
-    }, function(error, response) {
-        //console.log(response);
-    });
+        duration: duration,
+        icon: 'file://' + __dirname + '/view/images/notification-icon.png'
+    })
 }
 
 ipc.on('message', function(event, text) {
@@ -81,13 +71,12 @@ ipc.on('message', function(event, text) {
     message.innerHTML = text;
     container.appendChild(message);
     */
-    //notifyMe(text);
+    notifyMe('ImmoEngine Updater', message, 10);
 });
 
 ipc.on('update-available', function (event, args) {
     window.location.replace("update.html#"+window.location.hash.substring(1));
 });
-
 
 $('#logsSideBtn').click(function () {
     notifyMe('test message');

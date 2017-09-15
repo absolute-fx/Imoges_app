@@ -60,6 +60,7 @@
     "bootstrap-switch": "^3.3.4",
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.7",
+    "electron-notification-desktop": "0.0.4",
     "electron-updater": "^2.9.3",
     "enquire.js": "^2.1.6",
     "grunt": "^1.0.1",
@@ -67,7 +68,6 @@
     "icheck": "^1.0.2",
     "jquery": "^3.2.1",
     "nanoscroller": "^0.8.7",
-    "node-notifier": "^5.1.2",
     "sha1": "^1.1.1"
   },
   "devDependencies": {
