@@ -16,9 +16,7 @@ class autoUpdate
 
     init(){
         var autoUpdater = this.autoUpdater;
-        autoUpdater.on('checking-for-update', () => {
-            Tools.sendStatusToWindow(this.window, 'message', 'Vérification des mises à jour');
-        });
+
         autoUpdater.on('update-available', (info) => {
             Tools.sendStatusToWindow(this.window, 'message', 'Mise à jour détectée');
             this.window.webContents.send('update-available');
@@ -45,7 +43,7 @@ class autoUpdate
             console.log(JSON.stringify(info));
             var releaseVersion = info.version ;
             var releaseName = info.releaseName;
-            var releaseDescription = info.releaseMessage;
+            var releaseDescription = info.releaseNotes;
             var versionInfos = "<p>Version " + releaseVersion + " | " + releaseName + "</p>";
             if(releaseDescription != "") versionInfos += "<p>" + releaseDescription + "</p>";
             Tools.sendStatusToWindow(this.window, 'message', versionInfos);
