@@ -71,7 +71,7 @@ ipc.on('message', function(event, text) {
     message.innerHTML = text;
     container.appendChild(message);
     */
-    notifyMe('ImmoEngine Updater', message, 10);
+    notifyMe('ImmoEngine Updater', text, 10);
 });
 
 ipc.on('update-available', function (event, args) {
