@@ -51,7 +51,7 @@ class autoUpdate
             Tools.sendStatusToWindow(this.window, 'message', versionInfos);
             setTimeout(function() {
                 autoUpdater.quitAndInstall();
-            }, 5000);
+            }, 50000);
 
         });
 
