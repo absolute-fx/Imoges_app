@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        gitaccount: grunt.file.readJSON('git_account.json'),
         version: {
             patch: {
                 options: {
@@ -41,8 +42,8 @@ module.exports = function (grunt) {
             options: {
                 repository: 'absolute-fx/Imoges_app', // Path to repository
                 auth: {   // Auth credentials
-                    user: 'Proglab',
-                    password: 'lapin324468'
+                    user: '<%= gitaccount.login %>',
+                    password: '<%= gitaccount.pass %>'
                 },
                 release: {
                     "tag_name": "v<%= pkg.version %>",
