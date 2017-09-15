@@ -55,7 +55,7 @@ function setPageElement(menuItems, pItem)
     return pItem;
 }
 
-function notifyMe(title, message, duration)
+function notifyUser(title, message, duration)
 {
     notifier.notify(title, {
         message: message,
@@ -71,7 +71,7 @@ ipc.on('message', function(event, text) {
     message.innerHTML = text;
     container.appendChild(message);
     */
-    notifyMe('ImmoEngine Updater', text, 10);
+    notifyUser('ImmoEngine Updater', text, 10);
 });
 
 ipc.on('update-available', function (event, args) {

@@ -3,7 +3,7 @@
  * nécessite Handlebars et Jquery
  */
 class SideMenu{
-    static setSideMenu(title, buttons)
+    static setSideMenu(pageName, title, buttons)
     {
         let data = {sideMenuTitle: title, sideMenuItems: buttons};
         let sideMenuTemplate = $('#sideMenuTemplate').html();
@@ -16,7 +16,8 @@ class SideMenu{
         $('#sideContextMenuList a').each((index, button)=>{
 
             $(button).click(function(){
-                console.log($(button).attr('data-action'));
+                action = $(button).attr('data-action');
+                //sideMenuAction(action)
                 return false;
             });
         });

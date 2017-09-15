@@ -1,10 +1,35 @@
+// PARAMS SETTERS
+var pageName = 'projects';
+var itemsByRow = 3;
+var sideNavTitle = 'Outils';
+
+// SIDE MENU SETTER
+sideMenu.setSideMenu(
+    pageName,
+    sideNavTitle,
+    [
+        {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
+        {label: 'Statistiques', icon: 'fa fa-bar-chart-o', action: 'stat'}
+    ]
+);
+
+// CALL TO SERVICE
 var projects = [
     {id: 1, libelle_projet: 'Résidence Alexandre II', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/project-main-image-web.jpg'},
     {id: 2, libelle_projet: 'Les Demoiselles', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/demoiselles.jpg'},
     {id: 0, libelle_projet: 'Résidence Ines', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/ines.jpg'},
     {id: 3, libelle_projet: 'Résidence O. Strebelle', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/strebelle.jpg'}
 ];
-var itemsByRow = 3;
+
+// INIT
+$(document).ready(()=>{
+    setProjectsBoxes();
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PAGE SPECIFIC ACTIONS //**********************************************************************************
+
+// BOX ACTION SETTERS
 var projectsNavigationData = [
     {btnLabel: 'Infos projet', btnAction: 'infos'},
     {btnLabel: 'Biens', btnAction: 'goods'},
@@ -15,17 +40,7 @@ var projectsNavigationData = [
     {btnLabel: 'Support', btnAction: 'support'}
 ];
 
-
-$(document).ready(()=>{
-    setProjectsBoxes();
-    sideMenu.setSideMenu(
-        'Outils',
-        [
-            {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
-            {label: 'Statistiques', icon: 'fa fa-bar-chart-o', action: 'stat'}
-        ]);
-});
-
+// PROJECT BOXES INSTANCES
 function setProjectsBoxes() {
 
     let projectListTemplate = $('#projectListTpl').html();
@@ -60,6 +75,7 @@ function setProjectsBoxes() {
     });
 }
 
+// PROJECT BOXES ACTIONS SWITCHER
 function projectsNavigation(action, id)
 {
     switch (action)
@@ -70,6 +86,5 @@ function projectsNavigation(action, id)
         default:
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
     }
-
     return false;
 }

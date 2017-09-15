@@ -18,7 +18,7 @@ class autoUpdate
         var autoUpdater = this.autoUpdater;
 
         autoUpdater.on('update-available', (info) => {
-            Tools.sendStatusToWindow(this.window, 'message', 'Mise à jour détectée');
+            //Tools.sendStatusToWindow(this.window, 'message', 'Mise à jour détectée');
             this.window.webContents.send('update-available');
         });
         autoUpdater.on('update-not-available', (info) => {
@@ -40,16 +40,16 @@ class autoUpdate
         });
         autoUpdater.on('update-downloaded', (info) => {
             //Tools.sendStatusToWindow(this.window, 'message', JSON.stringify(info));
-            console.log(JSON.stringify(info));
+            //console.log(JSON.stringify(info));
             var releaseVersion = info.version ;
             var releaseName = info.releaseName;
             var releaseDescription = info.releaseNotes;
-            var versionInfos = "<p>Version " + releaseVersion + " | " + releaseName + "</p>";
-            if(releaseDescription != "") versionInfos += "<p>" + releaseDescription + "</p>";
+            var versionInfos = "<div class='mt-sm'>Version " + releaseVersion + " | " + releaseName + "</div>";
+            if(releaseDescription != "") versionInfos += "<div class='mt-sm'><em>" + releaseDescription + "</em></div>";
             Tools.sendStatusToWindow(this.window, 'message', versionInfos);
             setTimeout(function() {
                 autoUpdater.quitAndInstall();
-            }, 50000);
+            }, 8000);
 
         });
 
