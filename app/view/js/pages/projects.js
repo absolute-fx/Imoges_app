@@ -1,17 +1,31 @@
+// DEPENDENCIES
+var bootBox = require('bootbox');
+
 // PARAMS SETTERS
-var pageName = 'projects';
 var itemsByRow = 3;
 var sideNavTitle = 'Outils';
 
-// SIDE MENU SETTER
+// SIDE MENU SETTER ~ UNSETTER
 sideMenu.setSideMenu(
-    pageName,
     sideNavTitle,
     [
         {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
         {label: 'Statistiques', icon: 'fa fa-bar-chart-o', action: 'stat'}
     ]
 );
+
+// SIDE MENU ACTION SWITCHER
+function sideMenuAction(action)
+{
+    switch (action){
+        case 'addProject':
+            addProject();
+            break;
+        case 'stat':
+            showStats();
+            break;
+    }
+}
 
 // CALL TO SERVICE
 var projects = [
@@ -87,4 +101,29 @@ function projectsNavigation(action, id)
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
     }
     return false;
+}
+
+// SIDE NAV ACTIONS
+function addProject() {
+    console.log('Add project');
+
+    bootBox.dialog({
+        message: "Hello world!",
+        title: "Ajouter un projet",
+        size: "large",
+        backdrop: true,
+        buttons: {
+            cancel: {
+                label: 'Annuler',
+            },
+            confirm: {
+                label: 'Ajouter',
+                className: 'btn-primary'
+            }
+        }
+    });
+}
+
+function showStats(){
+    console.log('Show stats');
 }
