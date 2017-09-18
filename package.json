@@ -57,9 +57,9 @@
   "author": "AfxLab",
   "license": "ISC",
   "dependencies": {
+    "autosize": "^4.0.0",
     "bluebird": "^3.5.0",
     "bootbox": "^4.4.0",
-    "bootstrap": "^3.3.7",
     "bootstrap-switch": "^3.3.4",
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.7",

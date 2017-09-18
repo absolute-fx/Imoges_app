@@ -1,0 +1,130 @@
+<script type="text/javascript"> $.getScript("./view/js/pages/projects/edit-project.js", function(data){return data;});</script>
+
+<div class="tab-container tab-default">
+    <ul class="nav nav-tabs"><li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i> </a><ul class="dropdown-menu"></ul></li>
+        <li class="active"><a href="#addPrj-infos" data-toggle="tab" aria-expanded="true">Infos primaires</a></li>
+        <li class=""><a href="#addPrj-descri" data-toggle="tab" aria-expanded="true">Description</a></li>
+        <li class=""><a href="#addPrj-images" data-toggle="tab" aria-expanded="true">Images</a></li>
+        <li class=""><a href="#addPrj-doc" data-toggle="tab" aria-expanded="true">Documents</a></li>
+        <li class=""><a href="#addPrj-steps" data-toggle="tab" aria-expanded="true">Phases</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="addPrj-infos">
+            <form>
+                <div class="form-group">
+                    <label for="label">Nom du projet</label>
+                    <input type="hidden" name="id_projet" value="{{id_projet}}">
+                    <input type="text" class="form-control" id="label" name="libelle_projet" value="{{libelle_projet}}">
+                </div>
+                <div class="form-group">
+                    <label for="gmField">Recherche google maps</label>
+                    <input type="text" class="form-control" id="gmField">
+                </div>
+                <div class="form-group">
+                    <label for="adress">Adresse</label>
+                    <input type="text" class="form-control" id="adress" name="adresse_projet" value="{{adresse_projet}}">
+                </div>
+                <div class="row">
+                    <div class="col-md-10 form-group">
+                        <label for="city">Ville</label>
+                        <input type="text" class="form-control" id="city" name="ville_projet" value="{{ville_projet}}">
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label for="pc">Code postal</label>
+                        <input type="text" class="form-control" id="pc" name="cp_projet" value="{{cp_projet}}">
+                    </div>
+                </div>
+                <div id="map" style="height: 260px;"></div>
+            </form>
+        </div>
+        <div class="tab-pane" id="addPrj-descri">
+            <form action="">
+                <div class="form-group">
+                    <label for="shortDescription">Description courte</label>
+                    <textarea class="form-control" name="description_courte_projet" id="shortDescription">{{description_courte_projet}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="longDescription">Description longue</label>
+                    <textarea class="form-control autosize" name="description_longue_projet" id="longDescription">{{description_longue_projet}}</textarea>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane" id="addPrj-images">
+            <form>
+                <div id="imageUploader" class="form-group dropzone">
+                    <div class="dz-default dz-message"><span>Drop files here to upload</span></div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane" id="addPrj-doc">
+            <form>
+                <div id="fileUploader" class="form-group dropzone">
+                    <div class="dz-default dz-message"><span>Drop files here to upload</span></div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane" id="addPrj-steps">
+            <form action="">
+                <div class="form-group">
+                    <label>Phases</label>
+                    <input type="hidden" id="e12" style="width:100% !important" value="1,2,3,4,5,6"/>
+                </div>
+            </form>
+            <div class="row process-wizard process-wizard-primary hidden-xs">
+                <div class="col-xs-2 process-wizard-step complete">
+                    <div class="text-center process-wizard-stepnum">Fondations</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" class="process-wizard-dot"></a>
+                </div>
+                <div class="col-xs-2 process-wizard-step active">
+                    <!-- complete -->
+                    <div class="text-center process-wizard-stepnum">Gros oeuvre</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" class="process-wizard-dot"></a>
+                    <div class="process-wizard-info text-center"></div>
+                </div>
+                <div class="col-xs-2 process-wizard-step disabled">
+                    <!-- complete -->
+                    <div class="text-center process-wizard-stepnum">Toiture</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" class="process-wizard-dot"></a>
+                    <div class="process-wizard-info text-center"></div>
+                </div>
+                <div class="col-xs-2 process-wizard-step disabled">
+                    <!-- active -->
+                    <div class="text-center process-wizard-stepnum">Pose chassis</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" class="process-wizard-dot"></a>
+                    <div class="process-wizard-info text-center"></div>
+                </div>
+                <div class="col-xs-2 process-wizard-step disabled">
+                    <!-- active -->
+                    <div class="text-center process-wizard-stepnum">Finitions</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" class="process-wizard-dot"></a>
+                    <div class="process-wizard-info text-center"></div>
+                </div>
+                <div class="col-xs-2 process-wizard-step disabled">
+                    <!-- active -->
+                    <div class="text-center process-wizard-stepnum">Terminé</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" class="process-wizard-dot"></a>
+                    <div class="process-wizard-info text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

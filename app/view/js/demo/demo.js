@@ -1,6 +1,6 @@
 const bootstrapSwitch = require('bootstrap-switch');
 const iCheck = require('icheck');
-const {popover, tooltip} = require('bootstrap');
+//const {popover, tooltip} = require('bootstrap');
 
 $(function() {
 
@@ -20,7 +20,7 @@ $(function() {
     	$('.nav-tabs').filter(':noparents(.tab-right, .tab-left)').tabdrop();
 
 
-	
+
 
     //Custom checkboxes
     //------------------------
@@ -30,7 +30,7 @@ $(function() {
 			radioClass: 'iradio_minimal-blue'
 		});
 
-		
+
 
 	//Demo Background Pattern
 

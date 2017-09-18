@@ -41800,3 +41800,190 @@ body.updater .updater-wrapper .container
 body.updater #loaderCallback{
     font-weight: bold;
 }
+
+/*process*/
+.process-wizard {
+    padding: 0 0 10px;
+}
+.process-wizard > .process-wizard-step {
+    padding: 0;
+    position: relative;
+}
+.process-wizard > .process-wizard-step + .process-wizard-step {
+}
+.process-wizard > .process-wizard-step .process-wizard-stepnum {
+    color: #595959;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+.process-wizard > .process-wizard-step .process-wizard-info {
+    color: #999;
+    font-size: 12px;
+}
+.process-wizard > .process-wizard-step > .process-wizard-dot {
+    background: #fbe8aa none repeat scroll 0 0;
+    border-radius: 50%;
+    display: block;
+    height: 30px;
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+    position: absolute;
+    top: 47px;
+    width: 30px;
+}
+.process-wizard > .process-wizard-step > .process-wizard-dot::after {
+    background: #fbbd19 none repeat scroll 0 0;
+    border-radius: 50px;
+    content: " ";
+    height: 14px;
+    left: 8px;
+    position: absolute;
+    top: 8px;
+    width: 14px;
+}
+.process-wizard > .process-wizard-step > .progress {
+    border-radius: 0;
+    box-shadow: none;
+    height: 8px;
+    margin: 20px 0;
+    position: relative;
+}
+.process-wizard > .process-wizard-step > .progress > .progress-bar {
+    background: #fbe8aa none repeat scroll 0 0;
+    box-shadow: none;
+    width: 0;
+}
+.process-wizard > .process-wizard-step.complete > .progress > .progress-bar {
+    width: 100%;
+}
+.process-wizard > .process-wizard-step.active > .progress > .progress-bar {
+    width: 50%;
+}
+.process-wizard > .process-wizard-step.active:first-child > .progress > .progress-bar {
+    width: 0;
+}
+.process-wizard > .process-wizard-step.active:last-child > .progress > .progress-bar {
+    width: 100%;
+}
+.process-wizard > .process-wizard-step.disabled > .process-wizard-dot {
+    background-color: #f5f5f5;
+}
+.process-wizard > .process-wizard-step.disabled > .process-wizard-dot::after {
+    opacity: 0;
+}
+.process-wizard > .process-wizard-step:first-child > .progress {
+    left: 50%;
+    width: 50%;
+}
+.process-wizard > .process-wizard-step:last-child > .progress {
+    width: 50%;
+}
+.process-wizard > .process-wizard-step.disabled a.process-wizard-dot {
+    pointer-events: none;
+}
+.process-wizard-default > .process-wizard-step > .process-wizard-dot, .process-wizard-default > .process-wizard-step > .progress > .progress-bar {
+    background: #ccc none repeat scroll 0 0;
+}
+.process-wizard-default > .process-wizard-step > .process-wizard-dot::after {
+    background-color: #666;
+}
+.process-wizard-info > .process-wizard-step > .process-wizard-dot, .process-wizard-info > .process-wizard-step > .progress > .progress-bar {
+    background: #d9edf7 none repeat scroll 0 0;
+}
+.process-wizard-info > .process-wizard-step > .process-wizard-dot::after {
+    background-color: #31708f;
+}
+.process-wizard-warning > .process-wizard-step > .process-wizard-dot, .process-wizard-warning > .process-wizard-step > .progress > .progress-bar {
+    background: #fbe8aa none repeat scroll 0 0;
+}
+.process-wizard-warning > .process-wizard-step > .process-wizard-dot::after {
+    background-color: #fbbd19;
+}
+.process-wizard-success > .process-wizard-step > .process-wizard-dot, .process-wizard-success > .process-wizard-step > .progress > .progress-bar {
+    background: #d6e9c6 none repeat scroll 0 0;
+}
+.process-wizard-success > .process-wizard-step > .process-wizard-dot::after {
+    background-color: #3c763d;
+}
+.process-wizard-danger > .process-wizard-step > .process-wizard-dot, .process-wizard-danger > .process-wizard-step > .progress > .progress-bar {
+    background: #ebccd1 none repeat scroll 0 0;
+}
+.process-wizard-danger > .process-wizard-step > .process-wizard-dot::after {
+    background-color: #a94442;
+}
+ul.process-steps, ul.process-steps li {
+    border: 0 none;
+    text-align: center;
+}
+ul.process-steps li a {
+    background-color: #fff;
+    border: 1px solid #666;
+    border-radius: 50%;
+    color: #111;
+    display: inline-block;
+    font-size: 30px;
+    height: 50px;
+    line-height: 30px;
+    text-align: center;
+    width: 50px;
+}
+ul.process-steps li.active a, ul.process-steps li.active:hover > a {
+    background-color: #333;
+    color: #fff;
+}
+ul.process-steps li::after, ul.process-steps li::before {
+    border-top: 1px dashed #ddd;
+    content: "";
+    left: 0;
+    position: absolute;
+    top: 26px;
+    width: 50%;
+}
+ul.process-steps li:first-child::before {
+    display: none;
+}
+ul.process-steps li:last-child::after {
+    display: none;
+}
+ul.process-steps li::after {
+    left: auto;
+    margin: 0 -26px 0 0;
+    right: 0;
+}
+ul.process-steps li h1, ul.process-steps li h2, ul.process-steps li h3, ul.process-steps li h4, ul.process-steps li h5, ul.process-steps li h6 {
+    margin: 20px 0 0;
+}
+ul.process-steps li > a > i {
+    font-size: 28px;
+    line-height: 28px;
+    margin: -1px 0 0 -4px;
+    padding: 0;
+}
+ul.process-steps li > a > i.fa {
+    font-size: 30px;
+    line-height: 30px;
+}
+ul.process-steps.process-steps-square li a {
+    border-radius: 3px;
+}
+@media only screen and (max-width: 768px) {
+    ul.process-steps li::after, ul.process-steps li::before {
+        display: none;
+    }
+    ul.process-steps li h1, ul.process-steps li h2, ul.process-steps li h3, ul.process-steps li h4, ul.process-steps li h5, ul.process-steps li h6 {
+        margin: 10px 0 30px;
+    }
+}
+@media only screen and (max-width: 482px) {
+    ul.process-steps li > a {
+        display: inline-block;
+    }
+    ul.process-steps li h1, ul.process-steps li h2, ul.process-steps li h3, ul.process-steps li h4, ul.process-steps li h5, ul.process-steps li h6 {
+        display: block;
+        margin: 3px 0;
+    }
+    ul.process-steps li {
+        padding: 10px 0;
+    }
+}

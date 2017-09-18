@@ -4,7 +4,7 @@ const url = require('url');
 const isDev = require('electron-is-dev');
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 
-let win
+let win;
 
 function createWindow () {
     win = new BrowserWindow({width: 1200, height: 860, icon: "icon.ico", backgroundColor: "#37474f"});

@@ -1,5 +1,6 @@
 // DEPENDENCIES
 var bootBox = require('bootbox');
+var fs = require('fs');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
@@ -95,7 +96,7 @@ function projectsNavigation(action, id)
     switch (action)
     {
         case 'infos':
-            console.log('chargement modale');
+            editProject(id);
             break;
         default:
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
@@ -107,23 +108,60 @@ function projectsNavigation(action, id)
 function addProject() {
     console.log('Add project');
 
-    bootBox.dialog({
-        message: "Hello world!",
+    bootBox.prompt({
         title: "Ajouter un projet",
-        size: "large",
+        size: "medium",
         backdrop: true,
         buttons: {
             cancel: {
                 label: 'Annuler',
             },
             confirm: {
-                label: 'Ajouter',
+                label: 'Ajouter le projet',
                 className: 'btn-primary'
             }
+        },
+        callback: function (result) {
+            if(result != null)
+            {
+                createProject(result);
+            }
         }
+    });
+
+}
+
+// CREATE PROJECT
+function createProject(projectName)
+{
+    editProject({});
+}
+
+// PROJECT EDIT
+function editProject(data){
+    let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
+    let tpl = handlebars.compile(editProjectTemplate);
+    let projectData = {id_projet: 1, libelle_projet: "Résidence Ines", adresse_projet: "12 rue somewhere", ville_projet: "Ecaussinnes", cp_projet: '6132', description_courte_projet: "Une belle description courte", description_longue_projet: "Une belle description longue"};
+
+    //console.log(tpl(editProjectTemplate));
+    //console.log(tpl(projectData));
+
+    bootBox.dialog({
+        message: tpl(projectData),
+        onEscape: true,
+        title: projectData.libelle_projet,
+        size: "large",
+        backdrop: true,
+        buttons: {
+            cancel: {
+                label: 'Fermer',
+            }
+        }
+    }).on("shown.bs.modal", function() {
+        initMap();
     });
 }
 
 function showStats(){
-    console.log('Show stats');
+    alert("Cette fonctionalité n'est pas encore développée")
 }
