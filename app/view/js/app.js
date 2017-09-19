@@ -112,7 +112,7 @@ $('#logsSideBtn').click(function () {
         });
 
 
-    })
+    });
 
 });
 
