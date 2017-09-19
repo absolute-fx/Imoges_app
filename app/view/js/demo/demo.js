@@ -1,4 +1,4 @@
-const bootstrapSwitch = require('bootstrap-switch');
+//const bootstrapSwitch = require('bootstrap-switch');
 const iCheck = require('icheck');
 //const {popover, tooltip} = require('bootstrap');
 
@@ -24,12 +24,13 @@ $(function() {
 
     //Custom checkboxes
     //------------------------
+	/*
 		$(".bootstrap-switch").bootstrapSwitch();
 		$('.icheck input').iCheck({
 			checkboxClass: 'icheckbox_minimal-blue',
 			radioClass: 'iradio_minimal-blue'
 		});
-
+	*/
 
 
 	//Demo Background Pattern

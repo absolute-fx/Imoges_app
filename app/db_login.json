@@ -1,0 +1,7 @@
+{
+  "db": "cmsafxlab",
+  "login": "admin",
+  "pass": "infoteam1234",
+  "host": "92.243.27.199",
+  "dialect" : "mysql"
+}
