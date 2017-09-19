@@ -78,7 +78,41 @@ ipc.on('update-available', function (event, args) {
     window.location.replace("update.html#"+window.location.hash.substring(1));
 });
 
-$('#logsSideBtn').click(function () {
-    notifyMe('test message');
-    console.log('click');
+var Sequelize = require('sequelize');
+var sequelize_paid = new Sequelize('cmsafxlab', 'admin', 'infoteam1234', {
+    host: '92.243.27.199',
+    dialect: 'mysql',
+
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    },
+
+    // SQLite only
 });
+
+
+$('#logsSideBtn').click(function () {
+    const User = sequelize_paid.define('user', {
+        firstName: {
+            type: Sequelize.STRING
+        },
+        lastName: {
+            type: Sequelize.STRING
+        }
+    });
+
+
+
+    User.findAll().then(users => {
+
+        users.forEach(function (user) {
+            console.log(user.lastName);
+        });
+
+
+    })
+
+});
+
