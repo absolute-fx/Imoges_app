@@ -6,3 +6,4 @@ npm-debug.log
 app/files
 .tmp
 git_account.json
+app/db_login.json

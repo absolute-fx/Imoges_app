@@ -10,7 +10,6 @@ const notifier = require('electron-notification-desktop');
 $(document).ready(function() {
     getPageData();
     initPage();
-    //notifyMe('blabla', 'bloblo', 10);
 });
 
 function initPage()
@@ -18,7 +17,6 @@ function initPage()
     $('body').append('<div id="sideMenuTpl"></div>');
     $('#sideMenuTpl').load('view/html/widgets/SideMenu.html');
     $('#actualYear').html(actualYear.getFullYear());
-    //$('#appVersion').html('V' + pjson.version);
 
     $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
 
@@ -79,9 +77,10 @@ ipc.on('update-available', function (event, args) {
 });
 
 var Sequelize = require('sequelize');
-var sequelize_paid = new Sequelize('cmsafxlab', 'admin', 'infoteam1234', {
-    host: '92.243.27.199',
-    dialect: 'mysql',
+var dbConfig = require('../../db_login.json');
+var sequelize_paid = new Sequelize(dbConfig.db, dbConfig.login, dbConfig.pass, {
+    host: dbConfig.host,
+    dialect: dbConfig.dialect,
 
     pool: {
         max: 5,
@@ -110,8 +109,6 @@ $('#logsSideBtn').click(function () {
         users.forEach(function (user) {
             console.log(user.lastName);
         });
-
-
     });
 
 });
