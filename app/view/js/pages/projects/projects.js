@@ -138,13 +138,80 @@ function createProject(projectName)
 }
 
 // PROJECT EDIT
+var allStepsList = [
+    {id: 0, text: "Défrichage terrain"},
+    {id: 1, text: "Fondations"},
+    {id: 2, text: "Gros oeuvre"},
+    {id: 3, text: "Toiture"},
+    {id: 4, text: "Pose chassis"},
+    {id: 5, text: "Finitions"},
+    {id: 6, text: "Terminé"}
+];
+
+var projectInputVal;
+
 function editProject(data){
     let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
     let tpl = handlebars.compile(editProjectTemplate);
-    let projectData = {id_projet: 1, libelle_projet: "Résidence Ines", adresse_projet: "12 rue somewhere", ville_projet: "Ecaussinnes", cp_projet: '6132', description_courte_projet: "Une belle description courte", description_longue_projet: "Une belle description longue"};
+    let projectData = {
+        id_projet: 1,
+        libelle_projet: "Résidence Ines",
+        adresse_projet: "Avenue de la déportation 41",
+        ville_projet: "Ecaussinnes",
+        cp_projet: '7190',
+        lat_projet: '50.56170591970849',
+        long_projet: '4.158356019708435',
+        description_courte_projet: "Une belle description courte",
+        description_longue_projet: "Une belle description longue",
+        phase_actuelle_projet: 4,
+        phases_construction: [1,2,3,4,5,6]
+    };
 
-    //console.log(tpl(editProjectTemplate));
-    //console.log(tpl(projectData));
+    let stepId;
+    let projectSteps = [];
+    let state;
+    let count = 0;
+    let colSize = Math.floor(12 / projectData.phases_construction.length);
+
+    for(var i in projectData.phases_construction)
+    {
+        stepId = projectData.phases_construction[i];
+        for(var u in allStepsList)
+        {
+            if(stepId == allStepsList[u].id)
+            {
+                if(projectData.phase_actuelle_projet == allStepsList[u].id){
+                    count = 1;
+                }else if(count > 0){
+                    count = 2;
+                }
+
+                switch(count)
+                {
+                    case 0:
+                        state = 'complete';
+                        break;
+
+                    case 1:
+                        state = 'active';
+                        break;
+
+                    case 2:
+                        state = 'disabled';
+                        break;
+                }
+                if(i == 0 && projectData.phases_construction.length == 5){
+                    projectSteps.push({stepLabel: allStepsList[u].text, id: allStepsList[u].id, state: state, colSize: colSize +1});
+                }
+                else
+                {
+                    projectSteps.push({stepLabel: allStepsList[u].text, id:allStepsList[u].id, state: state, colSize: colSize});
+                }
+            }
+        }
+    }
+    projectData.projectSteps = projectSteps;
+    projectInputVal = projectSteps;
 
     bootBox.dialog({
         message: tpl(projectData),
@@ -163,5 +230,5 @@ function editProject(data){
 }
 
 function showStats(){
-    alert("Cette fonctionalité n'est pas encore développée")
+    alert("Cette fonctionalité n'est pas encore disponible")
 }

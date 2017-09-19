@@ -41880,7 +41880,7 @@ body.updater #loaderCallback{
     width: 50%;
 }
 .process-wizard > .process-wizard-step.disabled a.process-wizard-dot {
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 .process-wizard-default > .process-wizard-step > .process-wizard-dot, .process-wizard-default > .process-wizard-step > .progress > .progress-bar {
     background: #ccc none repeat scroll 0 0;
@@ -41986,4 +41986,12 @@ ul.process-steps.process-steps-square li a {
     ul.process-steps li {
         padding: 10px 0;
     }
+}
+
+.pac-container {
+    background-color: #FFF;
+    z-index: 10000 !important;
+    position: fixed;
+    display: inline-block;
+    float: left;
 }
