@@ -69,8 +69,11 @@
     "handlebars": "^4.0.10",
     "icheck": "^1.0.2",
     "jquery": "^3.2.1",
+    "mysql2": "^1.4.2",
     "nanoscroller": "^0.8.7",
-    "sha1": "^1.1.1"
+    "sequelize": "^4.8.4",
+    "sha1": "^1.1.1",
+    "sqlite3": "^3.1.11"
   },
   "devDependencies": {
     "asar": "^0.13.0",
@@ -81,7 +84,7 @@
     "electron-packager": "^8.7.2",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
-    "grunt-git": "^1.0.6",
+    "grunt-git": "^1.0.7",
     "grunt-github-releaser": "^0.1.18",
     "grunt-rename-util": "^1.0.0",
     "grunt-version": "^1.2.1",
