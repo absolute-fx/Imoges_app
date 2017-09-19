@@ -77,7 +77,7 @@ ipc.on('update-available', function (event, args) {
 });
 
 var Sequelize = require('sequelize');
-var dbConfig = require('../../db_login.json');
+var dbConfig = require(__dirname + '/db_login.json');
 var sequelize_paid = new Sequelize(dbConfig.db, dbConfig.login, dbConfig.pass, {
     host: dbConfig.host,
     dialect: dbConfig.dialect,
