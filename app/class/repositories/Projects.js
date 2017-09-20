@@ -5,11 +5,14 @@ class ProjectsRepository
     }
 
     insert(projectName){
-        this.models.sync().then(() => {
+        return this.models.sync().then(() => {
             return this.models.create({
                 'libelle_projet': projectName
             });
-        }).then(() => {return true;});
+        }).then((model) => {
+            console.log(model)
+            return model;
+        });
     }
 }
 

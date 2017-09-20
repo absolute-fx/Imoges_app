@@ -135,8 +135,11 @@ function addProject() {
 function createProject(projectName)
 {
     let ProjectsRepository = require(__dirname + '/class/repositories/Projects').ProjectsRepository;
-    ProjectsRepository.insert(projectName);
+    ProjectsRepository.insert(projectName).then((projet) => {
+        console.log(projet);
+        console.log(projet.libelle_projet);
 
+    });
 
     editProject({});
 }
