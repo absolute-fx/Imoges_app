@@ -96,7 +96,7 @@ function projectsNavigation(action, id)
     switch (action)
     {
         case 'infos':
-            editProject(id);
+            setEditProject(id);
             break;
         default:
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
@@ -134,17 +134,17 @@ function addProject() {
 // CREATE PROJECT
 function createProject(projectName)
 {
+    $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>')
     require(__dirname + '/class/repositories/Projects').insert({
         'libelle_projet': projectName
     }).then((projet) => {
-        console.log(projet);
-        console.log(projet.libelle_projet);
+        loadProjectData(projet.id);
 
     }).catch((error) => {
         alert(error.toString());
     });
 
-    editProject({});
+
 }
 
 // PROJECT EDIT
@@ -158,11 +158,16 @@ var allStepsList = [
     {id: 6, text: "Terminé"}
 ];
 
-var projectInputVal;
+function loadProjectData(projectId)
+{
+    setEditProject({});
+}
 
-function editProject(data){
+var projectInputVal;
+function setEditProject(data){
     let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
     let tpl = handlebars.compile(editProjectTemplate);
+
     let projectData = {
         id_projet: 1,
         libelle_projet: "Résidence Ines",
