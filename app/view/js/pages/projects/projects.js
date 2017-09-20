@@ -134,6 +134,10 @@ function addProject() {
 // CREATE PROJECT
 function createProject(projectName)
 {
+    let ProjectsRepository = require(__dirname + '/class/repositories/Projects').ProjectsRepository;
+    ProjectsRepository.insert(projectName);
+
+
     editProject({});
 }
 

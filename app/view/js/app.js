@@ -6,6 +6,7 @@ const handlebars = require('handlebars');
 const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 //const pjson = require('../package.json');
 const notifier = require('electron-notification-desktop');
+const app = electron.app;
 
 $(document).ready(function() {
     getPageData();
@@ -76,40 +77,8 @@ ipc.on('update-available', function (event, args) {
     window.location.replace("update.html#"+window.location.hash.substring(1));
 });
 
-var Sequelize = require('sequelize');
-var dbConfig = require(__dirname + '/db_login.json');
-var sequelize_paid = new Sequelize(dbConfig.db, dbConfig.login, dbConfig.pass, {
-    host: dbConfig.host,
-    dialect: dbConfig.dialect,
-
-    pool: {
-        max: 5,
-        min: 0,
-        idle: 10000
-    },
-
-    // SQLite only
-});
-
 
 $('#logsSideBtn').click(function () {
-    const User = sequelize_paid.define('user', {
-        firstName: {
-            type: Sequelize.STRING
-        },
-        lastName: {
-            type: Sequelize.STRING
-        }
-    });
-
-
-
-    User.findAll().then(users => {
-
-        users.forEach(function (user) {
-            console.log(user.lastName);
-        });
-    });
 
 });
 
