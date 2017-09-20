@@ -4,16 +4,11 @@ class ProjectsRepository
         this.models = require(__dirname + '/../models/index.js').Projects;
     }
 
-    insert(projectName){
+    insert(data){
         return this.models.sync().then(() => {
-            return this.models.create({
-                'libelle_projet': projectName
-            });
-        }).then((model) => {
-            console.log(model)
-            return model;
+            return this.models.create(data);
         });
     }
 }
 
-module.exports.ProjectsRepository = new ProjectsRepository();
+module.exports = new ProjectsRepository();
