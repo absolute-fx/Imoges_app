@@ -22,6 +22,17 @@ function setStepsList(event)
         if(event.added.id == event.added.text)
         {
             console.log("Nouvelle phase...");
+
+            require(__dirname + '/class/repositories/Phases').insert({
+                'label': event.added.text
+            }).then((phase) => {
+                console.log("Phase added : " + phase.label);
+
+            }).catch((error) => {
+                alert(error.toString());
+            });
+
+
             return false;
         }
     }

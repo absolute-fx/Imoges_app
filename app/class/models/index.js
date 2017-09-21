@@ -14,18 +14,17 @@ const sequelize = new Sequelize(dbConfig.db, dbConfig.login, dbConfig.pass, {
 });
 
 const models = [
-    'Projects'
+    'Projects',
+    'Phases'
 ];
 
 models.forEach(function(model) {
     module.exports[model] = sequelize.import(__dirname + '/' + model + '.js');
 });
-/*
+
 (function(m) {
-    m.PhoneNumber.belongsTo(m.User);
-    m.Task.belongsTo(m.User);
-    m.User.hasMany(m.Task);
-    m.User.hasMany(m.PhoneNumber);
+    m.Projects.belongsToMany (m.Phases, {as: 'Phases', through: 'projets_phases', foreignKey: 'phase_id'});
+    m.Phases.belongsToMany (m.Projects, {as: 'Projects', through: 'projets_phases', foreignKey: 'project_id'});
 })(module.exports);
-*/
-module.exports.sequelize = sequelize;
+
+module.exports.sequelize = sequelize.sync();

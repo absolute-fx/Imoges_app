@@ -143,8 +143,6 @@ function createProject(projectName)
     }).catch((error) => {
         alert(error.toString());
     });
-
-
 }
 
 // PROJECT EDIT
