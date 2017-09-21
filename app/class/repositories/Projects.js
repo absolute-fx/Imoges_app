@@ -5,9 +5,15 @@ class ProjectsRepository
     }
 
     insert(data){
-        return this.models.sync().then(() => {
-            return this.models.create(data);
-        });
+        return this.models.create(data);
+    }
+
+    find(id) {
+        return this.models.findById(id);
+    }
+
+    findAll(args) {
+        return this.models.findAll(args);
     }
 }
 

@@ -6,7 +6,7 @@ return sequelize.define('Projects', {
             allowNull: false,
             validate: {
                 len: {
-                    args: [10, 255],
+                    args: [5, 255],
                     msg: 'toolong_or_toobig'
                 }
             }
