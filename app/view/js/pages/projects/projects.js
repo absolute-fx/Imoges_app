@@ -29,6 +29,16 @@ function sideMenuAction(action)
 }
 
 // CALL TO SERVICE
+function getProjectsList()
+{
+    require(__dirname + '/class/repositories/Projects').findAll({
+
+    }).then((projects) => {
+        console.log(projects);
+    }).catch((error) => {
+        alert(error.toString());
+    });
+}
 var projects = [
     {id: 1, libelle_projet: 'Résidence Alexandre II', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/project-main-image-web.jpg'},
     {id: 2, libelle_projet: 'Les Demoiselles', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/demoiselles.jpg'},
@@ -38,6 +48,7 @@ var projects = [
 
 // INIT
 $(document).ready(()=>{
+    getProjectsList();
     setProjectsBoxes();
 });
 
