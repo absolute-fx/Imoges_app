@@ -47,7 +47,7 @@ $(document).ready(()=>{
 // BOX ACTION SETTERS
 var projectsNavigationData = [
     {btnLabel: 'Infos projet', btnAction: 'infos'},
-    {btnLabel: 'Biens', btnAction: 'goods'},
+    {btnLabel: 'Biens', btnAction: 'realty'},
     {btnLabel: 'Clients', btnAction: 'clients'},
     {btnLabel: 'Partenaires', btnAction: 'partners'},
     {btnLabel: 'Bibliothèque', btnAction: 'libraries'},

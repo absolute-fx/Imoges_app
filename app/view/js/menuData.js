@@ -2,7 +2,7 @@ const menuItems = [
     {'label': 'Dashboard', 'page': 'dashboard'},
     {'label': 'Parc', 'children': [
         {'label': 'Projets', 'page': 'projects'},
-        {'label': 'Biens', 'page': 'goods'},
+        {'label': 'Biens', 'page': 'realty'},
         {'type' : 'separator'},
         {'label': 'Bibliothèque', 'page': 'library'}
     ]},
