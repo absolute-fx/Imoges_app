@@ -22,6 +22,10 @@ class ProjectsRepository
             }]
         });
     }
+
+    addPhases(phase) {
+        return this.models.addPhases(phase);
+    }
 }
 
 module.exports = new ProjectsRepository();
