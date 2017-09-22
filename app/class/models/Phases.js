@@ -7,13 +7,18 @@ module.exports = function (sequelize, DataTypes) {
                 validate: {
                     len: {
                         args: [10, 255],
-                        msg: 'toolong_or_toobig'
+                        msg: 'tooshort_or_toobig'
                     }
                 }
             },
         },
         {
             timestamp: true,
-            logging: console.log
+            logging: console.log,
+            classMethods: {
+                associate: function(models) {
+                    Phases.belongsToMany (models.Projects, {as: 'Projects', through: 'projets_phases', foreignKey: 'project_id'});
+                }
+            }
         });
 };

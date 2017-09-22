@@ -135,14 +135,9 @@ function addProject() {
 function createProject(projectName)
 {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>')
-    require(__dirname + '/class/repositories/Projects').insert({
-        'libelle_projet': projectName
-    }).then((projet) => {
-        loadProjectData(projet.id);
 
-    }).catch((error) => {
-        alert(error.toString());
-    });
+    const projectsRepo = require('./class/repositories/Projects.js');
+    projectsRepo.insert({libelle_projet: projectName});
 }
 
 // PROJECT EDIT

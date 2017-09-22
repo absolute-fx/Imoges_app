@@ -3,6 +3,7 @@ const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
+const models = require('./class/models/index.js').database;
 
 let win;
 
@@ -19,6 +20,8 @@ function createWindow () {
         slashes: true,
         hash: 'v'+app.getVersion()
     }));
+
+    win.database = models;
 
     win.maximize();
 

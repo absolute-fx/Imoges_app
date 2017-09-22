@@ -1,7 +1,9 @@
+const models = require('../models/index.js').database;
+
 class PhasesRepository
 {
     constructor() {
-        this.phases = require(__dirname + '/../models/index.js').Phases;
+        this.phases = models.Phases;
     }
 
     insert(data){

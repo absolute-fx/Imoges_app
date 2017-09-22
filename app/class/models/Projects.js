@@ -6,8 +6,8 @@ return sequelize.define('Projects', {
             allowNull: false,
             validate: {
                 len: {
-                    args: [5, 255],
-                    msg: 'toolong_or_toobig'
+                    args: [10, 255],
+                    msg: 'tooshort_or_toobig'
                 }
             }
         },
@@ -29,6 +29,11 @@ return sequelize.define('Projects', {
     },
     {
         timestamp: true,
-        logging: console.log
+        logging: console.log,
+        classMethods: {
+            associate: function(models) {
+                Projects.belongsToMany (models.Phases, {as: 'Phases', through: 'projets_phases', foreignKey: 'phase_id'});
+            }
+        }
     });
 };

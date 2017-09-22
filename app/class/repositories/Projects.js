@@ -1,7 +1,9 @@
+const models = require('../models/index.js').database;
+
 class ProjectsRepository
 {
     constructor() {
-        this.models = require(__dirname + '/../models/index.js').Projects;
+        this.models = models.Projects;
     }
 
     insert(data){
