@@ -150,8 +150,10 @@ function createProject(projectName) {
     require(__dirname + '/class/repositories/Phases').find(1).then((phase) => {
         console.log(phase);
         console.log(project);
+        project.addPhases(phase.id);
+        project.save();
     });
-
+}
 // PROJECT EDIT
 var allStepsList = [
     {id: 0, text: "Défrichage terrain"},
@@ -250,5 +252,5 @@ function setEditProject(data){
 }
 
 function showStats(){
-    alert("Cette fonctionalité n'est pas encore disponible")
+    alert("Cette fonctionalité n'est pas encore disponible");
 }
