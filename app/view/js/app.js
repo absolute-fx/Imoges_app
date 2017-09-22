@@ -7,6 +7,7 @@ const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 //const pjson = require('../package.json');
 const notifier = require('electron-notification-desktop');
 const app = electron.app;
+const connexion = require(__dirname + '/class/Connection.js');
 
 $(document).ready(function() {
     getPageData();

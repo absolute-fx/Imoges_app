@@ -145,10 +145,16 @@ function addProject() {
 // CREATE PROJECT
 function createProject(projectName)
 {
-    $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>')
+    $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
 
-    const projectsRepo = require('./class/repositories/Projects.js');
-    projectsRepo.insert({libelle_projet: projectName});
+    require(__dirname + '/class/repositories/Projects').findAll().then((projects) => {
+        for (index in projects)
+        {
+            console.log(projects[index].Phases);
+        }
+        }
+
+    );
 }
 
 // PROJECT EDIT

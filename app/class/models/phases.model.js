@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('Phases', {
+    var Phases = sequelize.define('Phases', {
             title: {
                 type: DataTypes.STRING,
                 unique: true,
@@ -17,8 +17,9 @@ module.exports = function (sequelize, DataTypes) {
             logging: console.log,
             classMethods: {
                 associate: function(models) {
-                    Phases.belongsToMany (models.Projects, {as: 'Projects', through: 'projets_phases', foreignKey: 'project_id'});
+                    Phases.belongsToMany (models.Projects, {through: 'projets_phases', foreignKey: 'project_id'});
                 }
             }
         });
+    return Phases;
 };

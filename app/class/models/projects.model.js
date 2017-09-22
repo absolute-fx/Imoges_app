@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-return sequelize.define('Projects', {
+var Projects = sequelize.define('Projects', {
         libelle_projet: {
             type: DataTypes.STRING,
             unique: true,
@@ -32,8 +32,9 @@ return sequelize.define('Projects', {
         logging: console.log,
         classMethods: {
             associate: function(models) {
-                Projects.belongsToMany (models.Phases, {as: 'Phases', through: 'projets_phases', foreignKey: 'phase_id'});
+                Projects.belongsToMany (models.Phases, {through: 'projets_phases', foreignKey: 'phase_id'});
             }
         }
     });
+    return Projects;
 };

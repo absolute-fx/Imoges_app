@@ -1,9 +1,10 @@
-const models = require('../models/index.js').database;
+var Connection = require('sequelize-connect');
+var orm = new Connection();
 
 class PhasesRepository
 {
     constructor() {
-        this.phases = models.Phases;
+        this.phases = orm.models.Phases;
     }
 
     insert(data){

@@ -1,9 +1,10 @@
-const models = require('../models/index.js').database;
+var Connection = require('sequelize-connect');
+var orm = new Connection();
 
 class ProjectsRepository
 {
     constructor() {
-        this.models = models.Projects;
+        this.models = orm.models.Projects;
     }
 
     insert(data){
@@ -14,8 +15,12 @@ class ProjectsRepository
         return this.models.findById(id);
     }
 
-    findAll(args) {
-        return this.models.findAll(args);
+    findAll() {
+        return this.models.findAll({
+            include: [{
+                model: orm.models.Phases
+            }]
+        });
     }
 }
 
