@@ -60,7 +60,7 @@ var Projects = sequelize.define('Projects', {
         logging: console.log,
         classMethods: {
             associate: function(models) {
-                Projects.belongsToMany (models.Phases, {through: 'projets_phases', foreignKey: 'phase_id'});
+                Projects.belongsToMany (models.Phases, {through: 'projects_phases', foreignKey: 'phase_id'});
             }
         }
     });
