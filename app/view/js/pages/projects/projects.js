@@ -135,7 +135,7 @@ function addProject() {
         callback: function (result) {
             if(result != null)
             {
-                createProject(result);
+                createProject();
             }
         }
     });
@@ -143,7 +143,7 @@ function addProject() {
 }
 
 // CREATE PROJECT
-function createProject(projectName)
+function createProject()
 {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
 
