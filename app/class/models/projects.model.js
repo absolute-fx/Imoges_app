@@ -1,29 +1,57 @@
 module.exports = function (sequelize, DataTypes) {
 var Projects = sequelize.define('Projects', {
-        libelle_projet: {
+        project_title: {
             type: DataTypes.STRING,
             unique: true,
             allowNull: false,
             validate: {
                 len: {
-                    args: [10, 255],
+                    args: [5, 255],
                     msg: 'tooshort_or_toobig'
                 }
             }
         },
-        date_creation_projet: {
+        project_creation_date: {
             type: DataTypes.DATE
         },
-        description_courte_projet: {
+        project_start_build_date: {
+            type: DataTypes.DATE
+        },
+        project_end_build_date: {
+            type: DataTypes.DATE
+        },
+        project_start_diffusion_date: {
+            type: DataTypes.DATE
+        },
+        project_short_description: {
             type: DataTypes.TEXT
         },
-        description_longue_projet: {
+        project_long_description: {
             type: DataTypes.TEXT
         },
-        lat_projet: {
+        project_address: {
+            type: DataTypes.TEXT
+        },
+        project_city: {
+            type: DataTypes.TEXT
+        },
+        project_pc: {
+            type: DataTypes.TEXT
+        },
+        project_country: {
+            type: DataTypes.TEXT
+        },
+        project_active_online: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: 0,
+        },
+        project_actual_phase: {
+            type: DataTypes.INTEGER
+        },
+        project_lat: {
             type: DataTypes.FLOAT
         },
-        long_projet: {
+        project_long: {
             type: DataTypes.FLOAT
         }
     },

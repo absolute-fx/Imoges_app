@@ -152,9 +152,7 @@ function createProject(projectName)
         {
             console.log(projects[index].Phases);
         }
-        }
-
-    );
+    });
 }
 
 // PROJECT EDIT
