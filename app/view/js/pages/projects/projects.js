@@ -143,17 +143,14 @@ function addProject() {
 }
 
 // CREATE PROJECT
-function createProject(projectName)
-{
+function createProject(projectName) {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
 
-    require(__dirname + '/class/repositories/Projects').findAll().then((projects) => {
-        for (index in projects)
-        {
-            console.log(projects[index].Phases);
-        }
+    var project = require(__dirname + '/class/repositories/Projects').insert({project_title: projectName});
+    require(__dirname + '/class/repositories/Phases').find(1).then((phase) => {
+        console.log(phase);
+        console.log(project);
     });
-}
 
 // PROJECT EDIT
 var allStepsList = [

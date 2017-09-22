@@ -8,7 +8,7 @@ class ProjectsRepository
     }
 
     insert(data){
-        return this.models.create(data);
+        return this.models.build(data);
     }
 
     find(id) {
