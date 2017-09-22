@@ -12,7 +12,7 @@ var db =  new Connection(
         port:    3306,
         define: {
             charset: 'utf8',
-            collate: 'utf8_general_ci',
+            collate: 'utf8_general_ci'
         }
     },
     discover,
@@ -21,7 +21,6 @@ var db =  new Connection(
         Object.keys(db.models).forEach(function(modelName) {
             db.models[modelName].options.classMethods.associate(db.models);
         })
+        db.sequelize.sync();
     }
 );
-
-return db;
