@@ -27,6 +27,7 @@ fs.readdirSync(__dirname).filter(function(file) {
 
 /*
 (function(m) {
+    console.log('m: ' + m);
     m.Projects.belongsToMany (m.Phases, {as: 'Phases', through: 'projets_phases', foreignKey: 'phase_id'});
     m.Phases.belongsToMany (m.Projects, {as: 'Projects', through: 'projets_phases', foreignKey: 'project_id'});
 })(db);*/
