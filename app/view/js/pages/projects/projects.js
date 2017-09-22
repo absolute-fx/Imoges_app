@@ -147,14 +147,17 @@ function createProject()
 {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
 
-    require(__dirname + '/class/repositories/Projects').findAll().then((projects) => {
-        for (index in projects)
-        {
-            console.log(projects[index].Phases);
-        }
-    });
-}
+    var project = require(__dirname + '/class/repositories/Projects').insert({project_title: projectName});
 
+    require(__dirname + '/class/repositories/Phases').find(1).then(
+        (phase) => {
+            project.save().then((project) => {
+                project.addPhases(phase.id);
+                console.log(project);
+            });
+        }
+    );
+}
 // PROJECT EDIT
 var allStepsList = [
     {id: 0, text: "Défrichage terrain"},
@@ -253,5 +256,5 @@ function setEditProject(data){
 }
 
 function showStats(){
-    alert("Cette fonctionalité n'est pas encore disponible")
+    alert("Cette fonctionalité n'est pas encore disponible");
 }
