@@ -147,12 +147,15 @@ function createProject(projectName) {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
 
     var project = require(__dirname + '/class/repositories/Projects').insert({project_title: projectName});
-    require(__dirname + '/class/repositories/Phases').find(1).then((phase) => {
-        console.log(phase);
-        console.log(project);
-        project.addPhases(phase.id);
-        project.save();
-    });
+
+    require(__dirname + '/class/repositories/Phases').find(1).then(
+        (phase) => {
+            project.save().then((project) => {
+                project.addPhases(phase.id);
+                console.log(project);
+            });
+        }
+    );
 }
 // PROJECT EDIT
 var allStepsList = [
