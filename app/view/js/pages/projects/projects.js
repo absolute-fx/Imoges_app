@@ -196,6 +196,7 @@ function loadProjectData(projectId)
 
 var projectInputVal;
 function setEditProject(projectData){
+    if(projectData.project_active_online) projectData.project_active_online = 'checked';
     let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
     let tpl = handlebars.compile(editProjectTemplate);
     /*
