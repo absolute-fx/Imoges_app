@@ -2,7 +2,7 @@ const Connection = require('sequelize-connect');
 const discover = [__dirname + '/models'];
 const dbConfig = require(__dirname + '/../db_login.json');
 
-var db =  new Connection(
+module.exports =  new Connection(
     dbConfig.db,
     dbConfig.login,
     dbConfig.pass,
@@ -12,8 +12,7 @@ var db =  new Connection(
         port:    3306,
         define: {
             charset: 'utf8',
-            collate: 'utf8_general_ci',
-            sync: false
+            collate: 'utf8_general_ci'
         }
     },
     discover
