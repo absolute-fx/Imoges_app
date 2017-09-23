@@ -41995,3 +41995,7 @@ ul.process-steps.process-steps-square li a {
     display: inline-block;
     float: left;
 }
+
+.project-map{
+    height: 260px;
+}
