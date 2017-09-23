@@ -1,5 +1,7 @@
 var Connection = require('sequelize-connect');
 var orm = new Connection();
+var Promise = require("bluebird");
+
 
 class ProjectsRepository
 {
@@ -12,7 +14,21 @@ class ProjectsRepository
     }
 
     find(id) {
-        return this.models.findById(id);
+        const models = this.models;
+        return new Promise(function(resolve, reject) {
+            var projectArray = {};
+            models.findById(id).then(project => {
+                projectArray = project.dataValues;
+                project.getPhases().then(phases => {
+                    projectArray.Phases = phases;
+                    resolve(projectArray);
+                }).catch(err => {
+                    reject(err);
+                });
+            }).catch(err => {
+                reject(err);
+            });
+        });
     }
 
     findAll() {
