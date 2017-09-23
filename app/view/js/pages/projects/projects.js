@@ -5,6 +5,7 @@ var fs = require('fs');
 // PARAMS SETTERS
 var itemsByRow = 3;
 var sideNavTitle = 'Outils';
+var projects;
 
 // SIDE MENU SETTER ~ UNSETTER
 sideMenu.setSideMenu(
@@ -35,21 +36,24 @@ function getProjectsList()
 
     }).then((projects) => {
         console.log(projects);
+        setProjectsBoxes(projects);
     }).catch((error) => {
         alert(error.toString());
     });
 }
+/*
 var projects = [
     {id: 1, libelle_projet: 'Résidence Alexandre II', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/project-main-image-web.jpg'},
     {id: 2, libelle_projet: 'Les Demoiselles', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/demoiselles.jpg'},
     {id: 0, libelle_projet: 'Résidence Ines', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/ines.jpg'},
     {id: 3, libelle_projet: 'Résidence O. Strebelle', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/strebelle.jpg'}
 ];
+*/
 
 // INIT
 $(document).ready(()=>{
     getProjectsList();
-    setProjectsBoxes();
+    //setProjectsBoxes();
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,12 +71,13 @@ var projectsNavigationData = [
 ];
 
 // PROJECT BOXES INSTANCES
-function setProjectsBoxes() {
+function setProjectsBoxes(projects) {
 
     let projectListTemplate = $('#projectListTpl').html();
     let tpl = handlebars.compile(projectListTemplate);
     let projectList = {projectRow: []};
     let row = -1;
+    let image;
 
     for (let i in projects)
     {
@@ -81,16 +86,25 @@ function setProjectsBoxes() {
             projectList.projectRow.push({projects: []});
             row ++;
         }
+        if(projects[i].main_image)
+        {
+            image = projects[i].main_image;
+        }
+        else
+        {
+            image = 'file://' + __dirname + '/view/images/image_thumb_default.png';
+        }
         projectList.projectRow[row].projects.push({
             colSize: (12 / itemsByRow),
-            projectLabel: projects[i].libelle_projet,
-            projectImage: projects[i].main_image,
+            projectLabel: projects[i].project_title,
+            projectImage: image,
             id: projects[i].id,
             navigation: projectsNavigationData
         });
     }
     //console.log(projectList);
     $('#projects-wrapper').html(tpl(projectList));
+
     let projectId, projectAction;
     $('#projects-wrapper a').each(function(){
         $(this).click(()=>{
@@ -107,7 +121,7 @@ function projectsNavigation(action, id)
     switch (action)
     {
         case 'infos':
-            setEditProject(id);
+            loadProjectData(id);
             break;
         default:
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
@@ -135,7 +149,7 @@ function addProject() {
         callback: function (result) {
             if(result != null)
             {
-                createProject();
+                createProject(result);
             }
         }
     });
@@ -143,7 +157,7 @@ function addProject() {
 }
 
 // CREATE PROJECT
-function createProject()
+function createProject(projectName)
 {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
 
@@ -154,6 +168,7 @@ function createProject()
             project.save().then((project) => {
                 project.addPhases(phase.id);
                 console.log(project);
+                setEditProject(project.id);
             });
         }
     );
@@ -171,14 +186,20 @@ var allStepsList = [
 
 function loadProjectData(projectId)
 {
-    setEditProject({});
+    require(__dirname + '/class/repositories/Projects').find(projectId).then((project) => {
+        //console.log(project);
+        setEditProject(project);
+    }).catch((error) => {
+        alert(error.toString());
+    });
 }
 
 var projectInputVal;
-function setEditProject(data){
+function setEditProject(projectData){
+    if(projectData.project_active_online) projectData.project_active_online = 'checked';
     let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
     let tpl = handlebars.compile(editProjectTemplate);
-
+    /*
     let projectData = {
         id_projet: 1,
         libelle_projet: "Résidence Ines",
@@ -192,57 +213,61 @@ function setEditProject(data){
         phase_actuelle_projet: 4,
         phases_construction: [1,2,3,4,5,6]
     };
+    */
 
-    let stepId;
-    let projectSteps = [];
-    let state;
-    let count = 0;
-    let colSize = Math.floor(12 / projectData.phases_construction.length);
+        let stepId;
+        let projectSteps = [];
+        let state;
+        let count = 0;
+        let colSize = Math.floor(12 / projectData.getPhases().length);
+        console.log(projectData.getPhases());
 
-    for(var i in projectData.phases_construction)
-    {
-        stepId = projectData.phases_construction[i];
-        for(var u in allStepsList)
+        /*
+        for(var i in projectData.Phases)
         {
-            if(stepId == allStepsList[u].id)
+            stepId = projectData.phases_construction[i];
+            for(var u in allStepsList)
             {
-                if(projectData.phase_actuelle_projet == allStepsList[u].id){
-                    count = 1;
-                }else if(count > 0){
-                    count = 2;
-                }
-
-                switch(count)
+                if(stepId == allStepsList[u].id)
                 {
-                    case 0:
-                        state = 'complete';
-                        break;
+                    if(projectData.phase_actuelle_projet == allStepsList[u].id){
+                        count = 1;
+                    }else if(count > 0){
+                        count = 2;
+                    }
 
-                    case 1:
-                        state = 'active';
-                        break;
+                    switch(count)
+                    {
+                        case 0:
+                            state = 'complete';
+                            break;
 
-                    case 2:
-                        state = 'disabled';
-                        break;
-                }
-                if(i == 0 && projectData.phases_construction.length == 5){
-                    projectSteps.push({stepLabel: allStepsList[u].text, id: allStepsList[u].id, state: state, colSize: colSize +1});
-                }
-                else
-                {
-                    projectSteps.push({stepLabel: allStepsList[u].text, id:allStepsList[u].id, state: state, colSize: colSize});
+                        case 1:
+                            state = 'active';
+                            break;
+
+                        case 2:
+                            state = 'disabled';
+                            break;
+                    }
+                    if(i == 0 && projectData.phases_construction.length == 5){
+                        projectSteps.push({stepLabel: allStepsList[u].text, id: allStepsList[u].id, state: state, colSize: colSize +1});
+                    }
+                    else
+                    {
+                        projectSteps.push({stepLabel: allStepsList[u].text, id:allStepsList[u].id, state: state, colSize: colSize});
+                    }
                 }
             }
         }
-    }
-    projectData.projectSteps = projectSteps;
-    projectInputVal = projectSteps;
+        projectData.projectSteps = projectSteps;
+        projectInputVal = projectSteps;
+        */
 
     bootBox.dialog({
         message: tpl(projectData),
         onEscape: true,
-        title: projectData.libelle_projet,
+        title: projectData.project_title,
         size: "large",
         backdrop: true,
         buttons: {

@@ -15,10 +15,10 @@
             <form>
                 <div class="form-group">
                     <label for="label">Nom du projet</label>
-                    <input type="hidden" id="id_projet" name="id_projet" value="{{id_projet}}">
-                    <input type="hidden" id="lat_projet" name="lat_projet" value="{{lat_projet}}">
-                    <input type="hidden" id="long_projet" name="long_projet" value="{{long_projet}}">
-                    <input type="text" class="form-control" id="label" name="libelle_projet" value="{{libelle_projet}}">
+                    <input type="hidden" id="id_projet" name="id_projet" value="{{id}}">
+                    <input type="hidden" id="lat_projet" name="project_lat" value="{{project_lat}}">
+                    <input type="hidden" id="long_projet" name="project_long" value="{{project_long}}">
+                    <input type="text" class="form-control" id="label" name="project_title" value="{{project_title}}">
                 </div>
                 <div class="form-group">
                     <label for="googleMapsSearch">Recherche google maps</label>
@@ -26,19 +26,19 @@
                 </div>
                 <div class="form-group">
                     <label for="projectAdress">Adresse</label>
-                    <input type="text" class="form-control" id="projectAdress" name="adresse_projet" value="{{adresse_projet}}">
+                    <input type="text" class="form-control" id="projectAdress" name="project_address" value="{{project_address}}">
                 </div>
                 <div class="row">
                     <div class="col-md-10 form-group">
                         <label for="projectCity">Ville</label>
-                        <input type="text" class="form-control" id="projectCity" name="ville_projet" value="{{ville_projet}}">
+                        <input type="text" class="form-control" id="projectCity" name="project_city" value="{{project_city}}">
                     </div>
                     <div class="col-md-2 form-group">
                         <label for="projectPc">Code postal</label>
-                        <input type="text" class="form-control" id="projectPc" name="cp_projet" value="{{cp_projet}}">
+                        <input type="text" class="form-control" id="projectPc" name="project_pc" value="{{project_pc}}">
                     </div>
                 </div>
-                <div id="map" style="height: 260px;"></div>
+                <div id="map" class="project-map"></div>
             </form>
         </div>
 
@@ -46,11 +46,11 @@
             <form action="">
                 <div class="form-group">
                     <label for="shortDescription">Description courte</label>
-                    <textarea class="form-control" name="description_courte_projet" id="shortDescription">{{description_courte_projet}}</textarea>
+                    <textarea class="form-control" name="project_short_description" id="shortDescription">{{project_short_description}}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="longDescription">Description longue</label>
-                    <textarea class="form-control autosize" name="description_longue_projet" id="longDescription">{{description_longue_projet}}</textarea>
+                    <textarea class="form-control autosize" name="project_long_description" id="longDescription">{{project_long_description}}</textarea>
                 </div>
             </form>
         </div>
@@ -78,14 +78,14 @@
                     <div class="form-group col-md-6">
                         <label>Disponible sur le site web</label>
                         <ul class="demo-btns mb-10">
-                            <li class="mb0"><input class="bootstrap-switch" name="actif_en_ligne" type="checkbox" checked="false" data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                            <li class="mb0"><input class="bootstrap-switch" name="project_active_online" type="checkbox" {{project_active_online}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
                         </ul>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="projectDiffusionDate">Diffuser à partir du</label>
                         <div class="input-group date">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" id="projectDiffusionDate" name="date_debut_diffusion_projet" value="{{date_debut_diffusion_projet}}" class="form-control">
+                            <input type="text" id="projectDiffusionDate" name="project_start_diffusion_date" value="{{project_start_diffusion_date}}" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -95,21 +95,20 @@
                         <label for="projectStartDate">Début de chantier</label>
                         <div class="input-group date">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" name="date_debut_chantier_projet" id="projectStartDate" value="{{date_debut_chantier_projet}}" class="form-control">
+                            <input type="text" name="project_start_build_date" id="projectStartDate" value="{{project_start_build_date}}" class="form-control">
                         </div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="projectEndDate">Fin de chantier</label>
                         <div class="input-group date">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" id="projectEndDate" name="date_fin_chantier_projet" value="{{date_fin_chantier_projet}}" class="form-control">
+                            <input type="text" id="projectEndDate" name="project_end_build_date" value="{{project_end_build_date}}" class="form-control">
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="form-group">
                     <label for="lien_immoweb_projet">Lien Immoweb</label>
-                    <input type="hidden" id="phase_projet" name="phase_projet" value="{{phase_projet}}">
                     <input type="text" id="lien_immoweb_projet" name="lien_immoweb_projet" class="form-control" value="{{lien_immoweb_projet}}">
                 </div>
             </form>
@@ -119,12 +118,12 @@
             <form action="">
                 <div class="form-group">
                     <label for="projectPhase">Phases (min 3 - max 6)</label>
-                    <input type="hidden" id="phase_actuelle_projet" name="" value="{{phase_actuelle_projet}}">
-                    <input type="hidden" id="projectPhase" style="width:100% !important" value="1,2,3,4,5,6"/>
+                    <input type="hidden" id="phase_actuelle_projet" name="project_actual_phase" value="{{project_actual_phase}}">
+                    <input type="hidden" id="projectPhase" value="1,2,3,4,5,6"/>
                 </div>
             </form>
             <div id="stepsListContainer" class="row process-wizard process-wizard-primary hidden-xs">
-                {{#each projectSteps}}
+                {{#each Phases}}
                 <div class="col-xs-{{colSize}} process-wizard-step {{state}}">
                     <div class="text-center process-wizard-stepnum">{{stepLabel}}</div>
                     <div class="progress">
