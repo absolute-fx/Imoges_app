@@ -41,45 +41,11 @@
         </div>
     </div>
 
-
-                <!--
-                    <div class="skill">
-                        <h2>Téléchargement de la mise-à-jour...</h2>
-
-                        <div class="progress-wrap">
-                            <h3 id="messages">0 Ko/s (0Ko/OKo)</h3>
-                            <div class="progress">
-                                <div class="progress-bar  color1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="progress">
-                                    <span class="bar-width">0%</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                <div class="row">
-                    <div class="col-sm-12 wow fadeInDown">
-                        <div class="skill"><h2>Messages</h2>
-                            <div class="progress-wrap" id="message">
-
-                            </div>
-                        </div>
-
-                    </div>
-        -->
-
-
-
-
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script>
 
         const {ipcRenderer} = require('electron');
         ipcRenderer.on('download-progress', function(event, progressObj) {
-            //$('#progress').attr('style', 'width: '+progressObj.percent);
-            //$('#progress').attr('aria-valuenow', progressObj.percentValue);
-            //$('#progress').html(progressObj.percent);
             $('#preloadPercentBar').attr('style', 'width: ' + progressObj.percent);
             $('#preloadPercent').html(progressObj.percent);
             $('#loaderCallback').html(progressObj.bytesPerSecond+'/s (' + progressObj.transferred + '/' + progressObj.total+')');
@@ -88,7 +54,6 @@
             $('#message').html(progressObj);
         });
     </script>
-
 
 </body>
 </html>

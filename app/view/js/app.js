@@ -7,7 +7,7 @@ const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 //const pjson = require('../package.json');
 const notifier = require('electron-notification-desktop');
 const app = electron.app;
-const connexion = require(__dirname + '/class/Connection.js');
+let connexion;
 
 $(document).ready(function() {
     getPageData();
@@ -21,7 +21,10 @@ function initPage()
     $('#actualYear').html(actualYear.getFullYear());
 
     $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
-
+        connexion = require(__dirname + '/class/Connection.js');
+        $('.page-heading h1 i').fadeOut({complete: ()=>{
+            $('.page-heading h1 i').remove();
+        }});
     }).hide().fadeIn();
 }
 

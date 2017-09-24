@@ -186,7 +186,7 @@ var allStepsList = [
 
 function loadProjectData(projectId)
 {
-    require(__dirname + '/class/repositories/Projects').find(projectId).then((project) => {
+    require(__dirname + '/class/repositories/Projects').find(projectId).then(project => {
         //console.log(project);
         setEditProject(project);
     }).catch((error) => {
@@ -217,20 +217,20 @@ function setEditProject(projectData){
 
         let stepId;
         let projectSteps = [];
-        let state;
+        let state, selectInputVal;
         let count = 0;
-        let colSize = Math.floor(12 / projectData.getPhases().length);
-        console.log(projectData.getPhases());
+        let colSize = Math.floor(12 / projectData.Phases.length);
+        console.log(projectData);
 
-        /*
+
         for(var i in projectData.Phases)
         {
-            stepId = projectData.phases_construction[i];
+            stepId = projectData.Phases[i].id;
             for(var u in allStepsList)
             {
                 if(stepId == allStepsList[u].id)
                 {
-                    if(projectData.phase_actuelle_projet == allStepsList[u].id){
+                    if(projectData.project_actual_phase == allStepsList[u].id){
                         count = 1;
                     }else if(count > 0){
                         count = 2;
@@ -250,7 +250,7 @@ function setEditProject(projectData){
                             state = 'disabled';
                             break;
                     }
-                    if(i == 0 && projectData.phases_construction.length == 5){
+                    if(i == 0 && projectData.Phases.length == 5){
                         projectSteps.push({stepLabel: allStepsList[u].text, id: allStepsList[u].id, state: state, colSize: colSize +1});
                     }
                     else
@@ -262,7 +262,7 @@ function setEditProject(projectData){
         }
         projectData.projectSteps = projectSteps;
         projectInputVal = projectSteps;
-        */
+
 
     bootBox.dialog({
         message: tpl(projectData),

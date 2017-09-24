@@ -8,6 +8,7 @@ let win;
 
 function createWindow() {
     win = new BrowserWindow({width: 1200, height: 860, icon: "icon.ico", backgroundColor: "#37474f"});
+    win.maximize();
 
     const template = require('./view/js/menuTemplate')(win);
     const menu = Menu.buildFromTemplate(template);
@@ -21,7 +22,6 @@ function createWindow() {
         hash: 'v' + app.getVersion()
     }));
 
-    win.maximize();
 
     win.on('closed', () => {
         win = null
