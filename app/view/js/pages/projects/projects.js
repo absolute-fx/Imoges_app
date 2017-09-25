@@ -9,8 +9,7 @@ var projects;
 var phases;
 
 // SIDE MENU SETTER ~ UNSETTER
-sideMenu.setSideMenu(
-    sideNavTitle,
+sideMenu.setSideMenu(sideNavTitle,
     [
         {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
         {label: 'Statistiques', icon: 'fa fa-bar-chart-o', action: 'stat'}
@@ -58,15 +57,6 @@ function getFileList()
         alert(error.toString());
     });
 }
-
-/*
-var projects = [
-    {id: 1, libelle_projet: 'Résidence Alexandre II', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/project-main-image-web.jpg'},
-    {id: 2, libelle_projet: 'Les Demoiselles', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/demoiselles.jpg'},
-    {id: 0, libelle_projet: 'Résidence Ines', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/ines.jpg'},
-    {id: 3, libelle_projet: 'Résidence O. Strebelle', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/strebelle.jpg'}
-];
-*/
 
 // INIT
 $(document).ready(()=>{
@@ -191,17 +181,8 @@ function createProject(projectName)
         }
     );
 }
-// PROJECT EDIT
-var allStepsList = [
-    {id: 0, text: "Défrichage terrain"},
-    {id: 1, text: "Fondations"},
-    {id: 2, text: "Gros oeuvre"},
-    {id: 3, text: "Toiture"},
-    {id: 4, text: "Pose chassis"},
-    {id: 5, text: "Finitions"},
-    {id: 6, text: "Terminé"}
-];
 
+// LOAD A PROJECT DATA
 function loadProjectData(projectId)
 {
     require(__dirname + '/class/repositories/Projects').find(projectId).then(project => {
@@ -212,79 +193,65 @@ function loadProjectData(projectId)
     });
 }
 
+// PROJECT EDIT FORM -> SET DATA IN HANDLEBARS + INITIALIZE (dependencies: project-form.html, edit-project.js)
 function setEditProject(projectData){
     if(projectData.project_active_online) projectData.project_active_online = 'checked';
     let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
     let tpl = handlebars.compile(editProjectTemplate);
-    /*
-    let projectData = {
-        id_projet: 1,
-        libelle_projet: "Résidence Ines",
-        adresse_projet: "Avenue de la déportation 41",
-        ville_projet: "Ecaussinnes",
-        cp_projet: '7190',
-        lat_projet: '50.56170591970849',
-        long_projet: '4.158356019708435',
-        description_courte_projet: "Une belle description courte",
-        description_longue_projet: "Une belle description longue",
-        phase_actuelle_projet: 4,
-        phases_construction: [1,2,3,4,5,6]
-    };
-    */
 
-        let phaseId, state;
-        let selectData = "";
-        let count = 0;
-        let colSize = Math.floor(12 / projectData.Phases.length);
+    let phaseId, state;
+    let selectData = "";
+    let count = 0;
+    let colSize = Math.floor(12 / projectData.Phases.length);
 
-        console.log(projectData);
+    console.log(projectData);
 
 
-        for(var i in projectData.Phases)
+    for(var i in projectData.Phases)
+    {
+        if(i == 0){
+            selectData += projectData.Phases[i].id;
+        }else {
+            selectData += ',' + projectData.Phases[i].id;
+        }
+
+        phaseId = projectData.Phases[i].id;
+        for(var u in phases)
         {
-            if(i == 0){
-                selectData += projectData.Phases[i].id;
-            }else {
-                selectData += ',' + projectData.Phases[i].id;
-            }
-
-            phaseId = projectData.Phases[i].id;
-            for(var u in phases)
+            if(phaseId == phases[u].id)
             {
-                if(phaseId == phases[u].id)
+                if(projectData.project_actual_phase == phases[u].id){
+                    count = 1;
+                }else if(count > 0){
+                    count = 2;
+                }
+
+                switch(count)
                 {
-                    if(projectData.project_actual_phase == phases[u].id){
-                        count = 1;
-                    }else if(count > 0){
-                        count = 2;
-                    }
+                    case 0:
+                        state = 'complete';
+                        break;
 
-                    switch(count)
-                    {
-                        case 0:
-                            state = 'complete';
-                            break;
+                    case 1:
+                        state = 'active';
+                        break;
 
-                        case 1:
-                            state = 'active';
-                            break;
-
-                        case 2:
-                            state = 'disabled';
-                            break;
-                    }
-                    projectData.Phases[i].state = state;
-                    if(i == 0 && projectData.Phases.length == 5){
-                        projectData.Phases[i].colSize = colSize + 1;
-                    }
-                    else
-                    {
-                        projectData.Phases[i].colSize = colSize;
-                    }
+                    case 2:
+                        state = 'disabled';
+                        break;
+                }
+                projectData.Phases[i].state = state;
+                if(i == 0 && projectData.Phases.length == 5){
+                    projectData.Phases[i].colSize = colSize + 1;
+                }
+                else
+                {
+                    projectData.Phases[i].colSize = colSize;
                 }
             }
         }
-        projectData.selectData = selectData;
+    }
+    projectData.selectData = selectData;
 
     bootBox.dialog({
         message: tpl(projectData),
@@ -302,6 +269,7 @@ function setEditProject(projectData){
     });
 }
 
+// SHOW STATS
 function showStats(){
     alert("Cette fonctionalité n'est pas encore disponible");
 }
