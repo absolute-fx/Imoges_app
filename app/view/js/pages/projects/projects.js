@@ -6,6 +6,7 @@ var fs = require('fs');
 var itemsByRow = 3;
 var sideNavTitle = 'Outils';
 var projects;
+var phases;
 
 // SIDE MENU SETTER ~ UNSETTER
 sideMenu.setSideMenu(
@@ -35,12 +36,29 @@ function getProjectsList()
     require(__dirname + '/class/repositories/Projects').findAll({
 
     }).then((projects) => {
-        console.log(projects);
+        //console.log(projects);
         setProjectsBoxes(projects);
     }).catch((error) => {
         alert(error.toString());
     });
 }
+
+function getFileList()
+{
+    require(__dirname + '/class/repositories/Phases').findAll().then((p) => {
+        phases = p;
+        for(var i in phases)
+        {
+            phases[i].text = phases[i].title; // On pourrait mettre 'text directement en DB
+        }
+
+        //console.log(phases);
+        getProjectsList();
+    }).catch((error) => {
+        alert(error.toString());
+    });
+}
+
 /*
 var projects = [
     {id: 1, libelle_projet: 'Résidence Alexandre II', main_image: 'http://imoges.afxlab.be/mockup/assets/images/temp_projects/project-main-image-web.jpg'},
@@ -52,7 +70,7 @@ var projects = [
 
 // INIT
 $(document).ready(()=>{
-    getProjectsList();
+    getFileList();
     //setProjectsBoxes();
 });
 
@@ -194,7 +212,6 @@ function loadProjectData(projectId)
     });
 }
 
-var projectInputVal;
 function setEditProject(projectData){
     if(projectData.project_active_online) projectData.project_active_online = 'checked';
     let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
@@ -215,22 +232,28 @@ function setEditProject(projectData){
     };
     */
 
-        let stepId;
-        let projectSteps = [];
-        let state, selectInputVal;
+        let phaseId, state;
+        let selectData = "";
         let count = 0;
         let colSize = Math.floor(12 / projectData.Phases.length);
+
         console.log(projectData);
 
 
         for(var i in projectData.Phases)
         {
-            stepId = projectData.Phases[i].id;
-            for(var u in allStepsList)
+            if(i == 0){
+                selectData += projectData.Phases[i].id;
+            }else {
+                selectData += ',' + projectData.Phases[i].id;
+            }
+
+            phaseId = projectData.Phases[i].id;
+            for(var u in phases)
             {
-                if(stepId == allStepsList[u].id)
+                if(phaseId == phases[u].id)
                 {
-                    if(projectData.project_actual_phase == allStepsList[u].id){
+                    if(projectData.project_actual_phase == phases[u].id){
                         count = 1;
                     }else if(count > 0){
                         count = 2;
@@ -250,19 +273,18 @@ function setEditProject(projectData){
                             state = 'disabled';
                             break;
                     }
+                    projectData.Phases[i].state = state;
                     if(i == 0 && projectData.Phases.length == 5){
-                        projectSteps.push({stepLabel: allStepsList[u].text, id: allStepsList[u].id, state: state, colSize: colSize +1});
+                        projectData.Phases[i].colSize = colSize + 1;
                     }
                     else
                     {
-                        projectSteps.push({stepLabel: allStepsList[u].text, id:allStepsList[u].id, state: state, colSize: colSize});
+                        projectData.Phases[i].colSize = colSize;
                     }
                 }
             }
         }
-        projectData.projectSteps = projectSteps;
-        projectInputVal = projectSteps;
-
+        projectData.selectData = selectData;
 
     bootBox.dialog({
         message: tpl(projectData),

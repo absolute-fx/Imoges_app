@@ -46,7 +46,8 @@ var Projects = sequelize.define('Projects', {
             defaultValue: 0,
         },
         project_actual_phase: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
         },
         project_lat: {
             type: DataTypes.FLOAT

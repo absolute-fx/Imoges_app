@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("#fileUploader").dropzone({ url: "/file/post" });
     $('input.bootstrap-switch').bootstrapSwitch();
 
-    $("#projectPhase").select2({width: "100%", tags: allStepsList, val: allStepsList, maximumSelectionSize: 6 }).on('change', function (e) {
+    $("#projectPhase").select2({width: "100%", tags: phases, val: phases, maximumSelectionSize: 6 }).on('change', function (e) {
         setStepsList(e);
     });
 
@@ -48,11 +48,11 @@ function setStepsList(event)
     for(var i in steps)
     {
         stepId = steps[i];
-        for(var u in allStepsList)
+        for(var u in phases)
         {
-            if(stepId == allStepsList[u].id)
+            if(stepId == phases[u].id)
             {
-                if($("#phase_actuelle_projet").val() == allStepsList[u].id){
+                if($("#phase_actuelle_projet").val() == phases[u].id){
                     count = 1;
                 }else if(count > 0){
                     count = 2;
@@ -79,11 +79,11 @@ function setStepsList(event)
                 {
                     htmlData += '<div class="col-xs-' + colSize + ' process-wizard-step ' + state + '">\n';
                 }
-                htmlData += '                    <div class="text-center process-wizard-stepnum">' + allStepsList[u].text + '</div>\n' +
+                htmlData += '                    <div class="text-center process-wizard-stepnum">' + phases[u].text + '</div>\n' +
                 '                    <div class="progress">\n' +
                 '                        <div class="progress-bar"></div>\n' +
                 '                    </div>\n' +
-                '                    <a href="#" onclick="javascript: setActiveStep(' + allStepsList[u].id + '); return false;" class="process-wizard-dot"></a>\n' +
+                '                    <a href="#" onclick="javascript: setActiveStep(' + phases[u].id + '); return false;" class="process-wizard-dot"></a>\n' +
                 '                </div>';
             }
         }
