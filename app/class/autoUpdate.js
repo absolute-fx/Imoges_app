@@ -16,7 +16,7 @@ class autoUpdate
 
     init(){
         var autoUpdater = this.autoUpdater;
-        this.window.setSize(1200, 850);
+        this.window.setSize(850, 850);
         this.window.setClosable(false);
         autoUpdater.on('update-available', (info) => {
             //Tools.sendStatusToWindow(this.window, 'message', 'Mise à jour détectée');

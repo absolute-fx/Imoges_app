@@ -76,10 +76,11 @@ ipc.on('message', function(event, text) {
     notifyUser('ImmoEngine Updater', text, 10);
 });
 
+/*
 ipc.on('update-available', function (event, args) {
     window.location.replace("update.html#"+window.location.hash.substring(1));
 });
-
+*/
 
 $('#logsSideBtn').click(function () {
 
