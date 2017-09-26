@@ -1,10 +1,13 @@
 const {app, BrowserWindow, Menu} = require('electron');
+const {session} = require('electron');
 const ipc = require('electron').ipcMain;
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
-
+let now = new Date();
+now = new Date(now.setSeconds(now.getSeconds() + 120));
+const cookie = {url: 'http://www.imoges.be', name: 'imoges_account_login', value: 'Manu', expirationDate: 999999999999999999999999999, domain: 'imoges.be'};
 let win;
 
 function createWindow() {
@@ -17,7 +20,21 @@ function createWindow() {
         hash: 'v' + app.getVersion()
     }));
 
+    //win.webContents.openDevTools();
 
+    session.defaultSession.cookies.set(cookie, (error) => {
+        if (error)
+        {
+            console.error(error);
+        }
+        else
+        {
+            console.log(cookie)
+        }
+    });
+    session.defaultSession.cookies.get({url: 'http://www.imoges.be', name: 'imoges_account_login'}, (error, cookies) => {
+        console.log(error, cookies);
+    });
 
     win.on('closed', () => {
         win = null;
@@ -42,7 +59,6 @@ app.on('activate', () => {
         createWindow()
     }
 });
-
 
 
 ipc.on('auth', function(event, data) {
