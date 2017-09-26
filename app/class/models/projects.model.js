@@ -50,13 +50,26 @@ var Projects = sequelize.define('Projects', {
             defaultValue: 0,
         },
         project_lat: {
-            type: DataTypes.FLOAT
+            type: DataTypes.FLOAT,
+            allowNull: true,
+            defaultValue: null,
+            validate: { min: -90, max: 90 }
         },
         project_long: {
-            type: DataTypes.FLOAT
+            type: DataTypes.FLOAT,
+            allowNull: true,
+            defaultValue: null,
+            validate: { min: -180, max: 180 }
         }
     },
     {
+        validate: {
+            bothCoordsOrNone() {
+                if ((this.latitude === null) !== (this.longitude === null)) {
+                    throw new Error('Require either both latitude and longitude or neither')
+                }
+            }
+        },
         timestamp: true,
         logging: console.log,
         classMethods: {
