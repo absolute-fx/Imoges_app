@@ -42,7 +42,7 @@ function getProjectsList()
     });
 }
 
-function getFileList()
+function getPhasesList()
 {
     require(__dirname + '/class/repositories/Phases').findAll().then((p) => {
         phases = p;
@@ -60,7 +60,7 @@ function getFileList()
 
 // INIT
 $(document).ready(()=>{
-    getFileList();
+    getPhasesList();
     //setProjectsBoxes();
 });
 

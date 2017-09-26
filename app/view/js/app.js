@@ -4,7 +4,6 @@ const ipc = electron.ipcRenderer;
 const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
 const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
-//const pjson = require('../package.json');
 const notifier = require('electron-notification-desktop');
 const app = electron.app;
 let connexion;

@@ -1,6 +1,8 @@
 var autosize = require('autosize');
+var projectId;
 
 $(document).ready(function () {
+    projectId = $('#project_id').val();
     autosize($('#longDescription, #shortDescription'));
 
     $("#fileUploader").dropzone({ url: "/file/post" });
@@ -13,6 +15,10 @@ $(document).ready(function () {
     $('#projectDiffusionDate').datepicker({language: 'fr'});
     $('#projectStartDate').datepicker({language: 'fr'});
     $('#projectEndDate').datepicker({language: 'fr'});
+
+    $('#project_title').on( 'change keyup paste', () => {
+        $('*[data-projectId="' + projectId + '"] h2').html($('#project_title').val());
+    });
 });
 
 function setStepsList(event)
