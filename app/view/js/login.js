@@ -5,7 +5,7 @@ let connexion;
 
 
 $(document).ready(function () {
-    setTimeout(connectToServer, 100);
+    setTimeout(connectToServer, 1000);
 });
 
 $('form').submit(function(){

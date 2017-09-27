@@ -5,6 +5,8 @@ const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
+let template;
+let menu;
 let win;
 
 function createWindow() {
@@ -16,6 +18,10 @@ function createWindow() {
         slashes: true,
         hash: 'v' + app.getVersion()
     }));
+
+
+    template = require('./view/js/menuTemplate')(win);
+    menu = Menu.buildFromTemplate(template);
 
     //win.webContents.openDevTools();
 
@@ -51,8 +57,7 @@ ipc.on('auth', function(event, data) {
     win.setMaximizable(true);
     win.maximize();
     //console.log(data);
-    const template = require('./view/js/menuTemplate')(win);
-    const menu = Menu.buildFromTemplate(template);
+    win.setMenu(null);
     Menu.setApplicationMenu(menu);
     win.webContents.send('login-success', data);
     setCookies(data.login, data.pass);
