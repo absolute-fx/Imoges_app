@@ -71,12 +71,16 @@ ipc.on('auth', function(event, data) {
     const template = require('./view/js/menuTemplate')(win);
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-
+    console.log('login-success');
+    win.webContents.send('login-success', data);
+    /*
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true,
         hash: 'v' + app.getVersion()
     }));
+    */
+
     //win.setW;
 });
