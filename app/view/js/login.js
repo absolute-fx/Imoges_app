@@ -8,27 +8,32 @@ $(document).ready(function () {
     setTimeout(connectToServer, 100);
 });
 
-$('#submit').click(function(){
-    require(__dirname + '/class/repositories/Users').auth($('#login').val(), $('#password').val()).then((user) => {
+$('form').submit(function(){
+    let login = $('#login').val();
+    let pass = $('#password').val();
+    let userData = {login: login, pass: pass};
+    require(__dirname + '/class/repositories/Users').auth(login, pass).then((user) => {
         if (user.id === undefined)
         {
             throw new Error('Erreur de login/pass');
         }
         else
         {
-            $('.container').fadeOut(() => {complete: loadIndex(user.id)});
+            userData.id = user.id;
+            $('.container').fadeOut(() => {complete: loadIndex(userData)});
         }
     });
     return false;
 });
 
-function loadIndex(userId){
+function loadIndex(userData){
     console.log('call auth:send');
-    ipc.send('auth', userId);
+    ipc.send('auth', userData);
 }
 
 function connectToServer() {
     connexion = require(__dirname + '/class/Connection.js');
+    ipc.send('getCookies');
     $('.loader').hide();
     $('#login-container').fadeIn();
 }
@@ -42,4 +47,9 @@ ipc.on('login-success', function (event, args) {
     remote.getCurrentWindow().user_id = args;
     console.log(args);
     window.location.replace("index.html#"+window.location.hash.substring(1));
+});
+
+ipc.on('cookie', function (event, arg) {
+    $('#login').val(arg.login);
+    $('#password').val(arg.pass);
 });
