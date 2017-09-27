@@ -7,7 +7,8 @@ const isDev = require('electron-is-dev');
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 let now = new Date();
 now = new Date(now.setSeconds(now.getSeconds() + 120));
-const cookie = {url: 'http://www.imoges.be', name: 'imoges_account_login', value: 'Manu', expirationDate: 999999999999999999999999999, domain: 'imoges.be'};
+const cookie_mail = {url: 'http://www.imoges.be', name: 'imoges_account_login', value: 'manu@absolute-fx.com', expirationDate: 999999999999999999999999999, domain: 'imoges.be'};
+const cookie_password = {url: 'http://www.imoges.be', name: 'imoges_account_password', value: 'manux88', expirationDate: 999999999999999999999999999, domain: 'imoges.be'};
 let win;
 
 function createWindow() {
@@ -22,18 +23,11 @@ function createWindow() {
 
     //win.webContents.openDevTools();
 
-    session.defaultSession.cookies.set(cookie, (error) => {
-        if (error)
-        {
-            console.error(error);
-        }
-        else
-        {
-            console.log(cookie)
-        }
+    session.defaultSession.cookies.set(cookie_mail, (error) => {
+        if (error) console.error(error);
     });
-    session.defaultSession.cookies.get({url: 'http://www.imoges.be', name: 'imoges_account_login'}, (error, cookies) => {
-        console.log(error, cookies);
+    session.defaultSession.cookies.get({url: 'http://www.imoges.be'}, (error, cookies) => {
+        console.log(cookies);
     });
 
     win.on('closed', () => {
@@ -78,5 +72,4 @@ ipc.on('auth', function(event, data) {
         slashes: true,
         hash: 'v' + app.getVersion()
     }));
-    //win.setW;
 });
