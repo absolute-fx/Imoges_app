@@ -17,7 +17,7 @@ function createWindow() {
         hash: 'v' + app.getVersion()
     }));
 
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     win.on('closed', () => {
         win = null;

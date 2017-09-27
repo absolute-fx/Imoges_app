@@ -16,11 +16,11 @@ class autoUpdate
 
     init(){
         var autoUpdater = this.autoUpdater;
-        this.window.setSize(850, 850);
-        this.window.setClosable(false);
-        this.window.center();
         autoUpdater.on('update-available', (info) => {
             //Tools.sendStatusToWindow(this.window, 'message', 'Mise à jour détectée');
+            this.window.setSize(850, 850);
+            this.window.setClosable(false);
+            this.window.center();
             this.window.webContents.send('update-available');
         });
         autoUpdater.on('update-not-available', (info) => {
