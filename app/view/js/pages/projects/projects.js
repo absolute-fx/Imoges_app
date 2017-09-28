@@ -8,6 +8,24 @@ var sideNavTitle = 'Outils';
 var projects;
 var phases;
 
+/*
+require(__dirname + '/class/repositories/Projects').findById(1).then(
+    project => {
+        project.project_title = 'test';
+        project.save();
+    }
+);
+
+require(__dirname + '/class/repositories/Projects').findById(1).then(
+        project => {
+                project.addPhases(phase.id);
+            }
+        }
+    );
+
+ */
+
+
 // SIDE MENU SETTER ~ UNSETTER
 sideMenu.setSideMenu(sideNavTitle,
     [

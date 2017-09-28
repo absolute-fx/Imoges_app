@@ -31,6 +31,17 @@ class ProjectsRepository
         });
     }
 
+    findById(id) {
+        const models = this.models;
+        return new Promise(function(resolve, reject) {
+            models.findById(id).then(project => {
+                resolve(project);
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
+
     findAll() {
         return this.models.findAll({
             include: [{
