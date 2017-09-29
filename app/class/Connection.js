@@ -10,9 +10,8 @@ module.exports =  new Connection(
         host: dbConfig.host,
         dialect: "mysql",
         port:    3306,
-        define: {
+        dialectOptions: {
             charset: 'utf8',
-            collate: 'utf8_general_ci'
         }
     },
     discover
