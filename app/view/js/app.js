@@ -1,4 +1,4 @@
-const actualYear = new Date();
+﻿const actualYear = new Date();
 const electron = require('electron');
 const ipc = electron.ipcRenderer;
 const menuItems = require('./view/js/menuData').menuItems;

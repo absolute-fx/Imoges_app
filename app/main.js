@@ -53,6 +53,7 @@ app.on('activate', () => {
 ipc.on('auth', function(event, data) {
     win.setSize(1200, 850);
     win.center();
+    win.setMinimizable(true);
     win.setMaximizable(true);
     win.maximize();
     win.setMenu(null);

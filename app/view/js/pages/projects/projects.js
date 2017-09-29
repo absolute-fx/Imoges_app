@@ -6,6 +6,7 @@ var fs = require('fs');
 var itemsByRow = 3;
 var sideNavTitle = 'Outils';
 var projects;
+var project;
 var phases;
 
 /*
@@ -15,18 +16,10 @@ require(__dirname + '/class/repositories/Projects').findById(1).then(
         project.save();
     }
 );
-
-require(__dirname + '/class/repositories/Projects').findById(1).then(
-        project => {
-                project.addPhases(phase.id);
-            }
-        }
-    );
-
- */
+*/
 
 
-// SIDE MENU SETTER ~ UNSETTER
+// SIDE MENU SETTER ~ UN-SETTER
 sideMenu.setSideMenu(sideNavTitle,
     [
         {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
@@ -68,9 +61,8 @@ function getPhasesList()
         {
             phases[i].text = phases[i].title; // On pourrait mettre 'text directement en DB
         }
-
-        //console.log(phases);
         getProjectsList();
+        //console.log(phases);
     }).catch((error) => {
         alert(error.toString());
     });
@@ -79,7 +71,6 @@ function getPhasesList()
 // INIT
 $(document).ready(()=>{
     getPhasesList();
-    //setProjectsBoxes();
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,8 +194,9 @@ function createProject(projectName)
 // LOAD A PROJECT DATA
 function loadProjectData(projectId)
 {
-    require(__dirname + '/class/repositories/Projects').find(projectId).then(project => {
+    require(__dirname + '/class/repositories/Projects').find(projectId).then(p => {
         //console.log(project);
+        project = p;
         setEditProject(project);
     }).catch((error) => {
         alert(error.toString());

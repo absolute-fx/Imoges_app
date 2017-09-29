@@ -1,4 +1,4 @@
-class Tools
+﻿class Tools
 {
     static FileConvertSize (aSize) {
         aSize = Math.abs(parseInt(aSize, 10));

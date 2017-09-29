@@ -1,4 +1,4 @@
-const Connection = require('sequelize-connect');
+﻿const Connection = require('sequelize-connect');
 const discover = [__dirname + '/models'];
 const dbConfig = require(__dirname + '/../db_login.json');
 

@@ -1,4 +1,4 @@
-module.exports = function (sequelize, DataTypes) {
+﻿module.exports = function (sequelize, DataTypes) {
     var Phases = sequelize.define('Phases', {
             title: {
                 type: DataTypes.STRING,
@@ -6,7 +6,7 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
                 validate: {
                     len: {
-                        args: [10, 255],
+                        args: [3, 255],
                         msg: 'tooshort_or_toobig'
                     }
                 }

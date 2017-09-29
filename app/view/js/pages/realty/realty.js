@@ -1,4 +1,4 @@
-// DEPENDENCIES
+﻿// DEPENDENCIES
 var bootBox = require('bootbox');
 var fs = require('fs');
 

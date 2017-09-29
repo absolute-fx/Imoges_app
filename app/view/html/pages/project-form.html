@@ -12,10 +12,10 @@
     <div class="tab-content">
 
         <div class="tab-pane active" id="addPrj-infos">
-            <form>
+            <form id="form-tab-1" data-tablename="Projects">
                 <div class="form-group">
                     <label for="project_title">Nom du projet</label>
-                    <input type="hidden" id="project_id" name="id_projet" value="{{id}}">
+                    <input type="hidden" id="project_id" value="{{id}}">
                     <input type="hidden" id="lat_projet" name="project_lat" value="{{project_lat}}">
                     <input type="hidden" id="long_projet" name="project_long" value="{{project_long}}">
                     <input type="text" class="form-control" id="project_title" name="project_title" value="{{project_title}}">
@@ -43,7 +43,7 @@
         </div>
 
         <div class="tab-pane" id="addPrj-descri">
-            <form action="">
+            <form id="form-tab-2" data-tablename="Projects">
                 <div class="form-group">
                     <label for="shortDescription">Description courte</label>
                     <textarea class="form-control" name="project_short_description" id="shortDescription">{{project_short_description}}</textarea>
@@ -73,7 +73,7 @@
         </div>
 
         <div class="tab-pane" id="addPrj-doc">
-            <form>
+            <form id="form-tab-3" data-tablename="Projects">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Disponible sur le site web</label>
@@ -109,7 +109,7 @@
                 <hr>
                 <div class="form-group">
                     <label for="lien_immoweb_projet">Lien Immoweb</label>
-                    <input type="text" id="lien_immoweb_projet" name="lien_immoweb_projet" class="form-control" value="{{lien_immoweb_projet}}">
+                    <input type="text" id="lien_immoweb_projet" class="form-control" value="{{lien_immoweb_projet}}">
                 </div>
             </form>
         </div>

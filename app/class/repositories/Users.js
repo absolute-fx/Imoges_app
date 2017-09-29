@@ -1,4 +1,4 @@
-var Connection = require('sequelize-connect');
+﻿var Connection = require('sequelize-connect');
 var orm = new Connection();
 var Promise = require("bluebird");
 var sha1 = require('sha1');

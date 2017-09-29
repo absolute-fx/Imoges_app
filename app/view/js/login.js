@@ -1,4 +1,4 @@
-const electron = require('electron');
+﻿const electron = require('electron');
 const ipc = electron.ipcRenderer;
 const remote = electron.remote;
 let connexion;

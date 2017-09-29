@@ -1,4 +1,5 @@
 var autosize = require('autosize');
+var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
 var projectId;
 
 $(document).ready(function () {
@@ -18,36 +19,69 @@ $(document).ready(function () {
 
     $('#project_title').on( 'change keyup paste', () => {
         $('*[data-projectId="' + projectId + '"] h2').html($('#project_title').val());
+        $('.modal-header h4').html($('#project_title').val());
     });
+
+    FormEdition.setUpdateForm('form-tab-1', projectId);
+    FormEdition.setUpdateForm('form-tab-2', projectId);
+    FormEdition.setUpdateForm('form-tab-3', projectId);
 });
 
 function setStepsList(event)
 {
     if(event.added)
     {
-        if(event.added.id == event.added.text)
-        {
-            console.log("Nouvelle phase...");
-
+        // Si ajout nouvelle phase
+        if(event.added.id == event.added.text){
+           // insert de la nouvelle phase
             require(__dirname + '/class/repositories/Phases').insert({
-                'label': event.added.text
+                'title': event.added.text
             }).then((phase) => {
-                console.log("Phase added : " + phase.label);
+                console.log("Phase added : " + phase.id);
+                // ajout de la phase au projet
+                require(__dirname + '/class/repositories/Projects').findById(projectId).then(
+                    (p) => {
+                        p.addPhases(phase.id);
+                        phases.push({id: phase.id, text: phase.title});
+                        project.Phases.push({id: phase.id, title:phase.title});
+                        setStepLine();
+                    });
 
             }).catch((error) => {
                 alert(error.toString());
             });
 
+            //return false;
+        }
+        else {
 
-            return false;
+            require(__dirname + '/class/repositories/Projects').findById(projectId).then(
+                (p) => {
+                    p.addPhases(event.added.id);
+                    project.Phases.push({id: event.added.id, title:event.added.text});
+                    setStepLine();
+                });
         }
     }
+    else
+    {
+        setStepLine();
+    }
+}
+
+function setStepLine()
+{
     console.log($("#projectPhase").val());
+    let steps = [];
+    for(let p in project.Phases)
+    {
+        steps.push(project.Phases[p].id);
+    }
 
     let stepId;
     let state;
     let count = 0;
-    let steps = $("#projectPhase").val().split(",");
+    //let steps = $("#projectPhase").val().split(",");
     let colSize = Math.floor(12 / steps.length);
     let htmlData = '';
 
@@ -86,11 +120,11 @@ function setStepsList(event)
                     htmlData += '<div class="col-xs-' + colSize + ' process-wizard-step ' + state + '">\n';
                 }
                 htmlData += '                    <div class="text-center process-wizard-stepnum">' + phases[u].text + '</div>\n' +
-                '                    <div class="progress">\n' +
-                '                        <div class="progress-bar"></div>\n' +
-                '                    </div>\n' +
-                '                    <a href="#" onclick="javascript: setActiveStep(' + phases[u].id + '); return false;" class="process-wizard-dot"></a>\n' +
-                '                </div>';
+                    '                    <div class="progress">\n' +
+                    '                        <div class="progress-bar"></div>\n' +
+                    '                    </div>\n' +
+                    '                    <a href="#" onclick="javascript: setActiveStep(' + phases[u].id + '); return false;" class="process-wizard-dot"></a>\n' +
+                    '                </div>';
             }
         }
     }
@@ -113,13 +147,14 @@ function initMap()
     var map;
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: lat, lng: long},
-        zoom: 16
+        zoom: 17
     });
 
     var autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.bindTo('bounds', map);
 
     var infowindow = new google.maps.InfoWindow();
+
     var marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0, -29)
@@ -143,10 +178,10 @@ function initMap()
             return;
         }
 
-        $('#long_projet').val(place.geometry.viewport.b.b);
-        $('#lat_projet').val(place.geometry.viewport.f.b);
+        //$('#long_projet').val(place.geometry.viewport.b.b);
+        //$('#lat_projet').val(place.geometry.viewport.f.b);
 
-        setFormFromGmaps(place.address_components);
+        //console.log(place.geometry.location);
 
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
@@ -176,10 +211,12 @@ function initMap()
 
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
         infowindow.open(map, marker);
+        setFormFromGmaps(place);
     });
 
-    function setFormFromGmaps(data){
+    function setFormFromGmaps(d){
         let address, street_number, route, locality, postal_code = '';
+        let data = d.address_components;
         for (let i in data)
         {
             switch (data[i].types[0])
@@ -209,8 +246,19 @@ function initMap()
             address = route;
         }
 
+        $('#lat_projet').val(d.geometry.location.lat());
+        $('#long_projet').val(d.geometry.location.lng());
         $('#projectAdress').val(address);
         $('#projectCity').val(locality);
         $('#projectPc').val(postal_code);
+
+        let fields = [
+            {name: 'project_address', val: address},
+            {name: 'project_city', val: locality},
+            {name: 'project_pc', val: postal_code},
+            {name: 'project_lat', val: d.geometry.location.lat()},
+            {name: 'project_long', val: d.geometry.location.lng()}
+        ];
+        FormEdition.editByInputs('Projects', projectId, fields);
     }
 }

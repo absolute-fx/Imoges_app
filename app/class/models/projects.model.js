@@ -1,4 +1,4 @@
-module.exports = function (sequelize, DataTypes) {
+﻿module.exports = function (sequelize, DataTypes) {
 var Projects = sequelize.define('Projects', {
         project_title: {
             type: DataTypes.STRING,
@@ -6,7 +6,7 @@ var Projects = sequelize.define('Projects', {
             allowNull: false,
             validate: {
                 len: {
-                    args: [5, 255],
+                    args: [3, 255],
                     msg: 'tooshort_or_toobig'
                 }
             }
@@ -50,16 +50,14 @@ var Projects = sequelize.define('Projects', {
             defaultValue: 0,
         },
         project_lat: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.STRING,
             allowNull: true,
-            defaultValue: null,
-            validate: { min: -90, max: 90 }
+            defaultValue: null
         },
         project_long: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.STRING,
             allowNull: true,
-            defaultValue: null,
-            validate: { min: -180, max: 180 }
+            defaultValue: null
         }
     },
     {

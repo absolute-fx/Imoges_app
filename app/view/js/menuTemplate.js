@@ -1,4 +1,4 @@
-const electron = require('electron');
+﻿const electron = require('electron');
 const pjson = require('../../package.json');
 const menuItems = require('./menuData').menuItems;
 

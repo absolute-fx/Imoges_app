@@ -1,4 +1,4 @@
-var Connection = require('sequelize-connect');
+﻿var Connection = require('sequelize-connect');
 var orm = new Connection();
 
 class PhasesRepository

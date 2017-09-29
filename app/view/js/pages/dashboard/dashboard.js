@@ -1,3 +1,3 @@
-$(document).ready(()=>{
+﻿$(document).ready(()=>{
     sideMenu.unsetSideMenu();
 });
