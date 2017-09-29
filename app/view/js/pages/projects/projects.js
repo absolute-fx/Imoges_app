@@ -9,16 +9,6 @@ var projects;
 var project;
 var phases;
 
-/*
-require(__dirname + '/class/repositories/Projects').findById(1).then(
-    project => {
-        project.project_title = 'test';
-        project.save();
-    }
-);
-*/
-
-
 // SIDE MENU SETTER ~ UN-SETTER
 sideMenu.setSideMenu(sideNavTitle,
     [
@@ -43,9 +33,7 @@ function sideMenuAction(action)
 // CALL TO SERVICE
 function getProjectsList()
 {
-    require(__dirname + '/class/repositories/Projects').findAll({
-
-    }).then((projects) => {
+    require(__dirname + '/class/repositories/Projects').findAll().then((projects) => {
         //console.log(projects);
         setProjectsBoxes(projects);
     }).catch((error) => {
@@ -197,6 +185,13 @@ function loadProjectData(projectId)
     require(__dirname + '/class/repositories/Projects').find(projectId).then(p => {
         //console.log(project);
         project = p;
+        let endBuildDate = new Date(project.project_end_build_date);
+        let startBuildDate = new Date(project.project_start_build_date);
+        let startDiffusionDate = new Date(project.project_start_diffusion_date);
+        project.project_end_build_date = endBuildDate.getDate() + '/' + (endBuildDate.getMonth() + 1) + '/' + endBuildDate.getFullYear();
+        project.project_start_build_date = startBuildDate.getDate() + '/' + (startBuildDate.getMonth() + 1) + '/' + startBuildDate.getFullYear();
+        project.project_start_diffusion_date = startDiffusionDate.getDate() + '/' + (startDiffusionDate.getMonth() + 1) + '/' + startDiffusionDate.getFullYear();
+
         setEditProject(project);
     }).catch((error) => {
         alert(error.toString());
