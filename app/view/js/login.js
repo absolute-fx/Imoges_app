@@ -20,6 +20,7 @@ $('form').submit(function(){
         else
         {
             userData.id = user.id;
+            ipc.send('setUserSession', user);
             $('.container').fadeOut(() => {complete: loadIndex(userData)});
         }
     });

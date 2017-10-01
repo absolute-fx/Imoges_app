@@ -5,10 +5,13 @@ const menuItems = require('./view/js/menuData').menuItems;
 const handlebars = require('handlebars');
 const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 const notifier = require('electron-notification-desktop');
+const sessionUser = require('electron').remote.getGlobal('user');
 const app = electron.app;
 let connexion;
 
 $(document).ready(function() {
+    $('#userName').html(sessionUser.firstname);
+    $('#userAvatar').attr('src', sessionUser.avatar);
     getPageData();
     initPage();
 });
@@ -21,6 +24,8 @@ function initPage()
 
     $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
         connexion = require(__dirname + '/class/Connection.js');
+        ipc.send('initializeMenu');
+
         $('.page-heading h1 i').fadeOut({complete: ()=>{
             $('.page-heading h1 i').remove();
         }});

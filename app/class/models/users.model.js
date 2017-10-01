@@ -41,6 +41,16 @@
                     }
                 }
             },
+            avatar:{
+                type: DataTypes.STRING,
+                allowNull: true,
+                validate: {
+                    len: {
+                        args: [2, 255],
+                        msg: 'tooshort_or_toobig'
+                    }
+                }
+            }
         },
         {
             timestamp: true,

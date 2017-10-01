@@ -57,9 +57,8 @@ ipc.on('auth', function(event, data) {
     win.setMaximizable(true);
     win.maximize();
     win.setMenu(null);
-    Menu.setApplicationMenu(menu);
-    setCookies(data.login, data.pass);
-    win.webContents.send('login-success', data);
+    setCookies(data, data.login, data.pass);
+
     /*
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
@@ -70,7 +69,7 @@ ipc.on('auth', function(event, data) {
     */
 });
 
-function setCookies(login, pass)
+function setCookies(data, login, pass)
 {
     const cookie_mail = {url: 'http://www.imoges.be', name: 'imoges_account_login', value: login, expirationDate: 999999999999999999999999999, domain:'www.imoges.be'};
     const cookie_password = {url: 'http://www.imoges.be', name: 'imoges_account_password', value: pass, expirationDate: 999999999999999999999999999, domain:'www.imoges.be'};
@@ -89,7 +88,7 @@ function setCookies(login, pass)
     session.defaultSession.cookies.get({url: 'http://www.imoges.be', name: 'imoges_account_password'}, (error, cookie) => {
         console.log(cookie);
     });
-
+    win.webContents.send('login-success', data);
 }
 
 ipc.on('getCookies', function (event, data) {
@@ -115,4 +114,18 @@ ipc.on('getCookies', function (event, data) {
         });
 
     });
+});
+
+ipc.on('setPageVar', function (event, data) {
+    global.pageVar = {name: data.name, id: data.id};
+    console.log(global.pageVar);
+});
+
+ipc.on('initializeMenu', function (event, data) {
+    Menu.setApplicationMenu(menu);
+});
+
+ipc.on('setUserSession', function (event, data) {
+    global.user = data.dataValues;
+    console.log(global.user);
 });

@@ -4,13 +4,14 @@ var fs = require('fs');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
-var sideNavTitle = 'Outils';
+var sideNavTitle = 'Actions';
 
 // SIDE MENU SETTER ~ UNSETTER
 sideMenu.setSideMenu(
     sideNavTitle,
     [
-        {label: 'Ajouter un bien', icon: 'fa fa-plus', action: 'addRealty'}
+        {label: 'Ajouter un bien', icon: 'fa fa-plus', action: 'addRealty'},
+        {label: 'Retour aux projets', icon: 'fa fa-arrow-left', action: 'goToProjects'},
     ]
 );
 
@@ -21,7 +22,7 @@ function sideMenuAction(action)
         case 'addRealty':
             //addProject();
             break;
-        case 'stat':
+        case 'goToProjects':
             //showStats();
             break;
     }
@@ -48,6 +49,7 @@ $(document).ready(function() {
     $('.panel-footer').append($(".dataTable+.row"));
     $('.dataTables_paginate>ul.pagination').addClass("pull-right m0");
 
+    let pageVar = require('electron').remote.getGlobal('pageVar');
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

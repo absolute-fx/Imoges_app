@@ -8,14 +8,27 @@ $(document).ready(function () {
 
     $("#fileUploader").dropzone({ url: "/file/post" });
     $('input.bootstrap-switch').bootstrapSwitch();
+    $('input.bootstrap-switch').on('switchChange.bootstrapSwitch', function(event, state) {
+        let fields = [{name: 'project_active_online', val: state}];
+        FormEdition.editByInputs('Projects', projectId, fields);
+    });
 
     $("#projectPhase").select2({width: "100%", tags: phases, val: phases, maximumSelectionSize: 6 }).on('change', function (e) {
         setStepsList(e);
     });
 
-    $('#projectDiffusionDate').datepicker({language: 'fr'});
-    $('#projectStartDate').datepicker({language: 'fr'});
-    $('#projectEndDate').datepicker({language: 'fr'});
+    $('#projectDiffusionDate').datepicker({language: 'fr'}).on('changeDate', (e)=>{
+        let fieldDateA = [{name: 'project_start_diffusion_date', val: e.date}];
+        FormEdition.editByInputs('Projects', projectId, fieldDateA);
+    });
+    $('#projectStartDate').datepicker({language: 'fr'}).on('changeDate', (e)=>{
+        let fieldDateB = [{name: 'project_start_build_date', val: e.date}];
+        FormEdition.editByInputs('Projects', projectId, fieldDateB);
+    });
+    $('#projectEndDate').datepicker({language: 'fr'}).on('changeDate', (e)=>{
+        let fieldDateC = [{name: 'project_end_build_date', val: e.date}];
+        FormEdition.editByInputs('Projects', projectId, fieldDateC);
+    });
 
     $('#project_title').on( 'change keyup paste', () => {
         $('*[data-projectId="' + projectId + '"] h2').html($('#project_title').val());
@@ -133,6 +146,10 @@ function setStepLine()
 
 function setActiveStep(id) {
     $("#phase_actuelle_projet").val(id);
+    let fields = [
+        {name: 'project_actual_phase', val: id}
+    ];
+    FormEdition.editByInputs('Projects', projectId, fields);
     var obj = {};
     setStepsList(obj);
 }

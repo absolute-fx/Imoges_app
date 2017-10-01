@@ -1,23 +1,15 @@
 // DEPENDENCIES
 var bootBox = require('bootbox');
 var fs = require('fs');
+var ipcRenderer = require('electron').ipcRenderer;
+var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
 
 // PARAMS SETTERS
 var itemsByRow = 3;
-var sideNavTitle = 'Outils';
+var sideNavTitle = 'Actions';
 var projects;
 var project;
 var phases;
-
-/*
-require(__dirname + '/class/repositories/Projects').findById(1).then(
-    project => {
-        project.project_title = 'test';
-        project.save();
-    }
-);
-*/
-
 
 // SIDE MENU SETTER ~ UN-SETTER
 sideMenu.setSideMenu(sideNavTitle,
@@ -43,9 +35,7 @@ function sideMenuAction(action)
 // CALL TO SERVICE
 function getProjectsList()
 {
-    require(__dirname + '/class/repositories/Projects').findAll({
-
-    }).then((projects) => {
+    require(__dirname + '/class/repositories/Projects').findAll().then((projects) => {
         //console.log(projects);
         setProjectsBoxes(projects);
     }).catch((error) => {
@@ -70,6 +60,8 @@ function getPhasesList()
 
 // INIT
 $(document).ready(()=>{
+    //console.log(require('electron').remote.getGlobal('pageVar'));
+    //ipcRenderer.send('setPageVar', {name: 'project', id: '1'});
     getPhasesList();
 });
 
@@ -80,9 +72,9 @@ $(document).ready(()=>{
 var projectsNavigationData = [
     {btnLabel: 'Infos projet', btnAction: 'infos'},
     {btnLabel: 'Biens', btnAction: 'realty'},
-    {btnLabel: 'Clients', btnAction: 'clients'},
+    {btnLabel: 'Clients', btnAction: 'clientsList'},
     {btnLabel: 'Partenaires', btnAction: 'partners'},
-    {btnLabel: 'Bibliothèque', btnAction: 'libraries'},
+    {btnLabel: 'Bibliothèque', btnAction: 'library'},
     {btnLabel: 'Factures', btnAction: 'invoices'},
     {btnLabel: 'Support', btnAction: 'support'}
 ];
@@ -142,6 +134,12 @@ function projectsNavigation(action, id)
             break;
         default:
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
+            ipcRenderer.send('setPageVar', {name: 'project', id: id});
+            //console.log(MenuActions.searchInMenu('page', action, 'label'));
+            $('#page-heading').html(MenuActions.searchInMenu('page', action, 'label') + ' - ' + $('*[data-projectId="' + id + '"] h2').html()).hide().fadeIn();
+            $('#core-app').load('view/html/pages/' + action + '.html', ()=>{
+
+            }).hide().fadeIn();
     }
     return false;
 }
@@ -197,6 +195,16 @@ function loadProjectData(projectId)
     require(__dirname + '/class/repositories/Projects').find(projectId).then(p => {
         //console.log(project);
         project = p;
+        let endBuildDate = new Date(project.project_end_build_date);
+        let startBuildDate = new Date(project.project_start_build_date);
+        let startDiffusionDate = new Date(project.project_start_diffusion_date);
+        project.project_end_build_date = endBuildDate.getDate() + '/' + (endBuildDate.getMonth() + 1) + '/' + endBuildDate.getFullYear();
+        if(project.project_end_build_date == '1/1/1970') project.project_end_build_date = '';
+        project.project_start_build_date = startBuildDate.getDate() + '/' + (startBuildDate.getMonth() + 1) + '/' + startBuildDate.getFullYear();
+        if(project.project_start_build_date == '1/1/1970') project.project_start_build_date = '';
+        project.project_start_diffusion_date = startDiffusionDate.getDate() + '/' + (startDiffusionDate.getMonth() + 1) + '/' + startDiffusionDate.getFullYear();
+        if(project.project_start_diffusion_date == '1/1/1970') project.project_start_diffusion_date = '';
+
         setEditProject(project);
     }).catch((error) => {
         alert(error.toString());
