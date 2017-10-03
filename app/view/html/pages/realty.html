@@ -9,45 +9,19 @@
                 </div>
             </div>
             <div class="panel-body panel-no-padding">
-                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="realtiesList" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>Projet</th>
-                            <th>Référence bien</th>
+                            <th>Libellé du bien</th>
                             <th>Superficie</th>
                             <th>Prix</th>
                             <th>Statut</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="even gradeC">
-                            <td>Résidence Ines</td>
-                            <td>R1</td>
-                            <td>120m²</td>
-                            <td class="center">250.000€</td>
-                            <td class="center">Vendu à JCVD</td>
-                        </tr>
-                        <tr class="even gradeC">
-                            <td>Résidence Ines</td>
-                            <td>R2</td>
-                            <td>90m²</td>
-                            <td class="center">210.000€</td>
-                            <td class="center">Vendu à François Damiens</td>
-                        </tr>
-                        <tr class="even gradeC">
-                            <td>Résidence Ines</td>
-                            <td>R3</td>
-                            <td>114m²</td>
-                            <td class="center">240.000€</td>
-                            <td class="center">Vendu à Donald Trump</td>
-                        </tr>
-                        <tr class="even gradeC">
-                            <td>Résidence Ines</td>
-                            <td>R3</td>
-                            <td>114m²</td>
-                            <td class="center">240.000€</td>
-                            <td class="center">A vendre</td>
-                        </tr>
+
                     </tbody>
                 </table>
                 <div class="panel-footer"></div>
@@ -55,3 +29,26 @@
         </div>
     </div>
 </div>
+
+<script id="realtyListTpl" type="text/x-handlebars-template">
+    {{#each realties}}
+    <tr class="even">
+        <td>{{project_title}}</td>
+        <td>{{realty_title}}</td>
+        <td>{{realty_surface}}</td>
+        <td class="center">{{realty_net_price}}</td>
+        <td class="center">A vendre</td>
+        <td>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fa fa-pencil-square-o"></span>
+                </button>
+                <ul class="dropdown-menu pull-left">
+                    <li><a href="#" data-action="edit">Editer</a></li>
+                    <li><a href="#" data-action="delete">Supprimer</a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {{/each}}
+</script>

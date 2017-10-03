@@ -117,8 +117,8 @@ ipc.on('getCookies', function (event, data) {
 });
 
 ipc.on('setPageVar', function (event, data) {
-    global.pageVar = {name: data.name, id: data.id};
-    console.log(global.pageVar);
+    global.pageVars = {name: data.name, id: data.id};
+    console.log(global.pageVars);
 });
 
 ipc.on('initializeMenu', function (event, data) {

@@ -1,23 +1,23 @@
 var Connection = require('sequelize-connect');
 var orm = new Connection();
 
-class RealtyRepository
+class RealtiesRepository
 {
     constructor() {
-        this.realty = orm.models.Realty;
+        this.realties = orm.models.Realties;
     }
 
     insert(data){
-        return this.realty.create(data);
+        return this.realties.create(data);
     }
 
     find(id) {
-        return this.realty.findById(id);
+        return this.realties.findById(id);
     }
 
     findAll(args) {
-        return this.realty.findAll(args);
+        return this.realties.findAll(args);
     }
 }
 
-module.exports = new RealtyRepository();
+module.exports = new RealtiesRepository();

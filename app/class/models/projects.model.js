@@ -58,6 +58,11 @@ var Projects = sequelize.define('Projects', {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: null
+        },
+        project_status: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
         }
     },
     {

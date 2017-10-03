@@ -37,6 +37,7 @@ function connectToServer() {
     ipc.send('getCookies');
     $('.loader').hide();
     $('#login-container').fadeIn();
+    $('#password').focus();
 }
 
 ipc.on('update-available', function (event, args) {

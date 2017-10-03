@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-    var Realty = sequelize.define('Realty', {
+    var Realties = sequelize.define('Realties', {
             realty_title: {
                 type: DataTypes.STRING,
                 allowNull: false,
@@ -18,13 +18,7 @@ module.exports = function (sequelize, DataTypes) {
                 defaultValue: 0
             },
             realty_net_price: {
-                type: DataTypes.STRING,
-                validate: {
-                    len: {
-                        args: [1, 6],
-                        msg: 'tooshort_or_toobig'
-                    }
-                }
+                type: DataTypes.INTEGER,
             },
             realty_vat: {
                 type: DataTypes.INTEGER,
@@ -58,5 +52,5 @@ module.exports = function (sequelize, DataTypes) {
             timestamp: true,
             logging: console.log
         });
-    return Realty;
+    return Realties;
 };

@@ -35,7 +35,7 @@ function sideMenuAction(action)
 // CALL TO SERVICE
 function getProjectsList()
 {
-    require(__dirname + '/class/repositories/Projects').findAll().then((projects) => {
+    require(__dirname + '/class/repositories/Projects').findAll({where: {project_status: 1}}).then((projects) => {
         //console.log(projects);
         setProjectsBoxes(projects);
     }).catch((error) => {
@@ -136,7 +136,7 @@ function projectsNavigation(action, id)
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
             ipcRenderer.send('setPageVar', {name: 'project', id: id});
             //console.log(MenuActions.searchInMenu('page', action, 'label'));
-            $('#page-heading').html(MenuActions.searchInMenu('page', action, 'label') + ' - ' + $('*[data-projectId="' + id + '"] h2').html()).hide().fadeIn();
+            $('#page-heading').html(MenuActions.searchInMenu('page', action, 'label') + ' - <span id="projectName">' + $('*[data-projectId="' + id + '"] h2').html() + '</span>').hide().fadeIn();
             $('#core-app').load('view/html/pages/' + action + '.html', ()=>{
 
             }).hide().fadeIn();
