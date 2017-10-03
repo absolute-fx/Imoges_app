@@ -1,0 +1,144 @@
+<script type="text/javascript"> $.getScript("./view/js/pages/projects/edit-project.js", function(data){return data;});</script>
+
+<div class="tab-container tab-default">
+    <ul class="nav nav-tabs"><li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i> </a><ul class="dropdown-menu"></ul></li>
+        <li class="active"><a href="#addPrj-infos" data-toggle="tab" aria-expanded="true">Infos primaires</a></li>
+        <li class=""><a href="#addPrj-descri" data-toggle="tab" aria-expanded="true">Description</a></li>
+        <li class=""><a href="#addPrj-library" data-toggle="tab" aria-expanded="true">Biliothèque</a></li>
+        <li class=""><a href="#addPrj-doc" data-toggle="tab" aria-expanded="true">options</a></li>
+        <li class=""><a href="#addPrj-steps" data-toggle="tab" aria-expanded="true">Phases</a></li>
+        <li class=""><a href="#addPrj-stats" data-toggle="tab" aria-expanded="true">Statistiques</a></li>
+    </ul>
+    <div class="tab-content">
+
+        <div class="tab-pane active" id="addPrj-infos">
+            <form id="form-tab-1" data-tablename="Projects">
+                <div class="form-group">
+                    <label for="project_title">Nom du projet</label>
+                    <input type="hidden" id="project_id" value="{{id}}">
+                    <input type="hidden" id="lat_projet" name="project_lat" value="{{project_lat}}">
+                    <input type="hidden" id="long_projet" name="project_long" value="{{project_long}}">
+                    <input type="text" class="form-control" id="project_title" name="project_title" value="{{project_title}}">
+                </div>
+                <div class="form-group">
+                    <label for="googleMapsSearch">Recherche google maps</label>
+                    <input type="text" class="form-control" id="googleMapsSearch">
+                </div>
+                <div class="form-group">
+                    <label for="projectAdress">Adresse</label>
+                    <input type="text" class="form-control" id="projectAdress" name="project_address" value="{{project_address}}">
+                </div>
+                <div class="row">
+                    <div class="col-md-10 form-group">
+                        <label for="projectCity">Ville</label>
+                        <input type="text" class="form-control" id="projectCity" name="project_city" value="{{project_city}}">
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label for="projectPc">Code postal</label>
+                        <input type="text" class="form-control" id="projectPc" name="project_pc" value="{{project_pc}}">
+                    </div>
+                </div>
+                <div id="map" class="project-map"></div>
+            </form>
+        </div>
+
+        <div class="tab-pane" id="addPrj-descri">
+            <form id="form-tab-2" data-tablename="Projects">
+                <div class="form-group">
+                    <label for="shortDescription">Description courte</label>
+                    <textarea class="form-control" name="project_short_description" id="shortDescription">{{project_short_description}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="longDescription">Description longue</label>
+                    <textarea class="form-control autosize" name="project_long_description" id="longDescription">{{project_long_description}}</textarea>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane" id="addPrj-library">
+            <form>
+                <div id="fileUploader" class="form-group dropzone">
+                    <div class="dz-default dz-message"><span>Déposez votre fichier ici</span></div>
+                </div>
+            </form>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Liste des images</h3>
+                </div>
+                <div class="col-md-6">
+                    <h3>Liste des fichiers</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="addPrj-doc">
+            <form id="form-tab-3" data-tablename="Projects">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Disponible sur le site web</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_active_online" type="checkbox" {{project_active_online}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="projectDiffusionDate">Diffuser à partir du</label>
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" id="projectDiffusionDate" value="{{project_start_diffusion_date}}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="projectStartDate">Début de chantier</label>
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" id="projectStartDate" value="{{project_start_build_date}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="projectEndDate">Fin de chantier</label>
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" id="projectEndDate" value="{{project_end_build_date}}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="lien_immoweb_projet">Lien Immoweb</label>
+                    <input type="text" id="lien_immoweb_projet" class="form-control" value="{{lien_immoweb_projet}}">
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane" id="addPrj-steps">
+            <form action="">
+                <div class="form-group">
+                    <label for="projectPhase">Phases (min 3 - max 6)</label>
+                    <input type="hidden" id="phase_actuelle_projet" name="project_actual_phase" value="{{project_actual_phase}}">
+                    <input type="hidden" id="projectPhase" value="{{selectData}}"/>
+                </div>
+            </form>
+            <div id="stepsListContainer" class="row process-wizard process-wizard-primary hidden-xs">
+                {{#each Phases}}
+                <div class="col-xs-{{colSize}} process-wizard-step {{state}}">
+                    <div class="text-center process-wizard-stepnum">{{title}}</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" onclick="javascript: setActiveStep({{id}}); return false;" class="process-wizard-dot"></a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="tab-pane" id="addPrj-stats">
+            statistiques sur le projet
+        </div>
+
+    </div>
+</div>
+
