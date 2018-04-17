@@ -9,7 +9,7 @@ module.exports =  new Connection(
     dbConfig.pass,
     {
         host: dbConfig.host,
-        dialect: "mysql",
+        dialect: "sqlite",
         //port:    3306,
         dialectOptions: {
             charset: 'utf8',
