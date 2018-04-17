@@ -1,5 +1,6 @@
 var Connection = require('sequelize-connect');
 var orm = new Connection();
+var Promise = require("bluebird");
 
 class RealtiesRepository
 {
@@ -13,6 +14,17 @@ class RealtiesRepository
 
     find(id) {
         return this.realties.findById(id);
+    }
+
+    findById(id) {
+        const models = this.realties;
+        return new Promise(function(resolve, reject) {
+            models.findById(id).then(project => {
+                resolve(project);
+            }).catch(err => {
+                reject(err);
+            });
+        });
     }
 
     findAll(args) {

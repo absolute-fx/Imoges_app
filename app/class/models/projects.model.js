@@ -11,6 +11,18 @@ var Projects = sequelize.define('Projects', {
                 }
             }
         },
+        project_type: {
+            type: DataTypes.INTEGER
+        },
+        project_facade_number: {
+            type: DataTypes.INTEGER
+        },
+        project_cadastral_income: {
+            type: DataTypes.DECIMAL(5,2)
+        },
+        project_charges: {
+            type: DataTypes.DECIMAL(5,2)
+        },
         project_creation_date: {
             type: DataTypes.DATE
         },
@@ -43,11 +55,11 @@ var Projects = sequelize.define('Projects', {
         },
         project_active_online: {
             type: DataTypes.BOOLEAN,
-            defaultValue: 0,
+            defaultValue: 0
         },
         project_actual_phase: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
+            defaultValue: 0
         },
         project_lat: {
             type: DataTypes.STRING,
@@ -63,6 +75,63 @@ var Projects = sequelize.define('Projects', {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
+        },
+        project_environment_type: {
+            type: DataTypes.STRING(2)
+        },
+        project_terrain_size: {
+            type: DataTypes.INTEGER
+        },
+        project_parking_in_number: {
+            type: DataTypes.INTEGER
+        },
+        project_parking_out_number: {
+            type: DataTypes.INTEGER
+        },
+        project_floor_number: {
+            type: DataTypes.INTEGER
+        },
+        project_handicapped_access: {
+            type: DataTypes.BOOLEAN
+        },
+        project_lift: {
+            type: DataTypes.BOOLEAN
+        },
+        project_concierge: {
+            type: DataTypes.BOOLEAN
+        },
+        project_peb: {
+            type: DataTypes.INTEGER
+        },
+        project_heating_type: {
+            type: DataTypes.STRING(1)
+        },
+        project_energy_consumption: {
+            type: DataTypes.DECIMAL(4,2)
+        },
+        project_CO2_emission: {
+            type: DataTypes.DECIMAL(4,2)
+        },
+        project_air_conditioning: {
+            type: DataTypes.BOOLEAN
+        },
+        project_heat_pump: {
+            type: DataTypes.BOOLEAN
+        },
+        project_double_glazing: {
+            type: DataTypes.BOOLEAN
+        },
+        project_PV: {
+            type: DataTypes.BOOLEAN
+        },
+        project_distance_schools: {
+            type: DataTypes.INTEGER
+        },
+        project_distance_shops: {
+            type: DataTypes.INTEGER
+        },
+        project_distance_transports: {
+            type: DataTypes.INTEGER
         }
     },
     {

@@ -1,43 +1,188 @@
 var autosize = require('autosize');
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
 var realtyId;
+var appParams = require('electron').remote.getGlobal('appParams');
+var fs = require('fs');
 
 $(document).ready(function () {
-    /*
-    projectId = $('#project_id').val();
+    realtyId = $('#realty_id').val();
     autosize($('#longDescription, #shortDescription'));
 
-    $("#fileUploader").dropzone({ url: "/file/post" });
+    $("#fileUploader").dropzone({
+        url: "http://imoges.afxlab.be/upload.php",
+        init: function()
+        {
+            this.on("complete", function(file) {
+                console.log(file);
+                this.removeFile(file);
+                fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.libraryPath + 'test.jpg'));
+            });
+        }
+    });
+
     $('input.bootstrap-switch').bootstrapSwitch();
     $('input.bootstrap-switch').on('switchChange.bootstrapSwitch', function(event, state) {
-        let fields = [{name: 'project_active_online', val: state}];
-        FormEdition.editByInputs('Projects', projectId, fields);
+        let attrName = $(this).attr('name');
+        let fields = [{name: attrName, val: state}];
+        FormEdition.editByInputs('Realties', realtyId, fields);
     });
 
-    $("#projectPhase").select2({width: "100%", tags: phases, val: phases, maximumSelectionSize: 6 }).on('change', function (e) {
-        setStepsList(e);
+    FormEdition.setUpdateForm('form-tab-1', realtyId);
+    FormEdition.setUpdateForm('form-tab-details', realtyId);
+
+    $('#realty_surface').on( 'change keyup paste', (event) => {
+        calculatePrice('surface', event);
     });
 
-    $('#projectDiffusionDate').datepicker({language: 'fr'}).on('changeDate', (e)=>{
-        let fieldDateA = [{name: 'project_start_diffusion_date', val: e.date}];
-        FormEdition.editByInputs('Projects', projectId, fieldDateA);
+    $('#realtyNetPrice').on( 'change keyup paste blur', (event) => {
+        calculatePrice('net', event);
     });
-    $('#projectStartDate').datepicker({language: 'fr'}).on('changeDate', (e)=>{
-        let fieldDateB = [{name: 'project_start_build_date', val: e.date}];
-        FormEdition.editByInputs('Projects', projectId, fieldDateB);
+    $('#realtyPrice').on( 'change keyup paste blur', (event) => {
+        calculatePrice('brut', event);
     });
-    $('#projectEndDate').datepicker({language: 'fr'}).on('changeDate', (e)=>{
-        let fieldDateC = [{name: 'project_end_build_date', val: e.date}];
-        FormEdition.editByInputs('Projects', projectId, fieldDateC);
+    $('#realtyVat').on( 'change keyup paste', (event) => {
+        calculatePrice('vat', event);
     });
-
-    $('#project_title').on( 'change keyup paste', () => {
-        $('*[data-projectId="' + projectId + '"] h2').html($('#project_title').val());
-        $('.modal-header h4').html($('#project_title').val());
+    $('#realtyM').on( 'change keyup paste blur', (event) => {
+        calculatePrice('m', event);
     });
 
-    FormEdition.setUpdateForm('form-tab-1', projectId);
-    FormEdition.setUpdateForm('form-tab-2', projectId);
-    FormEdition.setUpdateForm('form-tab-3', projectId);
+    $('#availability').datepicker({language: 'fr'}).on('changeDate', (e)=>{
+        let fieldDate = [{name: 'realty_availability', val: e.date}];
+        FormEdition.editByInputs('Realties', realtyId, fieldDate);
+    });
+
+    $('#diffusionDate').datepicker({language: 'fr'}).on('changeDate', (e)=>{
+        let fieldDate = [{name: 'realty_start_diffusion_date', val: e.date}];
+        FormEdition.editByInputs('Realties', realtyId, fieldDate);
+    });
+
+    var price = parseFloat($('#realtyNetPrice').val());
+    var vat = $('#realtyVat').val();
+
+    if($('#realtyNetPrice').val() && $('#realty_surface').val() && $('#realtyVat').val())
+    {
+        var surface = parseFloat($('#realty_surface').val());
+        var surfacePrice = (price + (price * (vat / 100))) / surface;
+        $('#realtyM').val(surfacePrice.toFixed(2));
+    }
+
+    if($('#realtyNetPrice').val() && $('#realtyVat').val())
+    {
+        var fullPrice = Math.round(price + (price * (vat / 100)));
+        $('#realtyPrice').val(fullPrice.toFixed(2));
+    }
+    /*
+    $('#bedrooms').on('change keyup paste', (e) =>{
+        var inputField = $('#' + e.target.id).val();
+        inputField = inputField.replace(/\s+/g, '');
+        var itemsList = inputField.split(';');
+        console.log(itemsList);
+        $('#bedroomsList').html('');
+        for (var i in itemsList)
+        {
+            if(itemsList[i] != '')
+            {
+                $('#bedroomsList').append('<li class="list-group-item">Chambre ' + (Number(i)+1) + ': <strong>' + itemsList[i] + '</strong> m²</li>') ;
+            }
+        }
+    });
     */
+
+    setListFromString();
 });
+
+function calculatePrice(from, event) {
+
+    let vat ;
+    let net;
+    let brut;
+    let perM;
+    let surface = parseFloat($('#realty_surface').val());
+    switch (from)
+    {
+        case 'net':
+            if($('#realtyVat').val() && $('#realtyNetPrice').val())
+            {
+                vat = parseFloat($('#realtyVat').val());
+                net =  parseFloat($('#realtyNetPrice').val());
+                brut = net + (net * (vat / 100));
+                $('#realtyPrice').val(brut.toFixed(2));
+                if($('#realty_surface').val())
+                {
+                    perM = (brut / surface);
+                    $('#realtyM').val(perM.toFixed(2));
+                }
+            }
+            if(event.type == 'blur' && $('#realtyNetPrice').val()) $('#realtyNetPrice').val(net.toFixed(2));
+            break;
+        case 'brut':
+            if($('#realtyVat').val() && $('#realtyPrice').val()) {
+                vat = parseFloat($('#realtyVat').val());
+                brut = parseFloat($('#realtyPrice').val());
+                net = brut / (1 + (vat / 100));
+                $('#realtyNetPrice').val(net.toFixed(2));
+                if ($('#realty_surface').val()) {
+                    perM = (brut / surface);
+                    $('#realtyM').val(perM.toFixed(2));
+                }
+            }
+            if(event.type == 'blur' && $('#realtyPrice').val()) $('#realtyPrice').val(brut.toFixed(2));
+            break;
+        case 'vat':
+            if($('#realtyVat').val() && $('#realtyNetPrice').val())
+            {
+                vat = parseFloat($('#realtyVat').val());
+                net =  parseFloat($('#realtyNetPrice').val());
+                brut = (net + (net * (vat / 100)));
+                perM = (brut / surface);
+                $('#realtyM').val(perM.toFixed(2));
+                $('#realtyPrice').val(brut.toFixed(2));
+            }
+
+            break;
+        case 'm':
+            if($('#realty_surface').val() && $('#realtyM').val() && $('#realtyPrice').val())
+            {
+                vat = parseFloat($('#realtyVat').val());
+                brut = parseFloat($('#realtyM').val()) * surface;
+                net =  brut / (1 + (vat /100));
+
+                $('#realtyPrice').val(brut.toFixed(2));
+                $('#realtyNetPrice').val(net.toFixed(2));
+                if(event.type == 'blur') $('#realtyM').val(parseFloat($('#realtyM').val()).toFixed(2));
+            }
+            break;
+        case 'surface':
+            if($('#realtyPrice').val() && $('#realty_surface').val())
+            {
+                brut = parseFloat($('#realtyPrice').val());
+                perM = brut / surface;
+                $('#realtyM').val(perM.toFixed(2));
+            }
+
+            break;
+    }
+
+    if(event.type == 'change') FormEdition.editByInputs('Realties', realtyId,[{name: 'realty_net_price', val: net}, {name: 'realty_vat', val: vat}]);
+}
+
+function setListFromString()
+{
+    $('.stringList').on('change keyup paste', (e) =>{
+        var inputId = e.target.id;
+        var label = $('#' + inputId).data('label');
+        var inputField = $('#' + inputId).val();
+        inputField = inputField.replace(/\s+/g, '');
+        var itemsList = inputField.split(';');
+        $('#' + inputId + 'List').html('');
+
+        for (var i in itemsList)
+        {
+            if(itemsList[i] != '')
+            {
+                $('#' + inputId + 'List').append('<li class="list-group-item">' + label + ' ' + (Number(i)+1) + ': <strong>' + itemsList[i] + '</strong> m²</li>') ;
+            }
+        }
+    });
+}

@@ -7,12 +7,20 @@ $(document).ready(function () {
     autosize($('#longDescription, #shortDescription'));
 
     $("#fileUploader").dropzone({ url: "/file/post" });
+
     $('input.bootstrap-switch').bootstrapSwitch();
+    $('input.bootstrap-switch').on('switchChange.bootstrapSwitch', function(event, state) {
+        let attrName = $(this).attr('name');
+        let fields = [{name: attrName, val: state}];
+        console.log(fields);
+        FormEdition.editByInputs('Projects', projectId, fields);
+    });
+    /*
     $('input.bootstrap-switch').on('switchChange.bootstrapSwitch', function(event, state) {
         let fields = [{name: 'project_active_online', val: state}];
         FormEdition.editByInputs('Projects', projectId, fields);
     });
-
+    */
     $("#projectPhase").select2({width: "100%", tags: phases, val: phases, maximumSelectionSize: 6 }).on('change', function (e) {
         setStepsList(e);
     });
@@ -38,6 +46,7 @@ $(document).ready(function () {
     FormEdition.setUpdateForm('form-tab-1', projectId);
     FormEdition.setUpdateForm('form-tab-2', projectId);
     FormEdition.setUpdateForm('form-tab-3', projectId);
+    FormEdition.setUpdateForm('form-details', projectId);
 });
 
 function setStepsList(event)

@@ -2,11 +2,12 @@
 
 <div class="tab-container tab-default">
     <ul class="nav nav-tabs"><li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i> </a><ul class="dropdown-menu"></ul></li>
-        <li class="active"><a href="#realty-infos" data-toggle="tab" aria-expanded="true">Infos générales</a></li>
+        <li class="active"><a href="#realty-infos" data-toggle="tab" aria-expanded="true">Informations générales</a></li>
         <li class=""><a href="#realty-details" data-toggle="tab" aria-expanded="true">Détails</a></li>
         <li class=""><a href="#realty-library" data-toggle="tab" aria-expanded="true">Biliothèque</a></li>
         <li class=""><a href="#realty-options" data-toggle="tab" aria-expanded="true">options</a></li>
         <li class=""><a href="#addPrj-clients" data-toggle="tab" aria-expanded="true">Client(s)</a></li>
+        <li class=""><a href="#addPrj-stats" data-toggle="tab" aria-expanded="true">Statistiques</a></li>
     </ul>
     <div class="tab-content">
 
@@ -16,62 +17,34 @@
                     <div class="col-md-6 form-group">
                         <label for="realtyProjectId">Projet associé</label>
                         <select class="form-control" name="realty_project_id" id="realtyProjectId">
-                            <option value="0">Aucun</option>
                             {{#each projects}}
                             <option value="{{id}}" {{selected}}>{{project_title}}</option>
                             {{/each}}
                         </select>
                     </div>
-                    <div class="col-md-3 form-group">
-                        <label for="realty_title">Référence du bien</label>
+                    <div class="col-md-6 form-group">
+                        <label for="realty_title">Nom / référence du bien</label>
                         <input type="hidden" id="realty_id" value="{{id}}">
                         <input type="text" class="form-control" id="realty_title" name="realty_title" value="{{realty_title}}">
                     </div>
-                    <div class="col-md-2 form-group">
-                        <label for="realtyFloor">Etage</label>
-                        <select name="realty_floor" id="realtyFloor" class="form-control">
-                            <option value="">{{project_has_floor}}</option>
-                            {{#each realty_floors_list}}
-                            <option value="{{id}}" {{selected}}>{{label}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="col-md-1 form-group">
-                        <label for="facadesNumber">Façades</label>
-                        <select name="realty_facades_number" id="facadesNumber" class="form-control">
-                            <option value="">-</option>
-                            {{#each realty_facades_number_lst}}
-                            <option value="{{id}}" {{selected}}>{{label}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 form-group">
-                        <label for="realtyTypes">Type de bien</label>
-                        <select class="form-control" id="realtyTypes" name="realty_type">
-                            <option selected>Choisissez...</option>
-                            {{#each realtyTypes}}
-                            <option value="{{id}}" {{selected}}>{{label}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="col-md-3 form-group">
+                    <div class="col-md-4 form-group">
                         <label for="contractType">Type de contrat</label>
                         <select class="form-control" id="contractType" name="realty_contract_type">
-                            {{#each realty_contract_type_lst}}
+                            {{#each projectTypes}}
                             <option value="{{id}}" {{selected}}>{{label}}</option>
                             {{/each}}
                         </select>
                     </div>
-                    <div class="col-md-3 form-group">
+                    <div class="col-md-4 form-group">
                         <label for="availability">Disponibilité</label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             <input type="text" class="form-control" id="availability" value="{{realty_availability_date}}">
                         </div>
                     </div>
-                    <div class="col-md-3 form-group">
+                    <div class="col-md-4 form-group">
                         <label for="realty_surface">Surface habitable</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="realty_surface" name="realty_surface" value="{{realty_surface}}">
@@ -126,39 +99,19 @@
         <div class="tab-pane" id="realty-details">
             <form id="form-tab-details" data-tablename="Realties">
                 <div class="row">
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                         <label for="bedrooms">Surface des chambres</label>
-                        <input type="text" class="form-control stringList" id="bedrooms" name="realty_bedrooms" value="{{realty_bedrooms}}" data-label="Chambre">
-                        <small class="text-muted">ex: 16;20.5;16</small>
-                        <ul class="list-group mb-n " id="bedroomsList">
-                            {{#each bedroomsList}}
-                            <li class="list-group-item">Chambre {{n}}: <strong>{{surface}}</strong> m²</li>
-                            {{/each}}
+                        <input type="text" class="form-control" id="bedrooms" name="realty_bedrooms" value="{{realty_bedrooms}}">
+                        <small class="text-muted">ex: 16,20.5,16</small>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Rendu de la liste (<strong id="berdroomsCount">3</strong>)</label>
+                        <ul class="fa-ul" id="bedroomsList">
+                            <li><i class="fa fa-li fa-check"></i>Chambre 1: <strong>16</strong> m²</li>
+                            <li><i class="fa fa-li fa-check"></i>Chambre 2: <strong>20.5</strong> m²</li>
+                            <li><i class="fa fa-li fa-check"></i>Chambre 3: <strong>16</strong> m²</li>
                         </ul>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="bathrooms">surface des salles de bain</label>
-                        <input type="text" id="bathrooms" name="realty_bathrooms" value="{{realty_bathrooms}}" class="form-control stringList" data-label="Salle de bain">
-                        <small class="text-muted">ex: 16;20.5;16</small>
-                        <ul class="list-group mb-n" id="bathroomsList">
-                            {{#each bathroomsList}}
-                            <li class="list-group-item">Salle de bain {{n}}: <strong>{{surface}}</strong> m²</li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="showers">Surface des salles de douche</label>
-                        <input type="text" id="showers" name="realty_showers" value="{{realty_showers}}" class="form-control stringList" data-label="Salle de douche">
-                        <small class="text-muted">ex: 16;20.5;16</small>
-                        <ul class="list-group mb-n" id="showersList">
-                            {{#each showersList}}
-                            <li class="list-group-item">Salle de douche {{n}}: <strong>{{surface}}</strong> m²</li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
                     <div class="col-md-3 form-group">
                         <label for="terraceSurface">Surface terrasse</label>
                         <div class="input-group">
@@ -170,11 +123,18 @@
                         <label for="terraceOrientation">Orientation terrasse</label>
                         <select class="form-control" id="terraceOrientation" name="realty_terrace_orientation" value="{{realty_terrace_orientation}}">
                             <option selected>Choisissez...</option>
-                            {{#each terraceOrientations}}
-                            <option value="{{id}}" {{selected}}>{{label}}</option>
-                            {{/each}}
+                            <option value="n">Nord</option>
+                            <option value="ne">Nord Est</option>
+                            <option value="e">Est</option>
+                            <option value="se">Sud Est</option>
+                            <option value="s">Sud</option>
+                            <option value="su">Sud Ouest</option>
+                            <option value="o">Ouest</option>
+                            <option value="no">Nord Ouest</option>
                         </select>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-3 form-group">
                         <label for="kitchenSurface">Surface cuisine</label>
                         <div class="input-group">
@@ -191,8 +151,6 @@
                             {{/each}}
                         </select>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-3 form-group">
                         <label for="livingSurface">Surface living</label>
                         <div class="input-group">
@@ -207,6 +165,8 @@
                             <span class="input-group-addon">m²</span>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-3 form-group">
                         <label for="atticSurface">Surface grenier</label>
                         <div class="input-group">
@@ -221,8 +181,6 @@
                             <span class="input-group-addon">m²</span>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-3 form-group">
                         <label for="cellarSurface">Surface cave</label>
                         <div class="input-group">
@@ -237,16 +195,21 @@
                             <span class="input-group-addon">m²</span>
                         </div>
                     </div>
-                    <div class="col-md-3 form-group">
-                        <label for="gardenSurface">Surface jardin</label>
-                        <div class="input-group">
-                            <input type="number" id="gardenSurface" name="realty_garden_surface" value="{{realty_garden_surface}}" class="form-control">
-                            <span class="input-group-addon">m²</span>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label for="bathroomNumber">Nombre de salle de bain</label>
+                        <input type="text" id="bathroomNumber" name="realty_bathroom_number" value="{{realty_bathroom_number}}" class="form-control">
                     </div>
-                    <div class="col-md-3 form-group">
-                        <label for="wcNumber">Nombre de WC</label>
-                        <input type="number" id="wcNumber" name="realty_wc_number" value="{{realty_wc_number}}" class="form-control">
+                    <div class="form-group col-md-3">
+                        <label>Rendu de la liste (<strong id="bathroomCount">3</strong>)</label>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="showerNumber">Nombre de salle de douche</label>
+                        <input type="text" id="showerNumber" name="realty_shower_number" value="{{realty_shower_number}}" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Rendu de la liste (<strong id="showerCount">3</strong>)</label>
                     </div>
                 </div>
 
@@ -256,7 +219,7 @@
                     <div class="form-group col-md-2">
                         <label>Iso. acoustique</label>
                         <ul class="demo-btns mb-10">
-                            <li class="mb0"><input class="bootstrap-switch" name="realty_acoustic_isolation" type="checkbox" {{realty_acoustic_isolation}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                            <li class="mb0"><input class="bootstrap-switch" name="realty_security_system" type="checkbox" {{realty_security_system}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
                         </ul>
                     </div>
                     <div class="form-group col-md-2">
@@ -319,19 +282,16 @@
                             <li class="mb0"><input class="bootstrap-switch" name="realty_active_online" type="checkbox" {{realty_active_online}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
                         </ul>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <label for="diffusionDate">Difuser à partir du</label>
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" class="form-control" id="diffusionDate" value="{{realty_diffusion_date}}">
-                        </div>
-                    </div>
                 </div>
             </form>
         </div>
 
         <div class="tab-pane" id="addPrj-clients">
             Clients associés...
+        </div>
+
+        <div class="tab-pane" id="addPrj-stats">
+            statistiques sur le projet
         </div>
 
     </div>

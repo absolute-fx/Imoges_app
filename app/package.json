@@ -25,6 +25,8 @@
     "nanoscroller": "^0.8.7",
     "sequelize": "^4.8.4",
     "sequelize-connect": "^2.0.0",
-    "sha1": "^1.1.1"
-  }
+    "sha1": "^1.1.1",
+    "sqlite3": "^3.1.13"
+  },
+  "devDependencies": {}
 }

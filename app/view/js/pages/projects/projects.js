@@ -3,6 +3,7 @@ var bootBox = require('bootbox');
 var fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
+var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
 
 // PARAMS SETTERS
 var itemsByRow = 3;
@@ -10,6 +11,34 @@ var sideNavTitle = 'Actions';
 var projects;
 var project;
 var phases;
+var heatingTypes = [
+    {id: 'E', label: 'Electrique'},
+    {id: 'M', label: 'Mazout'},
+    {id: 'G', label: 'Gaz'},
+    {id: 'S', label: 'Solaire'}
+];
+var cpeb = [
+    {id: '1', label: 'A++'},
+    {id: '2', label: 'A+'},
+    {id: '3', label: 'A'}
+];
+var facades = [
+    {id: 1, label: 1},
+    {id: 2, label: 2},
+    {id: 3, label: 3},
+    {id: 4, label: 4}
+];
+var projectTypes = [
+    {id: 1, label: 'Maisons'},
+    {id: 2, label: 'Appartements'},
+    {id: 8, label: 'Autres'}
+];
+
+var environmentTypes = [
+    {id: 'CP', label: 'Campagne'},
+    {id: 'RR', label: 'Résidentiel'},
+    {id: 'US', label: 'Urbain'}
+]
 
 // SIDE MENU SETTER ~ UN-SETTER
 sideMenu.setSideMenu(sideNavTitle,
@@ -198,12 +227,12 @@ function loadProjectData(projectId)
         let endBuildDate = new Date(project.project_end_build_date);
         let startBuildDate = new Date(project.project_start_build_date);
         let startDiffusionDate = new Date(project.project_start_diffusion_date);
-        project.project_end_build_date = endBuildDate.getDate() + '/' + (endBuildDate.getMonth() + 1) + '/' + endBuildDate.getFullYear();
-        if(project.project_end_build_date == '1/1/1970') project.project_end_build_date = '';
-        project.project_start_build_date = startBuildDate.getDate() + '/' + (startBuildDate.getMonth() + 1) + '/' + startBuildDate.getFullYear();
-        if(project.project_start_build_date == '1/1/1970') project.project_start_build_date = '';
-        project.project_start_diffusion_date = startDiffusionDate.getDate() + '/' + (startDiffusionDate.getMonth() + 1) + '/' + startDiffusionDate.getFullYear();
-        if(project.project_start_diffusion_date == '1/1/1970') project.project_start_diffusion_date = '';
+        project.project_end_build_date = FormEdition.setDateNumberFormat(endBuildDate.getDate()) + '/' + FormEdition.setDateNumberFormat(endBuildDate.getMonth() + 1) + '/' + endBuildDate.getFullYear();
+        if(project.project_end_build_date == '01/01/1970') project.project_end_build_date = '';
+        project.project_start_build_date = FormEdition.setDateNumberFormat(startBuildDate.getDate()) + '/' + FormEdition.setDateNumberFormat(startBuildDate.getMonth() + 1) + '/' + startBuildDate.getFullYear();
+        if(project.project_start_build_date == '01/01/1970') project.project_start_build_date = '';
+        project.project_start_diffusion_date = FormEdition.setDateNumberFormat(startDiffusionDate.getDate()) + '/' + FormEdition.setDateNumberFormat(startDiffusionDate.getMonth() + 1) + '/' + startDiffusionDate.getFullYear();
+        if(project.project_start_diffusion_date == '01/01/1970') project.project_start_diffusion_date = '';
 
         setEditProject(project);
     }).catch((error) => {
@@ -214,6 +243,14 @@ function loadProjectData(projectId)
 // PROJECT EDIT FORM -> SET DATA IN HANDLEBARS + INITIALIZE (dependencies: project-form.html, edit-project.js)
 function setEditProject(projectData){
     if(projectData.project_active_online) projectData.project_active_online = 'checked';
+    if(projectData.project_handicapped_access) projectData.project_handicapped_access = 'checked';
+    if(projectData.project_lift) projectData.project_lift = 'checked';
+    if(projectData.project_concierge) projectData.project_concierge = 'checked';
+    if(projectData.project_air_conditioning) projectData.project_air_conditioning = 'checked';
+    if(projectData.project_heat_pump) projectData.project_heat_pump = 'checked';
+    if(projectData.project_double_glazing) projectData.project_double_glazing = 'checked';
+    if(projectData.project_PV) projectData.project_PV = 'checked';
+
     let editProjectTemplate = fs.readFileSync( __dirname + '/view/html/pages/project-form.html').toString();
     let tpl = handlebars.compile(editProjectTemplate);
 
@@ -221,6 +258,71 @@ function setEditProject(projectData){
     let selectData = "";
     let count = 0;
     let colSize = Math.floor(12 / projectData.Phases.length);
+
+    projectData.heating_types_list = heatingTypes;
+    for(var i in heatingTypes)
+    {
+        if(projectData.project_heating_type == heatingTypes[i].id)
+        {
+            projectData.heating_types_list[i].selected = 'selected';
+        }
+        else
+        {
+            projectData.heating_types_list[i].selected = '';
+        }
+    }
+
+    projectData.project_peb_list = cpeb;
+    for(var i in cpeb)
+    {
+        if(projectData.project_peb == cpeb[i].id)
+        {
+            projectData.project_peb_list[i].selected = 'selected';
+        }
+        else
+        {
+            projectData.project_peb_list[i].selected = '';
+        }
+    }
+
+    projectData.project_facade_number_list = facades;
+    for(var i in facades)
+    {
+        if(projectData.project_facade_number == facades[i].id)
+        {
+            projectData.project_facade_number_list[i].selected = 'selected';
+        }
+        else
+        {
+            projectData.project_facade_number_list[i].selected = '';
+        }
+    }
+
+    projectData.project_types_list = projectTypes;
+    for(var i in projectTypes)
+    {
+        if(projectData.project_type == projectTypes[i].id)
+        {
+            projectData.project_types_list[i].selected = 'selected';
+        }
+        else
+        {
+            projectData.project_types_list[i].selected = '';
+        }
+    }
+
+    projectData.project_environment_type_list = environmentTypes;
+    for(var i in environmentTypes)
+    {
+        if(projectData.project_environment_type == environmentTypes[i].id)
+        {
+            projectData.project_environment_type_list[i].selected = 'selected';
+        }
+        else
+        {
+            projectData.project_environment_type_list[i].selected = '';
+        }
+    }
 
     console.log(projectData);
 

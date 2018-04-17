@@ -8,8 +8,10 @@ const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 let template;
 let menu;
 let win;
+global.pageVars ={};
+global.appParams = {libraryPath: 'E:/JOBS/Imoges - Site V3/files_holder/'};
 
-function createWindow() {
+    function createWindow() {
     win = new BrowserWindow({width: 640, height: 235, icon: "icon.ico", backgroundColor: "#37474f", minimizable: false, maximizable: false});
     win.setMenu(null);
     win.loadURL(url.format({
