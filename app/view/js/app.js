@@ -7,6 +7,7 @@ const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 const notifier = require('electron-notification-desktop');
 const sessionUser = require('electron').remote.getGlobal('user');
 const app = electron.app;
+
 let connexion;
 
 $(document).ready(function() {

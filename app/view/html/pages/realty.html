@@ -17,6 +17,7 @@
                             <th>Superficie</th>
                             <th>Prix</th>
                             <th>Statut</th>
+                            <th>Web</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -32,20 +33,21 @@
 
 <script id="realtyListTpl" type="text/x-handlebars-template">
     {{#each realties}}
-    <tr class="even">
-        <td>{{project_title}}</td>
-        <td>{{realty_title}}</td>
-        <td>{{realty_surface}}</td>
-        <td class="center">{{realty_net_price}}</td>
+    <tr id="realty-{{id}}" class="even">
+        <td id="project_title-{{id}}">{{project_title}}</td>
+        <td id="realty_title-{{id}}">{{realty_title}}</td>
+        <td id="realty_surface-{{id}}">{{realty_surface}}</td>
+        <td id="realty_price-{{id}}" class="center">{{realty_price}}</td>
         <td class="center">A vendre</td>
+        <td id="realty_active_online-{{id}}">{{realty_active_online}}</td>
         <td>
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-pencil-square-o"></span>
                 </button>
                 <ul class="dropdown-menu pull-left">
-                    <li><a href="#" data-action="edit">Editer</a></li>
-                    <li><a href="#" data-action="delete">Supprimer</a></li>
+                    <li><a href="#" onclick="javascript: loadRealty({{id}});">Editer</a></li>
+                    <li><a href="#" onclick="javascript: removeRealty({{id}});">Supprimer</a></li>
                 </ul>
             </div>
         </td>

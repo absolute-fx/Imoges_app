@@ -3,12 +3,55 @@ var bootBox = require('bootbox');
 var fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
-var  pageVars = require('electron').remote.getGlobal('pageVars');
+var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
+var pageVars = require('electron').remote.getGlobal('pageVars');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
 var sideNavTitle = 'Actions';
 var projects;
+var realtiesTable;
+var contractType = [{id: 0, label: "Vente"}, {id: 1, label:"Location"}];
+var kitchenTypes =  [
+    {label: 'Hyper-équipée  ', value: 'XE'},
+    {label: 'Equipée  ', value: 'CE'},
+    {label: 'Semi-équipée  ', value: 'SE'},
+    {label: 'Non-équipée  ', value: 'NE'},
+    {label: 'Américaine semi-équipée  ', value: 'AS'},
+    {label: 'Américaine équipée   ', value: 'AC'},
+    {label: 'Américaine hyper-équipée   ', value: 'AX'},
+    {label: 'Américaine Non-équipée  ', value: 'AN'}];
+
+var realtyTypes = [
+    {id: '0000', label: 'Maison'},
+    {id: '5001', label: 'Appartement'},
+    {id: '5005', label: 'Flat/Studio'},
+    {id: '5007', label: 'Loft'},
+    {id: '5003', label: 'Duplex'},
+    {id: '5004', label: 'Triplex'},
+    {id: '5002', label: 'Rez-de-chaussée'},
+    {id: '5006', label: 'Penthouse'},
+    {id: '5008', label: 'Kot'},
+    {id: '5009', label: 'Séniorie'}
+];
+
+var terraceOrientations = [
+    {id: 'N', label: 'Nord'},
+    {id: 'NE', label: 'Nord Est'},
+    {id: 'E', label: 'Est'},
+    {id: 'SE', label: 'Sud Est'},
+    {id: 'S', label: 'Sud'},
+    {id: 'SO', label: 'Sud Ouest'},
+    {id: 'O', label: 'Ouest'},
+    {id: 'NO', label: 'Nord Ouest'}
+];
+
+var realtyFacades = [
+    {id: 1, label: 1},
+    {id: 2, label: 2},
+    {id: 3, label: 3},
+    {id: 4, label: 4}
+];
 
 // SIDE MENU SETTER ~ UNSETTER
 var btns = [ {label: 'Ajouter un bien', icon: 'fa fa-plus', action: 'addRealty'}];
@@ -53,10 +96,6 @@ function getRealtiesList()
     });
 }
 
-function SearchProject(project)
-{
-    return project.id === 2;
-}
 
 // INIT
 $(document).ready(function() {
@@ -101,12 +140,164 @@ function addRealtyAction(realtyName) {
     require(__dirname + '/class/repositories/Realties').insert(toInsert).then(
         (realty) =>{
             console.log(realty);
+            let realtiesLisTemplate = $('#realtyListTpl').html();
+            let tpl = handlebars.compile(realtiesLisTemplate);
+
+            let realtyProject = projects.find((project) => project.id == realty.realty_project_id);
+            let title = realtyProject.project_title;
+            realty.project_title = title;
+
+            if(realty.realty_net_price) realty.realty_price = Math.ceil(realty.realty_net_price + (realty.realty_net_price * (realty.realty_vat /100))) + ' €';
+            if(realty.realty_surface) realty.realty_surface = realty.realty_surface + ' m²';
+            realty.realty_active_online = (realty.realty_active_online == 0) ? 'Hors ligne' : 'En ligne';
+
+            let r = {realties: [realty]};
+            realtiesTable.row.add($(tpl(r))[0]).draw();
             setEditRealty(realty)
         }
     );
 }
 
 function setEditRealty(realtyData) {
+    if(realtyData.realty_active_online) realtyData.realty_active_online = 'checked';
+    if(realtyData.realty_acoustic_isolation) realtyData.realty_acoustic_isolation = 'checked';
+    if(realtyData.realty_security_system) realtyData.realty_security_system = 'checked';
+    if(realtyData.realty_door_phone) realtyData.realty_door_phone = 'checked';
+    if(realtyData.realty_videophone) realtyData.realty_videophone = 'checked';
+    if(realtyData.realty_security_door) realtyData.realty_security_door = 'checked';
+    if(realtyData.realty_laundry) realtyData.realty_laundry = 'checked';
+
+    var projectArrayId;
+    realtyData.projects = projects;
+    for(var i in realtyData.projects)
+    {
+        if(realtyData.projects[i].id == realtyData.realty_project_id){
+            realtyData.projects[i].selected = 'selected';
+            projectArrayId = i;
+        }
+        else
+        {
+            realtyData.projects[i].selected = '';
+        }
+    }
+
+    if(realtyData.projects[projectArrayId].project_floor_number)
+    {
+        var floors = Number(realtyData.projects[projectArrayId].project_floor_number);
+        realtyData.realty_floors_list = [];
+        realtyData.project_has_floor = 'Choisissez...';
+        for(var i =0; i< floors; i++ )
+        {
+            var label;
+            var id = i;
+            if(i==0)
+            {
+
+                label = "rez";
+            }
+            else
+            {
+                label = "Etage " + i;
+            }
+
+            realtyData.realty_floors_list.push({id:id, label: label});
+            if(realtyData.realty_floor == id)
+            {
+                realtyData.realty_floors_list[id].selected = 'selected';
+            }
+            else
+            {
+                realtyData.realty_floors_list[id].selected = '';
+            }
+        }
+    }
+    else
+    {
+        realtyData.project_has_floor = 'Voir projet';
+    }
+
+    realtyData.realty_contract_type_lst = contractType;
+    for(var i in contractType)
+    {
+        if(realtyData.realty_contract_type == contractType[i].id) {
+            realtyData.realty_contract_type_lst[i].selected = 'selected';
+        }
+        else
+        {
+            realtyData.realty_contract_type_lst[i].selected = '';
+        }
+    }
+
+    realtyData.realtyTypes = realtyTypes;
+    for(var i in realtyTypes)
+    {
+        if(realtyData.realty_type == realtyTypes[i].id)
+        {
+            realtyData.realtyTypes[i].selected = 'selected';
+        }
+        else
+        {
+            realtyData.realtyTypes[i].selected = '';
+        }
+    }
+
+    realtyData.kitchenTypes = kitchenTypes;
+    for(var i in kitchenTypes)
+    {
+        if(realtyData.realty_kitchen_type == kitchenTypes[i].value)
+        {
+            realtyData.kitchenTypes[i].selected = 'selected';
+        }
+        else
+        {
+            realtyData.kitchenTypes[i].selected = '';
+        }
+    }
+
+    realtyData.terraceOrientations = terraceOrientations;
+    for(var i in terraceOrientations)
+    {
+        if(realtyData.realty_terrace_orientation == terraceOrientations[i].id)
+        {
+            realtyData.terraceOrientations[i].selected = 'selected';
+        }
+        else
+        {
+            realtyData.terraceOrientations[i].selected = '';
+        }
+    }
+
+    realtyData.realty_facades_number_lst = realtyFacades;
+    for(var i in realtyFacades)
+    {
+        if(realtyData.realty_facades_number == realtyFacades[i].id)
+        {
+            realtyData.realty_facades_number_lst[i].selected = 'selected';
+        }
+        else
+        {
+            realtyData.realty_facades_number_lst[i].selected = '';
+        }
+    }
+
+    if(realtyData.realty_availability)
+    {
+        var availabilityDate = new Date(realtyData.realty_availability);
+        realtyData.realty_availability_date = FormEdition.setDateNumberFormat(availabilityDate.getDate()) + '/' + FormEdition.setDateNumberFormat(availabilityDate.getMonth() + 1) + '/' + availabilityDate.getFullYear();
+    }
+
+    if(realtyData.realty_start_diffusion_date) {
+        var diffusionDate = new Date(realtyData.realty_start_diffusion_date);
+        realtyData.realty_diffusion_date = FormEdition.setDateNumberFormat(diffusionDate.getDate()) + '/' + FormEdition.setDateNumberFormat(diffusionDate.getMonth() + 1) + '/' + diffusionDate.getFullYear();
+    }
+
+    realtyData.bedroomsList = getDetailsList(realtyData.realty_bedrooms);
+    realtyData.bathroomsList = getDetailsList(realtyData.realty_bathrooms);
+    realtyData.showersList = getDetailsList(realtyData.realty_showers);
+
+    //console.log('--->');
+    //console.log(realtyData);
+
     let editRealtyTemplate = fs.readFileSync( __dirname + '/view/html/pages/realty-form.html').toString();
     let tpl = handlebars.compile(editRealtyTemplate);
 
@@ -137,14 +328,17 @@ function setRealtiesList(realties)
         var realtyProject = projects.find((project) => project.id == realties[i].realty_project_id);
         var title = realtyProject.project_title;
         realties[i].project_title = title;
+
+        if(realties[i].realty_net_price) realties[i].realty_price = Math.round(parseFloat(realties[i].realty_net_price) + (parseFloat(realties[i].realty_net_price) * (realties[i].realty_vat /100))) + ' €';
+        if(realties[i].realty_surface) realties[i].realty_surface = realties[i].realty_surface + ' m²';
+        realties[i].realty_active_online = (realties[i].realty_active_online == 0) ? 'Hors ligne' : 'En ligne';
+
         //console.log(realtyProject.project_title);
     }
 
-    //console.log(title);
-
     $('#realtiesList tbody').html(tpl(r));
 
-    $('#realtiesList').dataTable({
+    realtiesTable = $('#realtiesList').DataTable({
         "language": {
             "lengthMenu": "_MENU_"
         }
@@ -161,9 +355,48 @@ function setRealtiesList(realties)
     $('.dataTables_paginate>ul.pagination').addClass("pull-right m0");
 }
 
+function loadRealty(id) {
+    require(__dirname + '/class/repositories/Realties').findById(id).then(
+        (realty) => {
+            setEditRealty(realty);
+        });
+}
+
+function removeRealty(id) {
+    bootBox.confirm("Voulez-vous vraiment supprimer ce bien", function(result){
+        if(result) removeAction(id);
+    });
+}
+
+function removeAction(id)
+{
+    FormEdition.editByInputs('Realties', id,[{name: 'realty_status', val: 0}]);
+    realtiesTable.row($('#realty-' + id)).remove().draw();
+}
+
+function arrangeData(){
+
+}
 
 function goToProjects() {
     var action = 'projects';
     $('#page-heading').html(MenuActions.searchInMenu('page', action, 'label')).hide().fadeIn();
     $('#core-app').load('view/html/pages/' + action + '.html').hide().fadeIn();
+}
+
+function getDetailsList(str)
+{
+    var objectList = [];
+    if(str)
+    {
+        str = str.replace(/\s+/g, '');
+        var listArray = str.split(';');
+
+        for(var i in listArray)
+        {
+            objectList.push({n: (Number(i) + 1), surface: listArray[i]});
+        }
+
+    }
+    return objectList;
 }

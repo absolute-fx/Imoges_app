@@ -2,34 +2,86 @@
 
 <div class="tab-container tab-default">
     <ul class="nav nav-tabs"><li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i> </a><ul class="dropdown-menu"></ul></li>
-        <li class="active"><a href="#addPrj-infos" data-toggle="tab" aria-expanded="true">Infos primaires</a></li>
+        <li class="active"><a href="#addPrj-infos" data-toggle="tab" aria-expanded="true">Infos générales</a></li>
+        <li class=""><a href="#addPrj-details" data-toggle="tab" aria-expanded="true">Détails</a></li>
         <li class=""><a href="#addPrj-descri" data-toggle="tab" aria-expanded="true">Description</a></li>
+        <li class=""><a href="#addPrj-steps" data-toggle="tab" aria-expanded="true">Phases</a></li>
         <li class=""><a href="#addPrj-library" data-toggle="tab" aria-expanded="true">Biliothèque</a></li>
         <li class=""><a href="#addPrj-doc" data-toggle="tab" aria-expanded="true">options</a></li>
-        <li class=""><a href="#addPrj-steps" data-toggle="tab" aria-expanded="true">Phases</a></li>
-        <li class=""><a href="#addPrj-stats" data-toggle="tab" aria-expanded="true">Statistiques</a></li>
     </ul>
     <div class="tab-content">
 
         <div class="tab-pane active" id="addPrj-infos">
             <form id="form-tab-1" data-tablename="Projects">
-                <div class="form-group">
-                    <label for="project_title">Nom du projet</label>
-                    <input type="hidden" id="project_id" value="{{id}}">
-                    <input type="hidden" id="lat_projet" name="project_lat" value="{{project_lat}}">
-                    <input type="hidden" id="long_projet" name="project_long" value="{{project_long}}">
-                    <input type="text" class="form-control" id="project_title" name="project_title" value="{{project_title}}">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="project_title">Nom du projet</label>
+                        <input type="hidden" id="project_id" value="{{id}}">
+                        <input type="hidden" id="lat_projet" name="project_lat" value="{{project_lat}}">
+                        <input type="hidden" id="long_projet" name="project_long" value="{{project_long}}">
+                        <input type="text" class="form-control" id="project_title" name="project_title" value="{{project_title}}">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="projectTypes">Type de projet</label>
+                        <select name="project_type" id="projectTypes" class="form-control">
+                            <option value="">Choisissez...</option>
+                            {{#each project_types_list}}
+                            <option value="{{id}}" {{selected}}>{{label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <label for="facadeNumber">Façades</label>
+                        <select name="project_facade_number" id="facadeNumber" class="form-control">
+                            <option value="">-</option>
+                            {{#each project_facade_number_list}}
+                            <option value="{{id}}" {{selected}}>{{label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="cadastralIncome">Revenu cadastral</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="cadastralIncome" name="project_cadastral_income" value="{{project_cadastral_income}}">
+                            <span class="input-group-addon">€</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="charges">Chrages</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="charges" name="project_charges" value="{{project_charges}}">
+                            <span class="input-group-addon">€</span>
+                        </div>
+                    </div>
                 </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="projectStartDate">Début de chantier</label>
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" id="projectStartDate" value="{{project_start_build_date}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="projectEndDate">Fin de chantier</label>
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" id="projectEndDate" value="{{project_end_build_date}}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <hr>
                 <div class="form-group">
                     <label for="googleMapsSearch">Recherche google maps</label>
                     <input type="text" class="form-control" id="googleMapsSearch">
                 </div>
-                <div class="form-group">
-                    <label for="projectAdress">Adresse</label>
-                    <input type="text" class="form-control" id="projectAdress" name="project_address" value="{{project_address}}">
-                </div>
                 <div class="row">
-                    <div class="col-md-10 form-group">
+                    <div class="form-group col-md-6">
+                        <label for="projectAdress">Adresse</label>
+                        <input type="text" class="form-control" id="projectAdress" name="project_address" value="{{project_address}}">
+                    </div>
+                    <div class="col-md-4 form-group">
                         <label for="projectCity">Ville</label>
                         <input type="text" class="form-control" id="projectCity" name="project_city" value="{{project_city}}">
                     </div>
@@ -39,6 +91,147 @@
                     </div>
                 </div>
                 <div id="map" class="project-map"></div>
+            </form>
+        </div>
+
+        <div class="tab-pane" id="addPrj-details">
+            <form id="form-details" data-tablename="Projects">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label for="environmentType">Type d'environement</label>
+                        <select name="project_environment_type" id="environmentType" class="form-control">
+                            <option value="">Choisissez...</option>
+                            {{#each project_environment_type_list}}
+                            <option value="{{id}}" {{selected}}>{{label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="terrainSize">Superficie du terrain</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="terrainSize" name="project_terrain_size" value="{{project_terrain_size}}">
+                            <span class="input-group-addon">m²</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label for="parkingInNumber">Places parking intérrieur</label>
+                        <input type="number" class="form-control" id="parkingInNumber" name="project_parking_in_number" value="{{project_parking_in_number}}">
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label for="parkingOutNumber">Places parking extérieur</label>
+                        <input type="number" class="form-control" id="parkingOutNumber" name="project_parking_out_number" value="{{project_parking_out_number}}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 form-group">
+                        <label for="floorNumber">Nombre d'étages</label>
+                        <input type="number" class="form-control" id="floorNumber" name="project_floor_number" value="{{project_floor_number}}">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Accès handicapé</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_handicapped_access" type="checkbox" {{project_handicapped_access}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Ascenseur</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_lift" type="checkbox" {{project_lift}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Conciergerie</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_concierge" type="checkbox" {{project_concierge}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label for="peb">Classe énergétique</label>
+                        <select name="project_peb" id="peb" class="form-control">
+                            <option value="">Choisissez...</option>
+                            {{#each project_peb_list}}
+                            <option value="{{id}}" {{selected}}>{{label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="heatingTypes">Chauffage</label>
+                        <select name="project_heating_type" id="heatingTypes" class="form-control">
+                            <option value="">Choisissez...</option>
+                            {{#each heating_types_list}}
+                            <option value="{{id}}" {{selected}}>{{label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="charges">Consommation énergétique</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="energyConsumption" name="project_energy_consumption" value="{{project_energy_consumption}}">
+                            <span class="input-group-addon">KWh/m²</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="co2Emission">Emission CO2</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="co2Emission" name="project_CO2_emission" value="{{project_CO2_emission}}">
+                            <span class="input-group-addon">KWh/m²</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>Climatisation</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_air_conditioning" type="checkbox" {{project_air_conditioning}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Pompe à chaleur</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_heat_pump" type="checkbox" {{project_heat_pump}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Double vitrage</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_double_glazing" type="checkbox" {{project_double_glazing}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Photovoltaïque</label>
+                        <ul class="demo-btns mb-10">
+                            <li class="mb0"><input class="bootstrap-switch" name="project_PV" type="checkbox" {{project_PV}} data-size="mini" data-on-color="success" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="distanceSchools">Distance écoles</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="distanceSchools" name="project_distance_schools" value="{{project_distance_schools}}">
+                            <span class="input-group-addon">m</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="distanceShops">Distance commerces</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="distanceShops" name="project_distance_shops" value="{{project_distance_shops}}">
+                            <span class="input-group-addon">m</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="distanceTransports">Distance transports</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="distanceTransports" name="project_distance_transports" value="{{project_distance_transports}}">
+                            <span class="input-group-addon">m</span>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -53,6 +246,27 @@
                     <textarea class="form-control autosize" name="project_long_description" id="longDescription">{{project_long_description}}</textarea>
                 </div>
             </form>
+        </div>
+
+        <div class="tab-pane" id="addPrj-steps">
+            <form action="">
+                <div class="form-group">
+                    <label for="projectPhase">Phases (min 3 - max 6)</label>
+                    <input type="hidden" id="phase_actuelle_projet" name="project_actual_phase" value="{{project_actual_phase}}">
+                    <input type="hidden" id="projectPhase" value="{{selectData}}"/>
+                </div>
+            </form>
+            <div id="stepsListContainer" class="row process-wizard process-wizard-primary hidden-xs">
+                {{#each Phases}}
+                <div class="col-xs-{{colSize}} process-wizard-step {{state}}">
+                    <div class="text-center process-wizard-stepnum">{{title}}</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" onclick="javascript: setActiveStep({{id}}); return false;" class="process-wizard-dot"></a>
+                </div>
+                {{/each}}
+            </div>
         </div>
 
         <div class="tab-pane" id="addPrj-library">
@@ -90,53 +304,12 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label for="projectStartDate">Début de chantier</label>
-                        <div class="input-group date">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" id="projectStartDate" value="{{project_start_build_date}}" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="projectEndDate">Fin de chantier</label>
-                        <div class="input-group date">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" id="projectEndDate" value="{{project_end_build_date}}" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <hr>
+
                 <div class="form-group">
                     <label for="lien_immoweb_projet">Lien Immoweb</label>
                     <input type="text" id="lien_immoweb_projet" class="form-control" value="{{lien_immoweb_projet}}">
                 </div>
             </form>
-        </div>
-
-        <div class="tab-pane" id="addPrj-steps">
-            <form action="">
-                <div class="form-group">
-                    <label for="projectPhase">Phases (min 3 - max 6)</label>
-                    <input type="hidden" id="phase_actuelle_projet" name="project_actual_phase" value="{{project_actual_phase}}">
-                    <input type="hidden" id="projectPhase" value="{{selectData}}"/>
-                </div>
-            </form>
-            <div id="stepsListContainer" class="row process-wizard process-wizard-primary hidden-xs">
-                {{#each Phases}}
-                <div class="col-xs-{{colSize}} process-wizard-step {{state}}">
-                    <div class="text-center process-wizard-stepnum">{{title}}</div>
-                    <div class="progress">
-                        <div class="progress-bar"></div>
-                    </div>
-                    <a href="#" onclick="javascript: setActiveStep({{id}}); return false;" class="process-wizard-dot"></a>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-
-        <div class="tab-pane" id="addPrj-stats">
-            statistiques sur le projet
         </div>
 
     </div>
