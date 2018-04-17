@@ -130,7 +130,12 @@ module.exports = function (sequelize, DataTypes) {
         },
         {
             timestamp: true,
-            logging: console.log
+            logging: console.log,
+            classMethods: {
+                associate: function(models) {
+
+                }
+            }
         });
     return Realties;
 };
