@@ -116,6 +116,8 @@ function setProjectsBoxes(projects) {
     let projectList = {projectRow: []};
     let row = -1;
     let image;
+    if(projects.length > 6 && projects.length <= 8) itemsByRow = 4;
+    if(projects.length > 8) itemsByRow = 6;
 
     for (let i in projects)
     {
@@ -142,7 +144,6 @@ function setProjectsBoxes(projects) {
     }
     //console.log(projectList);
     $('#projects-wrapper').html(tpl(projectList));
-
     let projectId, projectAction;
     $('#projects-wrapper a').each(function(){
         $(this).click(()=>{
@@ -212,7 +213,13 @@ function createProject(projectName)
             project.save().then((project) => {
                 project.addPhases(phase.id);
                 console.log(project);
-                setEditProject(project.id);
+                $('#projects-wrapper a').each(function(){
+                    $(this).unbind( "click" );
+                });
+                $('#projects-wrapper').html('');
+                getProjectsList();
+                loadProjectData(project.id);
+                //setEditProject(project.id);
             });
         }
     );

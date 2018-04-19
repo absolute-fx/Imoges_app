@@ -44,6 +44,7 @@ class ProjectsRepository
 
     findAll() {
         return this.models.findAll({
+            order: [['id', 'DESC']],
             include: [{
                 model: orm.models.Phases
             }]
