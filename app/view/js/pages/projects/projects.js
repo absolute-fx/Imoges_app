@@ -87,10 +87,26 @@ function getPhasesList()
     });
 }
 
+function loadProjectLibrary(id)
+{
+    var whereQuery = {where: {library_category_table_name : 'Projects', library_category_table_id : id}};
+    var lib;
+    require(__dirname + '/class/repositories/Librarycategories').findAll(whereQuery).then(
+        (library) => {
+            lib = library
+            var whereQuery = {where: {ProjectId: id, realty_status: 1}};
+            require(__dirname + '/class/repositories/Projects').findAll(whereQuery).then((projects) => {
+                setProjLibInterface(id, lib, projects);
+            }).catch((error) => {
+                alert(error.toString());
+            });
+        }).catch((error)=>{
+
+    });
+}
+
 // INIT
 $(document).ready(()=>{
-    //console.log(require('electron').remote.getGlobal('pageVar'));
-    //ipcRenderer.send('setPageVar', {name: 'project', id: '1'});
     getPhasesList();
 });
 
@@ -100,10 +116,10 @@ $(document).ready(()=>{
 // BOX ACTION SETTERS
 var projectsNavigationData = [
     {btnLabel: 'Infos projet', btnAction: 'infos'},
+    {btnLabel: 'Bibliothèque', btnAction: 'library'},
     {btnLabel: 'Biens', btnAction: 'realty'},
     {btnLabel: 'Clients', btnAction: 'clientsList'},
     {btnLabel: 'Partenaires', btnAction: 'partners'},
-    {btnLabel: 'Bibliothèque', btnAction: 'library'},
     {btnLabel: 'Factures', btnAction: 'invoices'},
     {btnLabel: 'Support', btnAction: 'support'}
 ];
@@ -161,6 +177,9 @@ function projectsNavigation(action, id)
     {
         case 'infos':
             loadProjectData(id);
+            break;
+        case 'library':
+            loadProjectLibrary(id);
             break;
         default:
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
@@ -393,6 +412,45 @@ function setEditProject(projectData){
         }
     }).on("shown.bs.modal", function() {
         initMap();
+    });
+}
+
+// SET LIBRARY
+function setProjLibInterface(projectId, libraryCategories, projects)
+{
+    var libraryData = {readonly: 'readonly'};
+    libraryData.categories = libraryCategories
+    libraryData.tables = [
+        {label : 'Projet', value: 'Projects', selected: 'selected'},
+        {label : 'Biens', value: 'Realties', selected: ''}
+    ];
+
+    libraryData.elements = [];
+    var selected;
+    for (var i in projects)
+    {
+        selected = (projectId == projects[i].id)? 'selected': '';
+        libraryData.elements.push({id: projects[i].id, label: projects[i].project_title, selected: selected});
+    }
+
+    libraryData.id = '{{id}}';
+    libraryData.Library_category_label = '{{Library_category_label}}';
+
+    let libraryTemplate = fs.readFileSync( __dirname + '/view/html/pages/libraries.html').toString();
+    let tpl = handlebars.compile(libraryTemplate);
+    bootBox.dialog({
+        message: tpl(libraryData),
+        onEscape: true,
+        title: 'Librairie',
+        size: "large",
+        backdrop: true,
+        buttons: {
+            cancel: {
+                label: 'Fermer',
+            }
+        }
+    }).on("shown.bs.modal", function() {
+
     });
 }
 

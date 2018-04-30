@@ -2,23 +2,12 @@ var autosize = require('autosize');
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
 var realtyId;
 var appParams = require('electron').remote.getGlobal('appParams');
+var userData = require('electron').remote.getGlobal('user');
 var fs = require('fs');
 
 $(document).ready(function () {
     realtyId = $('#realty_id').val();
     autosize($('#longDescription, #shortDescription'));
-
-    $("#fileUploader").dropzone({
-        url: "http://imoges.afxlab.be/upload.php",
-        init: function()
-        {
-            this.on("complete", function(file) {
-                console.log(file);
-                this.removeFile(file);
-                fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.libraryPath + 'test.jpg'));
-            });
-        }
-    });
 
     $('input.bootstrap-switch').bootstrapSwitch();
     $('input.bootstrap-switch').on('switchChange.bootstrapSwitch', function(event, state) {
@@ -72,22 +61,6 @@ $(document).ready(function () {
         var fullPrice = Math.round(price + (price * (vat / 100)));
         $('#realtyPrice').val(fullPrice.toFixed(2));
     }
-    /*
-    $('#bedrooms').on('change keyup paste', (e) =>{
-        var inputField = $('#' + e.target.id).val();
-        inputField = inputField.replace(/\s+/g, '');
-        var itemsList = inputField.split(';');
-        console.log(itemsList);
-        $('#bedroomsList').html('');
-        for (var i in itemsList)
-        {
-            if(itemsList[i] != '')
-            {
-                $('#bedroomsList').append('<li class="list-group-item">Chambre ' + (Number(i)+1) + ': <strong>' + itemsList[i] + '</strong> m²</li>') ;
-            }
-        }
-    });
-    */
 
     setListFromString();
 });

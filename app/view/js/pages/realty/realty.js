@@ -80,10 +80,10 @@ function sideMenuAction(action)
     }
 }
 
-// CALL TO SERVICE
-function getRealtiesList()
+// CALL TO SERVICES
+function initRealtiesList()
 {
-    var whereQuery = (projectId) ? {where: {realty_project_id: projectId, realty_status: 1}} : {where: {realty_status: 1}};
+    var whereQuery = (projectId) ? {where: {ProjectId: projectId, realty_status: 1}} : {where: {realty_status: 1}};
     require(__dirname + '/class/repositories/Realties').findAll(whereQuery).then((realties) => {
         require(__dirname + '/class/repositories/Projects').findAll({where: {project_status: 1}}).then((p) => {
             projects = p;
@@ -96,10 +96,45 @@ function getRealtiesList()
     });
 }
 
+function loadRealty(id) {
+    require(__dirname + '/class/repositories/Realties').findById(id).then(
+        (realty) => {
+            console.log(realty);
+            setEditRealty(realty);
+        });
+}
+
+function loadLibrary(id)
+{
+    var whereQuery = {where: {library_category_table_name : 'Realties', library_category_table_id : id}};
+    var lib;
+    require(__dirname + '/class/repositories/Librarycategories').findAll(whereQuery).then(
+        (library) => {
+            lib = library
+            var whereQuery = (projectId) ? {where: {ProjectId: projectId, realty_status: 1}} : {where: {realty_status: 1}};
+            require(__dirname + '/class/repositories/Realties').findAll(whereQuery).then((realties) => {
+                setLibraryInterface(id, lib, realties);
+            }).catch((error) => {
+                alert(error.toString());
+            });
+        }).catch((error)=>{
+
+    });
+}
+
+function addLibraryCategory(realty)
+{
+    var toInsert = {Library_category_label: 'general',library_category_table_name: 'Realties', library_category_table_id: realty.id}
+    require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
+        (category) =>{
+            realty.category = category;
+            setEditRealty(realty);
+        });
+}
 
 // INIT
 $(document).ready(function() {
-    getRealtiesList();
+    initRealtiesList();
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,7 +170,7 @@ function addRealty()
 function addRealtyAction(realtyName) {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
     var toInsert = {realty_title: realtyName};
-    if(projectId) toInsert.realty_project_id = projectId;
+    if(projectId) toInsert.ProjectId = projectId;
     console.log(toInsert);
     require(__dirname + '/class/repositories/Realties').insert(toInsert).then(
         (realty) =>{
@@ -143,9 +178,16 @@ function addRealtyAction(realtyName) {
             let realtiesLisTemplate = $('#realtyListTpl').html();
             let tpl = handlebars.compile(realtiesLisTemplate);
 
-            let realtyProject = projects.find((project) => project.id == realty.realty_project_id);
-            let title = realtyProject.project_title;
-            realty.project_title = title;
+            if(realty.ProjectId)
+            {
+                let realtyProject = projects.find((project) => project.id == realty.ProjectId);
+                let title = realtyProject.project_title;
+                realty.project_title = title;
+            }
+            else
+            {
+                realty.project_title = 'Aucun';
+            }
 
             if(realty.realty_net_price) realty.realty_price = Math.ceil(realty.realty_net_price + (realty.realty_net_price * (realty.realty_vat /100))) + ' €';
             if(realty.realty_surface) realty.realty_surface = realty.realty_surface + ' m²';
@@ -153,7 +195,8 @@ function addRealtyAction(realtyName) {
 
             let r = {realties: [realty]};
             realtiesTable.row.add($(tpl(r))[0]).draw();
-            setEditRealty(realty)
+            //setEditRealty(realty);
+            addLibraryCategory(realty);
         }
     );
 }
@@ -171,7 +214,7 @@ function setEditRealty(realtyData) {
     realtyData.projects = projects;
     for(var i in realtyData.projects)
     {
-        if(realtyData.projects[i].id == realtyData.realty_project_id){
+        if(realtyData.projects[i].id == realtyData.ProjectId){
             realtyData.projects[i].selected = 'selected';
             projectArrayId = i;
         }
@@ -180,40 +223,46 @@ function setEditRealty(realtyData) {
             realtyData.projects[i].selected = '';
         }
     }
-
-    if(realtyData.projects[projectArrayId].project_floor_number)
+    if(realtyData.projects[projectArrayId])
     {
-        var floors = Number(realtyData.projects[projectArrayId].project_floor_number);
-        realtyData.realty_floors_list = [];
-        realtyData.project_has_floor = 'Choisissez...';
-        for(var i =0; i< floors; i++ )
+        if(realtyData.projects[projectArrayId].project_floor_number)
         {
-            var label;
-            var id = i;
-            if(i==0)
+            var floors = Number(realtyData.projects[projectArrayId].project_floor_number);
+            realtyData.realty_floors_list = [];
+            realtyData.project_has_floor = 'Choisissez...';
+            for(var i =0; i< floors; i++ )
             {
+                var label;
+                var id = i;
+                if(i==0)
+                {
 
-                label = "rez";
-            }
-            else
-            {
-                label = "Etage " + i;
-            }
+                    label = "rez";
+                }
+                else
+                {
+                    label = "Etage " + i;
+                }
 
-            realtyData.realty_floors_list.push({id:id, label: label});
-            if(realtyData.realty_floor == id)
-            {
-                realtyData.realty_floors_list[id].selected = 'selected';
+                realtyData.realty_floors_list.push({id:id, label: label});
+                if(realtyData.realty_floor == id)
+                {
+                    realtyData.realty_floors_list[id].selected = 'selected';
+                }
+                else
+                {
+                    realtyData.realty_floors_list[id].selected = '';
+                }
             }
-            else
-            {
-                realtyData.realty_floors_list[id].selected = '';
-            }
+        }
+        else
+        {
+            realtyData.project_has_floor = 'Voir projet';
         }
     }
     else
     {
-        realtyData.project_has_floor = 'Voir projet';
+        realtyData.project_has_floor = 'Non dispo';
     }
 
     realtyData.realty_contract_type_lst = contractType;
@@ -295,9 +344,6 @@ function setEditRealty(realtyData) {
     realtyData.bathroomsList = getDetailsList(realtyData.realty_bathrooms);
     realtyData.showersList = getDetailsList(realtyData.realty_showers);
 
-    //console.log('--->');
-    //console.log(realtyData);
-
     let editRealtyTemplate = fs.readFileSync( __dirname + '/view/html/pages/realty-form.html').toString();
     let tpl = handlebars.compile(editRealtyTemplate);
 
@@ -323,11 +369,21 @@ function setRealtiesList(realties)
     let tpl = handlebars.compile(realtiesLisTemplate);
 
     var r = {realties: realties};
+
     for(var i in realties)
     {
-        var realtyProject = projects.find((project) => project.id == realties[i].realty_project_id);
-        var title = realtyProject.project_title;
-        realties[i].project_title = title;
+        if(realties[i].ProjectId)
+        {
+            var realtyProject = projects.find((project) => project.id == realties[i].ProjectId);
+            var title = realtyProject.project_title;
+            realties[i].project_title = title;
+        }
+        else
+        {
+            realties[i].project_title = 'Aucun';
+        }
+
+
 
         if(realties[i].realty_net_price) realties[i].realty_price = Math.round(parseFloat(realties[i].realty_net_price) + (parseFloat(realties[i].realty_net_price) * (realties[i].realty_vat /100))) + ' €';
         if(realties[i].realty_surface) realties[i].realty_surface = realties[i].realty_surface + ' m²';
@@ -355,12 +411,45 @@ function setRealtiesList(realties)
     $('.dataTables_paginate>ul.pagination').addClass("pull-right m0");
 }
 
-function loadRealty(id) {
-    require(__dirname + '/class/repositories/Realties').findById(id).then(
-        (realty) => {
-            setEditRealty(realty);
-        });
+function setLibraryInterface(realtyId, libraryCategories, realties){
+
+    var libraryData = {readonly: 'readonly'};
+    libraryData.categories = libraryCategories
+    libraryData.tables = [
+        {label : 'Projet', value: 'Projects', selected: ''},
+        {label : 'Biens', value: 'Realties', selected: 'selected'}
+        ];
+
+    //console.log(realties);
+    libraryData.elements = [];
+    var selected;
+    for (var i in realties)
+    {
+        selected = (realtyId == realties[i].id)? 'selected': '';
+        libraryData.elements.push({id: realties[i].id, label: realties[i].realty_title, selected: selected});
+    }
+
+    libraryData.id = '{{id}}';
+    libraryData.Library_category_label = '{{Library_category_label}}';
+
+    let libraryTemplate = fs.readFileSync( __dirname + '/view/html/pages/libraries.html').toString();
+    let tpl = handlebars.compile(libraryTemplate);
+    bootBox.dialog({
+        message: tpl(libraryData),
+        onEscape: true,
+        title: 'Librairie',
+        size: "large",
+        backdrop: true,
+        buttons: {
+            cancel: {
+                label: 'Fermer',
+            }
+        }
+    }).on("shown.bs.modal", function() {
+
+    });
 }
+
 
 function removeRealty(id) {
     bootBox.confirm("Voulez-vous vraiment supprimer ce bien", function(result){

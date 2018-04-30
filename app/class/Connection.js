@@ -15,10 +15,4 @@ module.exports =  new Connection(
         }
     },
     discover
-).then(
-    (db) => {
-        Object.keys(db.models).forEach(function(modelName) {
-            db.models[modelName].options.classMethods.associate(db.models);
-        });
-        db.sequelize.sync();
-    });
+);

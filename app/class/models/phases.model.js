@@ -14,12 +14,10 @@
         },
         {
             timestamp: true,
-            logging: console.log,
-            classMethods: {
-                associate: function(models) {
-                    Phases.belongsToMany (models.Projects, {through: 'project_phases', foreignKey: 'phase_id'});
-                }
-            }
+            logging: console.log
         });
+    Phases.associate = function (models) {
+        Phases.belongsToMany (models.Projects, {through: 'project_phases', foreignKey: 'phase_id'});
+    };
     return Phases;
 };

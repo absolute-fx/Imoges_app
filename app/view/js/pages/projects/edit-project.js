@@ -6,8 +6,6 @@ $(document).ready(function () {
     projectId = $('#project_id').val();
     autosize($('#longDescription, #shortDescription'));
 
-    $("#fileUploader").dropzone({ url: "/file/post" });
-
     $('input.bootstrap-switch').bootstrapSwitch();
     $('input.bootstrap-switch').on('switchChange.bootstrapSwitch', function(event, state) {
         let attrName = $(this).attr('name');

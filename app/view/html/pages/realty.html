@@ -47,10 +47,30 @@
                 </button>
                 <ul class="dropdown-menu pull-left">
                     <li><a href="#" onclick="javascript: loadRealty({{id}});">Editer</a></li>
+                    <li><a href="#" onclick="javascript: loadLibrary({{id}});">Bibliothèque</a></li>
                     <li><a href="#" onclick="javascript: removeRealty({{id}});">Supprimer</a></li>
                 </ul>
             </div>
         </td>
     </tr>
     {{/each}}
+</script>
+
+<script id="promptNewRealty" type="text/x-handlebars-template">
+    <form id="form-add-realty" data-tablename="Realties">
+        <div class="row">
+            <div class="form-group">
+                <label for="">Référence du bien</label>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label for="">Choisissez un projet</label>
+                <select name="" id="" class="form-control">
+                    <option value="">Aucun</option>
+                </select>
+            </div>
+        </div>
+    </form>
 </script>
