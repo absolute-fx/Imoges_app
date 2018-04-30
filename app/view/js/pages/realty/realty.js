@@ -128,12 +128,20 @@ function addLibraryCategory(realty)
     require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
         (category) =>{
             realty.category = category;
+            logThisEvent({
+                log_message: "Ajout de la catégorie " + category.Library_category_label + " au bien " + realty.project_title ,
+                log_action_type: 'add',
+                log_status: true,
+                log_table_name: 'Realties',
+                log_table_id: category.id
+            });
             setEditRealty(realty);
         });
 }
 
 // INIT
 $(document).ready(function() {
+    deactivateSideMenu();
     initRealtiesList();
 });
 
@@ -174,6 +182,7 @@ function addRealtyAction(realtyName) {
     console.log(toInsert);
     require(__dirname + '/class/repositories/Realties').insert(toInsert).then(
         (realty) =>{
+
             console.log(realty);
             let realtiesLisTemplate = $('#realtyListTpl').html();
             let tpl = handlebars.compile(realtiesLisTemplate);
@@ -195,6 +204,17 @@ function addRealtyAction(realtyName) {
 
             let r = {realties: [realty]};
             realtiesTable.row.add($(tpl(r))[0]).draw();
+
+
+
+            logThisEvent({
+                log_message: "Ajout du bien " + realty.realty_title + " au projet " + realty.project_title ,
+                log_action_type: 'add',
+                log_status: true,
+                log_table_name: 'Realties',
+                log_table_id: realty.id
+            });
+
             //setEditRealty(realty);
             addLibraryCategory(realty);
         }

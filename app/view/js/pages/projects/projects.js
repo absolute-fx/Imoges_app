@@ -43,8 +43,7 @@ var environmentTypes = [
 // SIDE MENU SETTER ~ UN-SETTER
 sideMenu.setSideMenu(sideNavTitle,
     [
-        {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
-        {label: 'Statistiques', icon: 'fa fa-bar-chart-o', action: 'stat'}
+        {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'}
     ]
 );
 
@@ -107,6 +106,7 @@ function loadProjectLibrary(id)
 
 // INIT
 $(document).ready(()=>{
+    deactivateSideMenu();
     getPhasesList();
 });
 
@@ -231,6 +231,13 @@ function createProject(projectName)
         (phase) => {
             project.save().then((project) => {
                 project.addPhases(phase.id);
+                logThisEvent({
+                    log_message: 'Ajout du projet ' + projectName,
+                    log_action_type: 'add',
+                    log_status: true,
+                    log_table_name: 'Projects',
+                    log_table_id: project.id
+                });
                 console.log(project);
                 $('#projects-wrapper a').each(function(){
                     $(this).unbind( "click" );

@@ -125,7 +125,15 @@ function addNewCategory()
         };
         require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
             (category) =>{
-
+                    /*
+                    logThisEvent({
+                        log_message: "Ajout de la catégorie " + category.Library_category_label + " au bien " + realty.project_title ,
+                        log_action_type: 'add',
+                        log_status: true,
+                        log_table_name: $('#tableNameSelect').val(),
+                        log_table_id: category.id
+                    });
+                    */
                     let catLisTemplate = $('#catListTpl').html();
                     let tplCat = handlebars.compile(catLisTemplate);
 
