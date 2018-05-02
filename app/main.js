@@ -5,13 +5,15 @@ const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
+const aclClass = require('./class/Acl').Acl;
+
 let template;
 let menu;
 let win;
 global.pageVars ={};
 global.appParams = {libraryPath: 'E:/JOBS/Imoges - Site V3/files_holder/'};
 
-    function createWindow() {
+function createWindow() {
     win = new BrowserWindow({width: 640, height: 235, icon: "icon.ico", backgroundColor: "#37474f", minimizable: false, maximizable: false});
     win.setMenu(null);
     win.loadURL(url.format({
@@ -35,6 +37,9 @@ global.appParams = {libraryPath: 'E:/JOBS/Imoges - Site V3/files_holder/'};
         const autoUpdater = new autoUpdaterClass(win);
         autoUpdater.autoUpdater.checkForUpdates();
     }
+
+    // ACL
+    const acl = new aclClass();
 }
 
 app.on('ready', createWindow);

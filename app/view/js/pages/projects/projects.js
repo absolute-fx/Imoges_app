@@ -239,11 +239,10 @@ function createProject(projectName)
                     log_table_id: project.id
                 });
                 logThisEvent({
-                    log_message: 'Liaison de la phase <strong data-id="' + phase.id + '" data-table="Phases">' + phase.title + '</strong>',
+                    log_message: 'Liaison de la phase <strong data-id="' + phase.id + '" data-table="Phases">' + phase.title + '</strong> au projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
                     log_action_type: 'bind',
                     log_status: true,
-                    log_table_name: 'Projects',
-                    log_table_id: project.id
+                    log_table_name: 'project_phases'
                 });
                 console.log(project);
                 $('#projects-wrapper a').each(function(){
