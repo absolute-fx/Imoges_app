@@ -1,6 +1,6 @@
 <script type="text/javascript"> $.getScript("./view/js/pages/parameters/parameters.js", function(data){return data;});</script>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading"><h2>Système</h2></div>
             <div class="panel-body">
@@ -19,13 +19,48 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="panel panel-default">
-            <div class="panel-heading"><h2>...</h2></div>
+            <div class="panel-heading"><h2>Logs</h2></div>
             <div class="panel-body">
                 <div class="alert alert-info">
-                    Infos
+                    Paramètres d'optimisation des logs. Nettoyage et backup en locale de la base de données des logs
                     <button type="button" class="close" data-dismiss="alert">×</button>
+                </div>
+                <form action="">
+                    <div class="form-group col-md-6">
+                        <label for="max-logs-display"> Nombre maximal de logs</label>
+                        <div class="input-group">
+                            <input type="number" value="" id="max-logs-display" class="form-control">
+                            <span class="input-group-addon">Logs</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="max-logs">Nettoyage des logs après</label>
+                        <div class="input-group">
+                            <input type="number" value="" id="max-logs" class="form-control">
+                            <span class="input-group-addon">Logs</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h2>Paramètres prédéfinis</h2></div>
+            <div class="panel-body">
+                <div class="form-group col-md-12">
+                    <label for="default-phases">Phases par défaut</label>
+                    <input type="hidden" id="default-phases" value="1,2"/>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="default-projects-categories">Catégorie par défaut des projets</label>
+                    <input type="hidden" id="default-projects-categories" value="1,2"/>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="default-realties-categories">Catégorie par défaut des biens</label>
+                    <input type="hidden" id="default-realties-categories" value="1"/>
                 </div>
             </div>
         </div>

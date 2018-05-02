@@ -60,7 +60,7 @@ function sideMenuAction(action)
     }
 }
 
-// CALL TO SERVICE
+// CALL TO SERVICES
 function getProjectsList()
 {
     require(__dirname + '/class/repositories/Projects').findAll({where: {project_status: 1}}).then((projects) => {
@@ -88,12 +88,12 @@ function getPhasesList()
 
 function loadProjectLibrary(id)
 {
-    var whereQuery = {where: {library_category_table_name : 'Projects', library_category_table_id : id}};
+    var whereQuery = {where: {library_category_table_name : 'Projects', library_category_table_id : id,}};
     var lib;
     require(__dirname + '/class/repositories/Librarycategories').findAll(whereQuery).then(
         (library) => {
             lib = library
-            var whereQuery = {where: {ProjectId: id, realty_status: 1}};
+            var whereQuery = {where: {project_status: 1}};
             require(__dirname + '/class/repositories/Projects').findAll(whereQuery).then((projects) => {
                 setProjLibInterface(id, lib, projects);
             }).catch((error) => {
@@ -232,8 +232,15 @@ function createProject(projectName)
             project.save().then((project) => {
                 project.addPhases(phase.id);
                 logThisEvent({
-                    log_message: 'Ajout du projet ' + projectName,
+                    log_message: 'Ajout du projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
                     log_action_type: 'add',
+                    log_status: true,
+                    log_table_name: 'Projects',
+                    log_table_id: project.id
+                });
+                logThisEvent({
+                    log_message: 'Liaison de la phase <strong data-id="' + phase.id + '" data-table="Phases">' + phase.title + '</strong>',
+                    log_action_type: 'bind',
                     log_status: true,
                     log_table_name: 'Projects',
                     log_table_id: project.id

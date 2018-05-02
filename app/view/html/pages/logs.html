@@ -1,1 +1,41 @@
-<p>We log bunch of stuffs here</p>
+<script type="text/javascript"> $.getScript("./view/js/pages/logs/logs.js", function(data){return data;});</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>Liste des logs</h2>
+                <div class="panel-ctrls">
+                </div>
+            </div>
+            <div class="panel-body panel-no-padding">
+                <table id="logsList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th class="dt-center"></th>
+                        <th class="dt-center"></th>
+                        <th>Evénement</th>
+                        <th>Utilisateur</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="logsListTpl" type="text/x-handlebars-template">
+    {{#each logs}}
+    <tr id="log-{{id}}" class="even">
+        <td class="dt-center"><span class="text-{{iconColor}} fa {{icon}}"></span></td>
+        <td class="dt-center"><span class="text-{{status}} fa {{statusIcon}}"></span></td>
+        <td>{{{log_message}}}</td>
+        <td>{{log_user_name}}</td>
+        <td>{{log_date}}</td>
+    </tr>
+    {{/each}}
+</script>

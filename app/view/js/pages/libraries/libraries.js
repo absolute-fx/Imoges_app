@@ -28,6 +28,32 @@ $(document).ready(function(){
                 require(__dirname + '/class/repositories/Libraries').insert(toInsert).then(
                     (library) =>{
                         //realty.library = library;
+                        var logMessage = '';
+                        logMessage += 'Upload <strong data-id="' + library.id + '" data-table="Libraries"> ' + file.name;
+                        logMessage += '</strong> dans catégorie <strong data-id="' + $('#catSelect').val() + '" data-table="Librarycategories">';
+                        logMessage += $('#catSelect :selected').text() + '</strong>';
+
+                        switch($('#tableNameSelect').val())
+                        {
+                            case 'Projects':
+                                logMessage += ' du projet ';
+                                break;
+
+                            case 'Realties':
+                                logMessage += ' du bien ';
+                                break;
+                        }
+
+                        logMessage += '<strong data-id="' + $('#elementsSelect').val() + '" data-table="' + $('#tableNameSelect').val() + '">' + $('#elementsSelect :selected').text() + '</strong>';
+
+                        logThisEvent({
+                            log_message: logMessage,
+                            log_action_type: 'upload',
+                            log_status: true,
+                            log_table_name: 'Librarycategories',
+                            log_table_id: library.id
+                        });
+
                         fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.libraryPath + 'test.jpg'));
                         this.removeFile(file);
                     });
@@ -125,15 +151,29 @@ function addNewCategory()
         };
         require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
             (category) =>{
-                    /*
+                    var elemTitle = $('#elementsSelect').find(':selected').text();
+                    var elemId = $('#elementsSelect').val();
+                    var logMessage;
+
+                    switch($('#tableNameSelect').val())
+                    {
+                        case 'Realties':
+                            logMessage = 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Librarycategories">' + category.Library_category_label + '</strong> au bien <strong data-id="' + elemId + '" data-table="Realties">' + elemTitle + '</strong>';
+                            break;
+
+                        case 'Projects':
+                            logMessage = 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Librarycategories">' + category.Library_category_label + '</strong> au projet <strong data-id="' + elemId + '" data-table="Projects">' + elemTitle + '</strong>' ;
+                            break;
+                    }
+
                     logThisEvent({
-                        log_message: "Ajout de la catégorie " + category.Library_category_label + " au bien " + realty.project_title ,
+                        log_message: logMessage ,
                         log_action_type: 'add',
                         log_status: true,
-                        log_table_name: $('#tableNameSelect').val(),
+                        log_table_name: 'Librarycategories',
                         log_table_id: category.id
                     });
-                    */
+
                     let catLisTemplate = $('#catListTpl').html();
                     let tplCat = handlebars.compile(catLisTemplate);
 

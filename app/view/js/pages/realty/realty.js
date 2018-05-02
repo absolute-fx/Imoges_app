@@ -129,10 +129,10 @@ function addLibraryCategory(realty)
         (category) =>{
             realty.category = category;
             logThisEvent({
-                log_message: "Ajout de la catégorie " + category.Library_category_label + " au bien " + realty.project_title ,
+                log_message: 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Categories">' + category.Library_category_label + '</strong> au bien <strong data-id="' + realty.id + '" data-table="Realties">' + realty.realty_title + '</strong>',
                 log_action_type: 'add',
                 log_status: true,
-                log_table_name: 'Realties',
+                log_table_name: 'Categories',
                 log_table_id: category.id
             });
             setEditRealty(realty);
@@ -208,7 +208,7 @@ function addRealtyAction(realtyName) {
 
 
             logThisEvent({
-                log_message: "Ajout du bien " + realty.realty_title + " au projet " + realty.project_title ,
+                log_message: 'Ajout du bien <strong data-id="' + realty.id + '" data-table="Realties">' + realty.realty_title + '</strong> au projet <strong data-id="' + realty.ProjectId + '" data-table="Projects">' + realty.project_title + '</strong>',
                 log_action_type: 'add',
                 log_status: true,
                 log_table_name: 'Realties',
@@ -479,8 +479,20 @@ function removeRealty(id) {
 
 function removeAction(id)
 {
-    FormEdition.editByInputs('Realties', id,[{name: 'realty_status', val: 0}]);
-    realtiesTable.row($('#realty-' + id)).remove().draw();
+    require(__dirname + '/class/repositories/Realties').findById(id).then(
+        (realty) => {
+            FormEdition.editByInputs('Realties', id,[{name: 'realty_status', val: 0}]);
+            realtiesTable.row($('#realty-' + id)).remove().draw();
+
+            var fromProject = projects.find((project) => project.id == realty.ProjectId);
+            logThisEvent({
+                log_message: 'Suppression du bien <strong data-id="' + id + '" data-table="Realties">' + realty.realty_title + '</strong> du projet <strong data-id="' + realty.ProjectId + '" data-table="Projects">' + fromProject.project_title + '</strong>',
+                log_action_type: 'remove',
+                log_status: true,
+                log_table_name: 'Realties',
+                log_table_id: realty.id
+            });
+        });
 }
 
 function arrangeData(){

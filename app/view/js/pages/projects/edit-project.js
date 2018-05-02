@@ -49,6 +49,7 @@ $(document).ready(function () {
 
 function setStepsList(event)
 {
+    console.log(event);
     if(event.added)
     {
         // Si ajout nouvelle phase
@@ -58,12 +59,25 @@ function setStepsList(event)
                 'title': event.added.text
             }).then((phase) => {
                 console.log("Phase added : " + phase.id);
+                logThisEvent({
+                    log_message: 'Ajout de la phase <strong data-id="' + phase.id + '" data-table="Phases">' + phase.title + '</strong>',
+                    log_action_type: 'add',
+                    log_status: true,
+                    log_table_name: 'Phases',
+                    log_table_id: phase.id
+                });
                 // ajout de la phase au projet
                 require(__dirname + '/class/repositories/Projects').findById(projectId).then(
                     (p) => {
                         p.addPhases(phase.id);
                         phases.push({id: phase.id, text: phase.title});
                         project.Phases.push({id: phase.id, title:phase.title});
+                        logThisEvent({
+                            log_message: 'Liaison de la phase <strong data-id="' + phase.id + '" data-table="Phases">' + phase.title + '</strong> au projet <strong data-id="' + p.id + '" data-table="Projects">' + p.project_title + '</strong>',
+                            log_action_type: 'bind',
+                            log_status: true,
+                            log_table_name: 'project_phases'
+                        });
                         setStepLine();
                     });
 
@@ -79,19 +93,58 @@ function setStepsList(event)
                 (p) => {
                     p.addPhases(event.added.id);
                     project.Phases.push({id: event.added.id, title:event.added.text});
+                    logThisEvent({
+                        log_message: 'Liaison de la phase <strong data-id="' + event.added.id + '" data-table="Phases">' + event.added.text +  '</strong> au projet <strong data-id="' + p.id + '" data-table="Projects">' + p.project_title + '</strong>',
+                        log_action_type: 'bind',
+                        log_status: true,
+                        log_table_name: 'project_phases'
+                    });
                     setStepLine();
                 });
         }
     }
     else
     {
-        setStepLine();
+        if(event.removed)
+        {
+            console.log(event.removed);
+            require(__dirname + '/class/repositories/Projects').findById(projectId).then(
+                (pr) => {
+                    var removedId = event.removed.id;
+                    pr.removePhases(removedId);
+
+                    //var removedRow = project.Phases.find((p) => p.id == removedId);
+                    var ph = [];
+                    for(var i in project.Phases)
+                    {
+                        if(project.Phases[i].id != removedId) ph.push(project.Phases[i]);
+                    }
+
+                    project.Phases = ph;
+
+                    logThisEvent({
+                        log_message: 'Suppression de la liaison de la phase <strong data-id="' + event.removed.id + '" data-table="Phases">' + event.removed.text + '</strong> au projet <strong data-id="' + pr.id + '" data-table="Projects">' + pr.project_title + '</strong>',
+                        log_action_type: 'unbind',
+                        log_status: true,
+                        log_table_name: 'project_phases'
+                    });
+
+                    setStepLine();
+                });
+
+        }
+        else {
+            setStepLine();
+        }
     }
 }
+
+
 
 function setStepLine()
 {
     console.log($("#projectPhase").val());
+    //$('#stepsListContainer').html('');
     let steps = [];
     for(let p in project.Phases)
     {
@@ -157,6 +210,18 @@ function setActiveStep(id) {
         {name: 'project_actual_phase', val: id}
     ];
     FormEdition.editByInputs('Projects', projectId, fields);
+
+    let phaseSelected = project.Phases.find((ph) => ph.id == id);
+    let phaseName = phaseSelected.title;
+
+    logThisEvent({
+        log_message: 'Le projet <strong data-id="' + projectId + '" data-table="Projects">' + project.project_title + '</strong> est passé en phase <strong data-id="' + id + '" data-table="Phases">' + phaseName + '</strong>',
+        log_action_type: 'update',
+        log_status: true,
+        log_table_name: 'Projects',
+        log_table_id: projectId
+    });
+
     var obj = {};
     setStepsList(obj);
 }

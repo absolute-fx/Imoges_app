@@ -57,6 +57,8 @@
   "author": "AfxLab",
   "license": "ISC",
   "dependencies": {
+    "acl": "^0.4.11",
+    "acl-sequelize": "^0.2.1",
     "autosize": "^4.0.0",
     "bluebird": "^3.5.0",
     "bootbox": "^4.4.0",

@@ -42,13 +42,10 @@ class ProjectsRepository
         });
     }
 
-    findAll() {
-        return this.models.findAll({
-            order: [['id', 'DESC']],
-            include: [{
-                model: orm.models.Phases
-            }]
-        });
+    findAll(args) {
+        args.order = [['id', 'DESC']];
+        args.include = [{model: orm.models.Phases}];
+        return this.models.findAll(args);
     }
 
     addPhases(phase) {
