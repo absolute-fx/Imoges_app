@@ -30,6 +30,8 @@ function createWindow() {
     template = require('./view/js/menuTemplate')(win);
     menu = Menu.buildFromTemplate(template);
 
+    win.webContents.openDevTools();
+
     win.on('closed', () => {
         win = null;
     });

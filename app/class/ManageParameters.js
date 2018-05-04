@@ -1,12 +1,10 @@
 const fs = require('fs');
-var Promise = require("bluebird");
-
 class ManageParameters{
     static getParameters()
     {
         return new Promise (function(resolve, reject){
             let appParameters;
-            if (!fs.existsSync(__dirname + '/parameters.json')){
+            if (!fs.existsSync(__dirname + '/../parameters.json')){
                 appParameters = {
                     system: {
                         root_path: 'E:/JOBS/Imoges - Site V3/files_holder'
@@ -25,7 +23,7 @@ class ManageParameters{
                         max_logs_stored: 10000
                     }
                 };
-                fs.writeFile(__dirname + '/parameters.json', JSON.stringify(appParameters), 'utf8', (err) =>{
+                fs.writeFile(__dirname + '/../parameters.json', JSON.stringify(appParameters), 'utf8', (err) =>{
                     if(!err)
                     {
                         resolve(appParameters);
@@ -39,7 +37,7 @@ class ManageParameters{
             }
             else
             {
-                fs.readFile(__dirname + '/parameters.json', 'utf8', (err, data) =>{
+                fs.readFile(__dirname + '/../parameters.json', 'utf8', (err, data) =>{
                     if (err){
                         reject(err);
                     } else {
