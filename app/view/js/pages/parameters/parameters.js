@@ -1,8 +1,13 @@
 var {dialog} = require('electron').remote;
+var appParams = require('electron').remote.getGlobal('appParameters');
 
 $(document).ready(function () {
     // SIDE MENU SETTER ~ UNSETTER
     sideMenu.unsetSideMenu();
+
+    let parametersTemplate = $('#parametersTpl').html();
+    let tpl = handlebars.compile(parametersTemplate);
+    $('#parameters-wrapper').html(tpl(appParams));
 
     $('#system-path-select').click(() =>{
         dialog.showOpenDialog({properties: ['openDirectory']}, function(dir){
@@ -24,3 +29,19 @@ $(document).ready(function () {
     });
 
 });
+
+
+
+/*
+
+fs.readFile(__dirname + '/parameters.json', 'utf8', (err, data) =>{
+            if (err){
+                console.log(err);
+            } else {
+                appParameters = JSON.parse(data);
+                obj.table.push({id: 2, square:3}); //add some data
+                json = JSON.stringify(obj); //convert it back to json
+                fs.writeFile('myjsonfile.json', json, 'utf8', callback); // write it back
+            }
+        });
+ */

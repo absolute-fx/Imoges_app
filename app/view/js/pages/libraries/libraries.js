@@ -2,6 +2,7 @@ var appParams = require('electron').remote.getGlobal('appParams');
 var userData = require('electron').remote.getGlobal('user');
 var fs = require('fs');
 var notify = require('bootstrap-notify');
+var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
 var categoriesTable;
 var uploader;
 
@@ -54,7 +55,7 @@ $(document).ready(function(){
                             log_table_id: library.id
                         });
 
-                        fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.libraryPath + 'test.jpg'));
+                        fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.libraryPath + '/test.jpg'));
                         this.removeFile(file);
                     });
 
@@ -154,6 +155,7 @@ function addNewCategory()
                     var elemTitle = $('#elementsSelect').find(':selected').text();
                     var elemId = $('#elementsSelect').val();
                     var logMessage;
+                    var isProject = false;
 
                     switch($('#tableNameSelect').val())
                     {
@@ -162,7 +164,8 @@ function addNewCategory()
                             break;
 
                         case 'Projects':
-                            logMessage = 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Librarycategories">' + category.Library_category_label + '</strong> au projet <strong data-id="' + elemId + '" data-table="Projects">' + elemTitle + '</strong>' ;
+                            logMessage = 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Librarycategories">' + category.Library_category_label + '</strong> au projet <strong data-id="' + elemId + '" data-table="Projects">' + elemTitle + '</strong>';
+                            isProject = true;
                             break;
                     }
 
@@ -173,6 +176,19 @@ function addNewCategory()
                         log_table_name: 'Librarycategories',
                         log_table_id: category.id
                     });
+
+                    if(isProject)
+                    {
+                        DesktopManagement.addDirectory(category.Library_category_label, elemTitle + '/Bibliothèque');
+                    }
+                    else
+                    {
+                        require(__dirname + '/class/repositories/Realties').findById(elemId).then(r => {
+                            r.getProject().then(pr =>{
+                                DesktopManagement.addDirectory(category.Library_category_label, pr.project_title + '/Biens/' + elemTitle + '/Bibliothèque');
+                            });
+                        });
+                    }
 
                     let catLisTemplate = $('#catListTpl').html();
                     let tplCat = handlebars.compile(catLisTemplate);

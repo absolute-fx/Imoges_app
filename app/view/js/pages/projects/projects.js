@@ -4,6 +4,8 @@ var fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
+var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
+var appParams = require('electron').remote.getGlobal('appParams');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
@@ -196,7 +198,7 @@ function projectsNavigation(action, id)
 // SIDE NAV ACTIONS
 function addProject() {
     console.log('Add project');
-
+    ipcRenderer.send('unsetAppMenu');
     bootBox.prompt({
         title: "Ajouter un projet",
         size: "medium",
@@ -211,9 +213,13 @@ function addProject() {
             }
         },
         callback: function (result) {
-            if(result != null)
+            if(result)
             {
                 createProject(result);
+            }
+            else
+            {
+                ipcRenderer.send('setAppMenu');
             }
         }
     });
@@ -244,6 +250,12 @@ function createProject(projectName)
                     log_status: true,
                     log_table_name: 'project_phases'
                 });
+
+
+                DesktopManagement.addDirectory(projectName);
+                DesktopManagement.addDirectory('Bibliothèque', projectName);
+                DesktopManagement.addDirectory('Biens', projectName);
+
                 console.log(project);
                 $('#projects-wrapper a').each(function(){
                     $(this).unbind( "click" );
@@ -411,7 +423,7 @@ function setEditProject(projectData){
         }
     }
     projectData.selectData = selectData;
-
+    ipcRenderer.send('unsetAppMenu');
     bootBox.dialog({
         message: tpl(projectData),
         onEscape: true,
@@ -425,6 +437,8 @@ function setEditProject(projectData){
         }
     }).on("shown.bs.modal", function() {
         initMap();
+    }).on("hidden.bs.modal", function () {
+        ipcRenderer.send('setAppMenu');
     });
 }
 
@@ -451,6 +465,7 @@ function setProjLibInterface(projectId, libraryCategories, projects)
 
     let libraryTemplate = fs.readFileSync( __dirname + '/view/html/pages/libraries.html').toString();
     let tpl = handlebars.compile(libraryTemplate);
+    ipcRenderer.send('unsetAppMenu');
     bootBox.dialog({
         message: tpl(libraryData),
         onEscape: true,
@@ -464,6 +479,8 @@ function setProjLibInterface(projectId, libraryCategories, projects)
         }
     }).on("shown.bs.modal", function() {
 
+    }).on("hidden.bs.modal", function () {
+        ipcRenderer.send('setAppMenu');
     });
 }
 

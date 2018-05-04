@@ -10,12 +10,15 @@ const aclClass = require('./class/Acl').Acl;
 let template;
 let menu;
 let win;
+let acl;
+
 global.pageVars ={};
-global.appParams = {libraryPath: 'E:/JOBS/Imoges - Site V3/files_holder/'};
+global.appParams = {libraryPath: 'E:/JOBS/Imoges - Site V3/files_holder'};
 
 function createWindow() {
     win = new BrowserWindow({width: 640, height: 235, icon: "icon.ico", backgroundColor: "#37474f", minimizable: false, maximizable: false});
     win.setMenu(null);
+
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'login.html'),
         protocol: 'file:',
@@ -27,19 +30,18 @@ function createWindow() {
     template = require('./view/js/menuTemplate')(win);
     menu = Menu.buildFromTemplate(template);
 
-    win.webContents.openDevTools();
-
     win.on('closed', () => {
         win = null;
     });
+
+    // ACL
+    acl = new aclClass();
 
     if (!isDev) {
         const autoUpdater = new autoUpdaterClass(win);
         autoUpdater.autoUpdater.checkForUpdates();
     }
 
-    // ACL
-    const acl = new aclClass();
 }
 
 app.on('ready', createWindow);
@@ -132,7 +134,19 @@ ipc.on('initializeMenu', function (event, data) {
     Menu.setApplicationMenu(menu);
 });
 
+ipc.on('setParameters', function(event, parameters) {
+    global.appParameters = parameters;
+});
+
 ipc.on('setUserSession', function (event, data) {
     global.user = data.dataValues;
     console.log(global.user);
+});
+
+ipc.on('unsetAppMenu', function(event) {
+    win.setMenu(null);
+});
+
+ipc.on('setAppMenu', function(event) {
+    win.setMenu(menu);
 });

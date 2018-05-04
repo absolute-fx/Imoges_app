@@ -3,6 +3,7 @@ $(document).ready(function(){
     $('#parameters-btn').click(function(){
         deactivateSideMenu();
         $(this).parent('li').addClass('active')
+
         $('#page-heading').html('Paramètres').hide().fadeIn();
         $('#core-app').load('view/html/pages/parameters.html', ()=>{
 

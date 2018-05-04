@@ -6,7 +6,8 @@ var iconList = {
         bind: {icon: 'fa-chain', color: 'text-muted'},
         unbind: {icon: 'fa-chain-broken', color: 'text-muted'},
         update: {icon: 'fa-pencil', color: 'text-muted'},
-        upload: {icon: 'fa-cloud-upload', color: 'text-muted'}
+        upload: {icon: 'fa-cloud-upload', color: 'text-muted'},
+        newDir: {icon: 'fa-folder', color: 'text-muted'}
     };
 
 $(document).ready(() => {
@@ -37,7 +38,7 @@ function setLogsList(logs)
     {
         logs[i].icon = iconList[logs[i].log_action_type].icon;
         logs[i].iconColor = iconList[logs[i].log_action_type].color;
-        logs[i].status = (logs[i].log_status) ? 'success' : 'error';
+        logs[i].status = (logs[i].log_status) ? 'success' : 'danger';
         logs[i].statusIcon = (logs[i].log_status) ? 'fa-check' : 'fa-exclamation-circle';
         var date = new Date(logs[i].createdAt);
         var dateString = FormEdition.setDateNumberFormat(date.getDate()) + '/' + FormEdition.setDateNumberFormat(date.getMonth() + 1) + '/' + date.getFullYear();

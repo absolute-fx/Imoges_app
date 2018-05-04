@@ -4,7 +4,9 @@ var fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
+var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
 var pageVars = require('electron').remote.getGlobal('pageVars');
+var appParams = require('electron').remote.getGlobal('appParams');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
@@ -122,7 +124,7 @@ function loadLibrary(id)
     });
 }
 
-function addLibraryCategory(realty)
+function addLibraryCategory(realty, projectTitle)
 {
     var toInsert = {Library_category_label: 'general',library_category_table_name: 'Realties', library_category_table_id: realty.id}
     require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
@@ -135,6 +137,9 @@ function addLibraryCategory(realty)
                 log_table_name: 'Categories',
                 log_table_id: category.id
             });
+
+            DesktopManagement.addDirectory(category.Library_category_label, projectTitle + '/Biens/' + realty.realty_title + '/Bibliothèque');
+
             setEditRealty(realty);
         });
 }
@@ -151,6 +156,7 @@ $(document).ready(function() {
 // SIDE NAV ACTIONS
 function addRealty()
 {
+    ipcRenderer.send('unsetAppMenu');
     var title = "Ajouter un bien";
     if(projectId) title += ' à ' + $('#projectName').html();
     bootBox.prompt({
@@ -167,9 +173,13 @@ function addRealty()
             }
         },
         callback: function (result) {
-            if(result != null)
+            if(result)
             {
                 addRealtyAction(result);
+            }
+            else
+            {
+                ipcRenderer.send('setAppMenu');
             }
         }
     });
@@ -215,8 +225,11 @@ function addRealtyAction(realtyName) {
                 log_table_id: realty.id
             });
 
+            DesktopManagement.addDirectory(realty.realty_title, realty.project_title + '/Biens');
+            DesktopManagement.addDirectory('Bibliothèque', realty.project_title + '/Biens/'+ realty.realty_title);
+
             //setEditRealty(realty);
-            addLibraryCategory(realty);
+            addLibraryCategory(realty, realty.project_title);
         }
     );
 }
@@ -366,7 +379,7 @@ function setEditRealty(realtyData) {
 
     let editRealtyTemplate = fs.readFileSync( __dirname + '/view/html/pages/realty-form.html').toString();
     let tpl = handlebars.compile(editRealtyTemplate);
-
+    ipcRenderer.send('unsetAppMenu');
     bootBox.dialog({
         message: tpl(realtyData),
         onEscape: true,
@@ -380,6 +393,8 @@ function setEditRealty(realtyData) {
         }
     }).on("shown.bs.modal", function() {
 
+    }).on("hidden.bs.modal", function () {
+        ipcRenderer.send('setAppMenu');
     });
 }
 
