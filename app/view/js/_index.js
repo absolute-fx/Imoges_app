@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 
 // IPC
-ipc.on('show-loging', function (event){
+ipc.on('show-logging', function (event){
     initApp();
 });
 
