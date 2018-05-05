@@ -49,7 +49,7 @@ function createWindow() {
     });
 
     // ACL
-    acl = new aclClass();
+    //acl = new aclClass();
 
     /*
     if (!isDev) {
