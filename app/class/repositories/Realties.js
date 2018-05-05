@@ -19,8 +19,8 @@ class RealtiesRepository
     findById(id) {
         const models = this.realties;
         return new Promise(function(resolve, reject) {
-            models.findById(id).then(project => {
-                resolve(project);
+            models.findById(id).then(realty => {
+                resolve(realty);
             }).catch(err => {
                 reject(err);
             });

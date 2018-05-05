@@ -1,12 +1,26 @@
 ﻿const electron = require('electron');
 const ipc = electron.ipcRenderer;
 const remote = electron.remote;
-let connexion;
+const ManageParameters = require('./class/ManageParameters');
+const Connexion = require(__dirname + '/class/Connection.js');
 
 
-$(document).ready(function () {
-    setTimeout(connectToServer, 1000);
+$(document).ready(function (){
+    init();
 });
+
+function init() {
+    Connexion.setConnection().then(c =>{
+        //ipc.send('getCookies');
+        ManageParameters.getParameters().then(parameters =>{
+            $('#login').val(parameters.user.login);
+            $('#password').val(parameters.user.password);
+            $('.loader').hide();
+            $('#login-container').fadeIn();
+            $('#password').focus();
+        });
+    });
+}
 
 $('form').submit(function(){
     let login = $('#login').val();
@@ -32,13 +46,7 @@ function loadIndex(userData){
     ipc.send('auth', userData);
 }
 
-function connectToServer() {
-    connexion = require(__dirname + '/class/Connection.js');
-    ipc.send('getCookies');
-    $('.loader').hide();
-    $('#login-container').fadeIn();
-    $('#password').focus();
-}
+
 
 ipc.on('update-available', function (event, args) {
     window.location.replace("update.html#"+window.location.hash.substring(1));

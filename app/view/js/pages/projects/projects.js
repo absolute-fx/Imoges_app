@@ -4,6 +4,8 @@ var fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
+var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
+var appParams = require('electron').remote.getGlobal('appParams');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
@@ -43,8 +45,7 @@ var environmentTypes = [
 // SIDE MENU SETTER ~ UN-SETTER
 sideMenu.setSideMenu(sideNavTitle,
     [
-        {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'},
-        {label: 'Statistiques', icon: 'fa fa-bar-chart-o', action: 'stat'}
+        {label: 'Ajouter un projet', icon: 'fa fa-plus', action: 'addProject'}
     ]
 );
 
@@ -61,7 +62,7 @@ function sideMenuAction(action)
     }
 }
 
-// CALL TO SERVICE
+// CALL TO SERVICES
 function getProjectsList()
 {
     require(__dirname + '/class/repositories/Projects').findAll({where: {project_status: 1}}).then((projects) => {
@@ -87,10 +88,27 @@ function getPhasesList()
     });
 }
 
+function loadProjectLibrary(id)
+{
+    var whereQuery = {where: {library_category_table_name : 'Projects', library_category_table_id : id,}};
+    var lib;
+    require(__dirname + '/class/repositories/Librarycategories').findAll(whereQuery).then(
+        (library) => {
+            lib = library
+            var whereQuery = {where: {project_status: 1}};
+            require(__dirname + '/class/repositories/Projects').findAll(whereQuery).then((projects) => {
+                setProjLibInterface(id, lib, projects);
+            }).catch((error) => {
+                alert(error.toString());
+            });
+        }).catch((error)=>{
+
+    });
+}
+
 // INIT
 $(document).ready(()=>{
-    //console.log(require('electron').remote.getGlobal('pageVar'));
-    //ipcRenderer.send('setPageVar', {name: 'project', id: '1'});
+    deactivateSideMenu();
     getPhasesList();
 });
 
@@ -100,10 +118,10 @@ $(document).ready(()=>{
 // BOX ACTION SETTERS
 var projectsNavigationData = [
     {btnLabel: 'Infos projet', btnAction: 'infos'},
+    {btnLabel: 'Bibliothèque', btnAction: 'library'},
     {btnLabel: 'Biens', btnAction: 'realty'},
     {btnLabel: 'Clients', btnAction: 'clientsList'},
     {btnLabel: 'Partenaires', btnAction: 'partners'},
-    {btnLabel: 'Bibliothèque', btnAction: 'library'},
     {btnLabel: 'Factures', btnAction: 'invoices'},
     {btnLabel: 'Support', btnAction: 'support'}
 ];
@@ -116,6 +134,8 @@ function setProjectsBoxes(projects) {
     let projectList = {projectRow: []};
     let row = -1;
     let image;
+    if(projects.length > 6 && projects.length <= 8) itemsByRow = 4;
+    if(projects.length > 8) itemsByRow = 6;
 
     for (let i in projects)
     {
@@ -142,7 +162,6 @@ function setProjectsBoxes(projects) {
     }
     //console.log(projectList);
     $('#projects-wrapper').html(tpl(projectList));
-
     let projectId, projectAction;
     $('#projects-wrapper a').each(function(){
         $(this).click(()=>{
@@ -161,6 +180,9 @@ function projectsNavigation(action, id)
         case 'infos':
             loadProjectData(id);
             break;
+        case 'library':
+            loadProjectLibrary(id);
+            break;
         default:
             console.log("chargement page " + action + " avec paramètre id de projet @ " + id);
             ipcRenderer.send('setPageVar', {name: 'project', id: id});
@@ -176,7 +198,7 @@ function projectsNavigation(action, id)
 // SIDE NAV ACTIONS
 function addProject() {
     console.log('Add project');
-
+    ipcRenderer.send('unsetAppMenu');
     bootBox.prompt({
         title: "Ajouter un projet",
         size: "medium",
@@ -191,9 +213,13 @@ function addProject() {
             }
         },
         callback: function (result) {
-            if(result != null)
+            if(result)
             {
                 createProject(result);
+            }
+            else
+            {
+                ipcRenderer.send('setAppMenu');
             }
         }
     });
@@ -211,8 +237,33 @@ function createProject(projectName)
         (phase) => {
             project.save().then((project) => {
                 project.addPhases(phase.id);
+                logThisEvent({
+                    log_message: 'Ajout du projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
+                    log_action_type: 'add',
+                    log_status: true,
+                    log_table_name: 'Projects',
+                    log_table_id: project.id
+                });
+                logThisEvent({
+                    log_message: 'Liaison de la phase <strong data-id="' + phase.id + '" data-table="Phases">' + phase.title + '</strong> au projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
+                    log_action_type: 'bind',
+                    log_status: true,
+                    log_table_name: 'project_phases'
+                });
+
+
+                DesktopManagement.addDirectory(projectName);
+                DesktopManagement.addDirectory('Bibliothèque', projectName);
+                DesktopManagement.addDirectory('Biens', projectName);
+
                 console.log(project);
-                setEditProject(project.id);
+                $('#projects-wrapper a').each(function(){
+                    $(this).unbind( "click" );
+                });
+                $('#projects-wrapper').html('');
+                getProjectsList();
+                loadProjectData(project.id);
+                //setEditProject(project.id);
             });
         }
     );
@@ -372,7 +423,7 @@ function setEditProject(projectData){
         }
     }
     projectData.selectData = selectData;
-
+    ipcRenderer.send('unsetAppMenu');
     bootBox.dialog({
         message: tpl(projectData),
         onEscape: true,
@@ -386,6 +437,50 @@ function setEditProject(projectData){
         }
     }).on("shown.bs.modal", function() {
         initMap();
+    }).on("hidden.bs.modal", function () {
+        ipcRenderer.send('setAppMenu');
+    });
+}
+
+// SET LIBRARY
+function setProjLibInterface(projectId, libraryCategories, projects)
+{
+    var libraryData = {readonly: 'readonly'};
+    libraryData.categories = libraryCategories
+    libraryData.tables = [
+        {label : 'Projet', value: 'Projects', selected: 'selected'},
+        {label : 'Biens', value: 'Realties', selected: ''}
+    ];
+
+    libraryData.elements = [];
+    var selected;
+    for (var i in projects)
+    {
+        selected = (projectId == projects[i].id)? 'selected': '';
+        libraryData.elements.push({id: projects[i].id, label: projects[i].project_title, selected: selected});
+    }
+
+    libraryData.id = '{{id}}';
+    libraryData.Library_category_label = '{{Library_category_label}}';
+
+    let libraryTemplate = fs.readFileSync( __dirname + '/view/html/pages/libraries.html').toString();
+    let tpl = handlebars.compile(libraryTemplate);
+    ipcRenderer.send('unsetAppMenu');
+    bootBox.dialog({
+        message: tpl(libraryData),
+        onEscape: true,
+        title: 'Librairie',
+        size: "large",
+        backdrop: true,
+        buttons: {
+            cancel: {
+                label: 'Fermer',
+            }
+        }
+    }).on("shown.bs.modal", function() {
+
+    }).on("hidden.bs.modal", function () {
+        ipcRenderer.send('setAppMenu');
     });
 }
 

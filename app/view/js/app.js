@@ -7,8 +7,8 @@ const sideMenu = require('./view/js/widgets/SideMenu').SideMenu;
 const notifier = require('electron-notification-desktop');
 const sessionUser = require('electron').remote.getGlobal('user');
 const app = electron.app;
-
-let connexion;
+const ManageParameters = require('./class/ManageParameters');
+const Connexion = require(__dirname + '/class/Connection.js');
 
 $(document).ready(function() {
     $('#userName').html(sessionUser.firstname);
@@ -23,14 +23,19 @@ function initPage()
     $('#sideMenuTpl').load('view/html/widgets/SideMenu.html');
     $('#actualYear').html(actualYear.getFullYear());
 
-    $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
-        connexion = require(__dirname + '/class/Connection.js');
-        ipc.send('initializeMenu');
+    Connexion.setConnection().then(c =>{
+        ManageParameters.getParameters().then(parameters =>{
+            ipc.send('setParameters', parameters);
+            $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
 
-        $('.page-heading h1 i').fadeOut({complete: ()=>{
-            $('.page-heading h1 i').remove();
-        }});
-    }).hide().fadeIn();
+                ipc.send('initializeMenu');
+
+                $('.page-heading h1 i').fadeOut({complete: ()=>{
+                    $('.page-heading h1 i').remove();
+                }});
+            }).hide().fadeIn();
+        });
+    });
 }
 
 function getPageData() {
