@@ -16,8 +16,12 @@ global.pageVars ={};
 global.appParams = {libraryPath: 'E:/JOBS/Imoges - Site V3/files_holder'};
 
 function createWindow() {
+
+    template = require('./view/js/menuTemplate')(win);
+    menu = Menu.buildFromTemplate(template);
+
     win = new BrowserWindow({width: 640, height: 235, icon: "icon.ico", backgroundColor: "#37474f", minimizable: false, maximizable: false});
-    win.setMenu(null);
+    win.setMenu(menu);
 
     /*
     win.loadURL(url.format({
@@ -36,10 +40,8 @@ function createWindow() {
     }));
 
 
-    template = require('./view/js/menuTemplate')(win);
-    menu = Menu.buildFromTemplate(template);
 
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
 
     win.on('closed', () => {
         win = null;
