@@ -108,7 +108,6 @@ function loadProjectLibrary(id)
 
 // INIT
 $(document).ready(()=>{
-    deactivateSideMenu();
     getPhasesList();
 });
 

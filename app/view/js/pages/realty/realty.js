@@ -146,7 +146,6 @@ function addLibraryCategory(realty, projectTitle)
 
 // INIT
 $(document).ready(function() {
-    deactivateSideMenu();
     initRealtiesList();
 });
 

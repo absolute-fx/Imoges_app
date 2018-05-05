@@ -24,6 +24,7 @@ class autoUpdate
             this.window.webContents.send('update-available');
         });
         autoUpdater.on('update-not-available', (info) => {
+            this.window.webContents.send('update-not-available');
             Tools.sendStatusToWindow(this.window, 'message', 'Vous utilisez la dernière version de ImmoEngine');
         });
         autoUpdater.on('error', (err) => {
