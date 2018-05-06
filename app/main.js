@@ -61,16 +61,7 @@ function createWindow() {
     }
     */
 
-    // INIT HTML
-    ipc.on('html-page-ready', function (event) {
-        if (!isDev) {
-            const autoUpdater = new autoUpdaterClass(win);
-            autoUpdater.autoUpdater.checkForUpdates();
-        }
-        else{
-            win.webContents.send('show-logging');
-        }
-    });
+
 }
 
 app.on('ready', createWindow);
@@ -84,6 +75,18 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     if (win === null) {
         createWindow()
+    }
+});
+
+
+// INIT HTML
+ipc.on('html-page-ready', function (event) {
+    if (!isDev) {
+        const autoUpdater = new autoUpdaterClass(win);
+        autoUpdater.autoUpdater.checkForUpdates();
+    }
+    else{
+        win.webContents.send('show-logging');
     }
 });
 
@@ -157,7 +160,7 @@ ipc.on('update-available', function (event, data) {
     win.webContents.send('show-update');
 });
 
-ipc.on('update-not-available', function (event) {
+ipc.on('update-not-available', function (event, data) {
     win.webContents.send('show-logging');
 });
 // UPDATER FIN
