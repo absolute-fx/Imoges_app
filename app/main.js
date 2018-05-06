@@ -34,7 +34,7 @@ function createWindow() {
     */
 
     win.loadURL(url.format({
-        pathname: path.join(__dirname, '_index.html'),
+        pathname: path.join(__dirname, 'login.html'),
         protocol: 'file:',
         slashes: true,
         hash: 'v' + app.getVersion()
