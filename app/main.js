@@ -20,7 +20,13 @@ function createWindow() {
     win = new BrowserWindow({width: 640, height: 235, icon: "icon.ico", backgroundColor: "#37474f", minimizable: false, maximizable: false});
     win.setMenu(null);
 
-
+    win.loadURL(url.format({
+        pathname: path.join(__dirname, '_index.html'),
+        protocol: 'file:',
+        slashes: true,
+        hash: 'v' + app.getVersion()
+    }));
+    
     template = require('./view/js/menuTemplate')(win);
     menu = Menu.buildFromTemplate(template);
 
@@ -32,13 +38,6 @@ function createWindow() {
         hash: 'v' + app.getVersion()
     }));
     */
-
-    win.loadURL(url.format({
-        pathname: path.join(__dirname, 'login.html'),
-        protocol: 'file:',
-        slashes: true,
-        hash: 'v' + app.getVersion()
-    }));
 
 
 
