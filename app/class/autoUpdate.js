@@ -21,10 +21,10 @@ class autoUpdate
             this.window.setSize(850, 680);
             this.window.setClosable(false);
             this.window.center();
-            this.window.webContents.send('update-available');
+            this.window.webContents.send('show-update');
         });
         autoUpdater.on('update-not-available', (info) => {
-            this.window.webContents.send('update-not-available');
+            this.window.webContents.send('show-logging');
             Tools.sendStatusToWindow(this.window, 'message', 'Vous utilisez la dernière version de ImmoEngine');
         });
         autoUpdater.on('error', (err) => {

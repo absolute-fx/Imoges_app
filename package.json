@@ -52,6 +52,7 @@
     "dist:release:major:win": "grunt before --force && grunt version::major --force && grunt gitadd --force && grunt gitcommit --force && grunt gitpull --force && grunt gitpush --force && build --win && grunt after --force",
     "dist:release:patch:win:manu1": "grunt before --force && grunt version::patch --force && grunt gitadd --force && grunt gitcommit --force && grunt gitpull --force",
     "dist:release:patch:win:manu2": "build --win && grunt after --force",
+    "test-build": "build --win ",
     "check:clean": "grunt before --force"
   },
   "author": "AfxLab",

@@ -6,6 +6,7 @@ const url = require('url');
 const isDev = require('electron-is-dev');
 const autoUpdaterClass = require('./class/autoUpdate').autoUpdate;
 const aclClass = require('./class/Acl').Acl;
+var autoUpdater;
 
 let template;
 let menu;
@@ -30,6 +31,8 @@ function createWindow() {
     template = require('./view/js/menuTemplate')(win);
     menu = Menu.buildFromTemplate(template);
 
+    autoUpdater = new autoUpdaterClass(win);
+
     /*
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'login.html'),
@@ -41,14 +44,14 @@ function createWindow() {
 
 
 
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     win.on('closed', () => {
         win = null;
     });
 
     // ACL
-    //acl = new aclClass();
+    acl = new aclClass();
 
     /*
     if (!isDev) {
@@ -81,10 +84,10 @@ app.on('activate', () => {
 // INIT HTML
 ipc.on('html-page-ready', function (event) {
     if (!isDev) {
-        const autoUpdater = new autoUpdaterClass(win);
         autoUpdater.autoUpdater.checkForUpdates();
     }
     else{
+        win.webContents.openDevTools();
         win.webContents.send('show-logging');
     }
 });
