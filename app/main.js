@@ -26,7 +26,7 @@ function createWindow() {
         slashes: true,
         hash: 'v' + app.getVersion()
     }));
-    
+
     template = require('./view/js/menuTemplate')(win);
     menu = Menu.buildFromTemplate(template);
 
