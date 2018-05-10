@@ -5,7 +5,7 @@ var ipcRenderer = require('electron').ipcRenderer;
 var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
 var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
-var appParams = require('electron').remote.getGlobal('appParams');
+var appParams = require('electron').remote.getGlobal('appParameters');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
@@ -40,7 +40,7 @@ var environmentTypes = [
     {id: 'CP', label: 'Campagne'},
     {id: 'RR', label: 'Résidentiel'},
     {id: 'US', label: 'Urbain'}
-]
+];
 
 // SIDE MENU SETTER ~ UN-SETTER
 sideMenu.setSideMenu(sideNavTitle,
@@ -105,6 +105,8 @@ function loadProjectLibrary(id)
 
     });
 }
+
+
 
 // INIT
 $(document).ready(()=>{
@@ -230,42 +232,68 @@ function createProject(projectName)
 {
     $('.bootbox .modal-footer').html('<i class="fa fa-cog fa-spin"></i>');
 
-    var project = require(__dirname + '/class/repositories/Projects').insert({project_title: projectName});
+    // Paramètres
+    var pP = appParams.project.project_phases;
+    var pC = appParams.project.projects_categories;
 
-    require(__dirname + '/class/repositories/Phases').find(1).then(
-        (phase) => {
-            project.save().then((project) => {
-                project.addPhases(phase.id);
-                logThisEvent({
-                    log_message: 'Ajout du projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
-                    log_action_type: 'add',
-                    log_status: true,
-                    log_table_name: 'Projects',
-                    log_table_id: project.id
-                });
-                logThisEvent({
-                    log_message: 'Liaison de la phase <strong data-id="' + phase.id + '" data-table="Phases">' + phase.title + '</strong> au projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
-                    log_action_type: 'bind',
-                    log_status: true,
-                    log_table_name: 'project_phases'
-                });
+    require(__dirname + '/class/repositories/Projects').insert({project_title: projectName}).then((project) =>{
+        logThisEvent({
+            log_message: 'Ajout du projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
+            log_action_type: 'add',
+            log_status: true,
+            log_table_name: 'Projects',
+            log_table_id: project.id
+        });
 
-
-                DesktopManagement.addDirectory(projectName);
-                DesktopManagement.addDirectory('Bibliothèque', projectName);
-                DesktopManagement.addDirectory('Biens', projectName);
-
-                console.log(project);
-                $('#projects-wrapper a').each(function(){
-                    $(this).unbind( "click" );
-                });
-                $('#projects-wrapper').html('');
-                getProjectsList();
-                loadProjectData(project.id);
-                //setEditProject(project.id);
+        for(var i in pP)
+        {
+            project.addPhases(pP[i].id);
+            logThisEvent({
+                log_message: 'Liaison de la phase <strong data-id="' + pP[i].id + '" data-table="Phases">' + pP[i].label + '</strong> au projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>',
+                log_action_type: 'bind',
+                log_status: true,
+                log_table_name: 'project_phases'
             });
         }
-    );
+
+        DesktopManagement.addDirectory(projectName);
+        DesktopManagement.addDirectory(appParams.system.projects_dirs.default.realties, projectName);
+        DesktopManagement.addDirectory(appParams.system.projects_dirs.default.libraries, projectName);
+
+        for (var i in appParams.system.projects_dirs.user_defined)
+        {
+            DesktopManagement.addDirectory(appParams.system.projects_dirs.user_defined[i], projectName);
+        }
+
+
+        for(var i in pC)
+        {
+            var toInsert = {
+                Library_category_label: pC[i],
+                library_category_table_name: 'Projects',
+                library_category_table_id: project.id
+            };
+            require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
+                (category) =>{
+                    var logMessage = 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Librarycategories">' + category.Library_category_label + '</strong> au projet <strong data-id="' + project.id + '" data-table="Projects">' + projectName + '</strong>';
+                    logThisEvent({
+                        log_message: logMessage ,
+                        log_action_type: 'add',
+                        log_status: true,
+                        log_table_name: 'Librarycategories',
+                        log_table_id: category.id
+                    });
+                    DesktopManagement.addDirectory(category.Library_category_label, projectName + '/' + appParams.system.projects_dirs.default.libraries);
+                });
+        }
+
+        $('#projects-wrapper a').each(function(){
+            $(this).unbind( "click" );
+        });
+        $('#projects-wrapper').html('');
+        getProjectsList();
+        loadProjectData(project.id);
+    });
 }
 
 // LOAD A PROJECT DATA

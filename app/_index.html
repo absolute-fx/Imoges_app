@@ -6,13 +6,14 @@
     <link type="text/css" rel="stylesheet" href="view/css/styles.css">
     <link type="text/css" rel="stylesheet" href="view/js/plugins/codeprettifier/prettify.css">
     <link type="text/css" rel="stylesheet" href="view/fonts/font-awesome/css/font-awesome.min.css">
-    <link href='http://fonts.googleapis.com/css?family=RobotoDraft:300,400,400italic,500,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,700' rel='stylesheet' type='text/css'>
+    <link type='text/css' rel='stylesheet' href='http://fonts.googleapis.com/css?family=RobotoDraft:300,400,400italic,500,700'>
+    <link type='text/css' rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,700'>
     <link type="text/css" rel="stylesheet" href="view/js/plugins/dropzone/css/dropzone.css">
     <link type="text/css" rel="stylesheet" href="view/js/plugins/select2/select2.css">
     <link type="text/css" rel="stylesheet" href="view/js/plugins/datatables/dataTables.bootstrap.css">
     <link type="text/css" rel="stylesheet" href="view/js/plugins/datatables/dataTables.fontAwesome.css">
     <link type="text/css" rel="stylesheet" href="view/css/animate.css">
+    <link type="text/css" rel="stylesheet" href="view/css/jstree/style.css">
     <script>var jQuery = $ = require('jquery');</script>
 </head>
 <body class="updater">
@@ -27,7 +28,6 @@
     <script type="text/javascript" src="view/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="view/js/plugins/codeprettifier/prettify.js"></script>
     <script type="text/javascript" src="view/js/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js"></script>
-    <!--<script type="text/javascript" src="view/js/application.js"></script>-->
     <script type="text/javascript" src="view/js/demo/demo.js"></script>
     <script type="text/javascript" src="view/js/plugins/dropzone/dropzone.min.js"></script>
     <script type="text/javascript" src="view/js/plugins/select2/select2.min.js"></script>
@@ -41,7 +41,6 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqE_AnI_z-LGEuQX6X1Ofc9H9a-R5Ceu0&libraries=places"></script>
 
     <script src="view/js/_index.js"></script>
-    <script src="view/js/index.js"></script>
 
     <script id="mainTpl" type="text/x-handlebars-template">
         <header id="topnav" class="navbar navbar-midnightblue navbar-fixed-top clearfix" role="banner">
@@ -319,9 +318,23 @@
                         <div class="form-group">
                             <input type="password" name="password" id="password" class="form-control" placeholder="Mot de passe" required>
                         </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn-primary btn" id="submit">Connexion</button>
+
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <button type="submit" class="btn-primary btn" id="submit">Connexion</button>
+                            </div>
                         </div>
+                        <div class="col-xs-1">
+                            <div class="form-group">
+                                <ul class="demo-btns mb-10">
+                                    <li class="mb0"><input class="bootstrap-switch" id="remember-me" type="checkbox" {{remember_me}} data-size="mini" data-on-color="primary" data-off-color="default" data-on-text="I" data-off-text="O"></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-7" style="color:#FFFFFF;">
+                            Mémoriser le mot de passe
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -354,6 +367,22 @@
             </div>
         </div>
     </script>
+
+    <div class="modal" id="indexModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mise en route</h5>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Afin de pouvoir utiliser l'application <strong>ImmoEngine</strong> vous devez spécifier l'endroit où vous désirez placer vos dossiers sur votre ordinateur.</p>
+                    <div class="form-group">
+                        <button type="button" class=" form-control" id="modal-system-path-select"><i class="fa fa-folder"></i> Sélectonner le dossier racine</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

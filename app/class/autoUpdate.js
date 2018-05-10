@@ -24,15 +24,14 @@ class autoUpdate
             this.window.webContents.send('show-update');
         });
         autoUpdater.on('update-not-available', (info) => {
-            this.window.webContents.send('show-logging');
             Tools.sendStatusToWindow(this.window, 'message', 'Vous utilisez la dernière version de ImmoEngine');
+            this.window.webContents.send('show-logging');
         });
         autoUpdater.on('error', (err) => {
             console.log(err);
             Tools.sendStatusToWindow(this.window, 'message', 'Error in auto-updater '+err.toString());
         });
         autoUpdater.on('download-progress', (progressObj) => {
-            //Tools.sendStatusToWindow(this.window, 'message', Math.round(progressObj.percent)+'%');
             Tools.sendStatusToWindow(this.window, 'download-progress', {
                 'bytesPerSecond': Tools.FileConvertSize(progressObj.bytesPerSecond),
                 'percentValue' : Math.round(progressObj.percent),

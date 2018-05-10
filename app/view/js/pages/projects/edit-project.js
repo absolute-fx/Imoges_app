@@ -13,12 +13,7 @@ $(document).ready(function () {
         console.log(fields);
         FormEdition.editByInputs('Projects', projectId, fields);
     });
-    /*
-    $('input.bootstrap-switch').on('switchChange.bootstrapSwitch', function(event, state) {
-        let fields = [{name: 'project_active_online', val: state}];
-        FormEdition.editByInputs('Projects', projectId, fields);
-    });
-    */
+
     $("#projectPhase").select2({width: "100%", tags: phases, val: phases, maximumSelectionSize: 6 }).on('change', function (e) {
         setStepsList(e);
     });

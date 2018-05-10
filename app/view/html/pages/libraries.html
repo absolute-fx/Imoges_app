@@ -1,14 +1,16 @@
 <script type="text/javascript"> $.getScript("./view/js/pages/libraries/libraries.js", function(data){return data;});</script>
 <div class="tab-container tab-default">
     <ul class="nav nav-tabs"><li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i> </a><ul class="dropdown-menu"></ul></li>
-        <li class="active"><a href="#realty-infos" data-toggle="tab" aria-expanded="true">Ajouter un fichier</a></li>
-        <li class=""><a href="#realty-library" data-toggle="tab" aria-expanded="true">Liste des documents</a></li>
-        <li class=""><a href="#realty-details" data-toggle="tab" aria-expanded="true">Liste des images</a></li>
-        <li class=""><a href="#realty-library" data-toggle="tab" aria-expanded="true">Liste des vidéos</a></li>
+        <li class="active"><a href="#library-main" data-toggle="tab" aria-expanded="true">Ajouter un fichier</a></li>
+        <li class=""><a href="#library-documents" data-toggle="tab" aria-expanded="true">Liste des documents</a></li>
+        <li class=""><a href="#library-images" data-toggle="tab" aria-expanded="true">Liste des images</a></li>
+        <li class=""><a href="#library-external-media" data-toggle="tab" aria-expanded="true">Liste des vidéos</a></li>
     </ul>
     <div class="tab-content notify-here">
         <div class="tab-pane active" id="library-main">
-
+            <div class="row">
+                <div id="dir-checker" class="col-md-12"></div>
+            </div>
             <div class="row">
                 <div class="col-md-3 form-group">
                     <label for="tableNameSelect">Type de liaison</label>
@@ -106,6 +108,17 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="tab-pane" id="library-documents">
+            <div class="row">
+                <div id="documents-tree"></div>
+            </div>
+        </div>
+        <div class="tab-pane" id="library-images">
+            <p>Images</p>
+        </div>
+        <div class="tab-pane" id="library-external-media">
+            <p>medias externes</p>
         </div>
     </div>
 </div>

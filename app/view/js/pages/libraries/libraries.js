@@ -1,18 +1,43 @@
-var appParams = require('electron').remote.getGlobal('appParams');
-var userData = require('electron').remote.getGlobal('user');
+var appParams = require('electron').remote.getGlobal('appParameters');
+//var userData = require('electron').remote.getGlobal('user');
 var fs = require('fs');
 var notify = require('bootstrap-notify');
 var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
+var Jstree = require('jstree');
 var categoriesTable;
 var uploader;
+var parentElement;
+var actualTable;
+var actualLibraryCategories;
+var actualMediaList;
 
 $(document).ready(function(){
     $('.category-edit').hide();
+    $(".uploader-zone").hide();
+    switch($('#tableNameSelect').val())
+    {
+        case 'Projects':
+            actualTable = 'Projects'
+            init();
+            break;
+
+        case 'Realties':
+            require(__dirname + '/class/repositories/Realties').findById($('#elementsSelect').val()).then(r => {
+                r.getProject().then(pr =>{
+                    actualTable = 'Realties';
+                    parentElement = pr;
+                    init();
+                });
+            });
+            break;
+    }
+});
+
+
+function init()
+{
     uploader = $("#fileUploader").dropzone({
         url: "http://imoges.afxlab.be/upload.php",
-        autoProcessQueue: true,
-        uploadMultiple: true,
-        parallelUploads: 5,
         init: function()
         {
             this.on("complete", function(file) {
@@ -28,20 +53,24 @@ $(document).ready(function(){
 
                 require(__dirname + '/class/repositories/Libraries').insert(toInsert).then(
                     (library) =>{
-                        //realty.library = library;
+                        var localDirPath;
+
                         var logMessage = '';
                         logMessage += 'Upload <strong data-id="' + library.id + '" data-table="Libraries"> ' + file.name;
                         logMessage += '</strong> dans catégorie <strong data-id="' + $('#catSelect').val() + '" data-table="Librarycategories">';
                         logMessage += $('#catSelect :selected').text() + '</strong>';
 
-                        switch($('#tableNameSelect').val())
+
+                        switch(actualTable)
                         {
                             case 'Projects':
                                 logMessage += ' du projet ';
+                                localDirPath = $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + $('#catSelect :selected').text();
                                 break;
 
                             case 'Realties':
                                 logMessage += ' du bien ';
+                                localDirPath = parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + $('#catSelect :selected').text();
                                 break;
                         }
 
@@ -55,7 +84,8 @@ $(document).ready(function(){
                             log_table_id: library.id
                         });
 
-                        fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.libraryPath + '/test.jpg'));
+                        // placement du fichier en local
+                        fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.system.root_path + '/' + localDirPath + '/' + file.name));
                         this.removeFile(file);
                     });
 
@@ -139,7 +169,10 @@ $(document).ready(function(){
         $('.category-edit').hide();
     });
 
-});
+    loadLibraries();
+    setDocumentTree();
+}
+
 
 function addNewCategory()
 {
@@ -177,19 +210,20 @@ function addNewCategory()
                         log_table_id: category.id
                     });
 
+                    // >>> A prooprifier maintenant que le parent est connu avant l'init
                     if(isProject)
                     {
-                        DesktopManagement.addDirectory(category.Library_category_label, elemTitle + '/Bibliothèque');
+                        DesktopManagement.addDirectory(category.Library_category_label, elemTitle + '/' + appParams.system.projects_dirs.default.libraries);
                     }
                     else
                     {
                         require(__dirname + '/class/repositories/Realties').findById(elemId).then(r => {
                             r.getProject().then(pr =>{
-                                DesktopManagement.addDirectory(category.Library_category_label, pr.project_title + '/Biens/' + elemTitle + '/Bibliothèque');
+                                DesktopManagement.addDirectory(category.Library_category_label, pr.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + elemTitle + '/' + appParams.system.projects_dirs.default.libraries);
                             });
                         });
                     }
-
+                    // <<<
                     let catLisTemplate = $('#catListTpl').html();
                     let tplCat = handlebars.compile(catLisTemplate);
 
@@ -246,8 +280,62 @@ function updateCategory(id, data, field)
 {
     require(__dirname + '/class/repositories/Librarycategories').findById(id).then(
         (row) => {
-            row[field] = data;
-            row.save();
+
+            var filePathFrom;
+            var filePathTo;
+            switch (actualTable)
+            {
+                case 'Projects':
+                    filePathFrom = appParams.system.root_path + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + row[field];
+                    filePathTo = appParams.system.root_path + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + data;
+                    break;
+
+                case 'Realties':
+                    filePathFrom = appParams.system.root_path + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + row[field];
+                    filePathTo = appParams.system.root_path + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + '/' + data;
+                    break;
+            }
+
+            fs.rename(filePathFrom, filePathTo, function (err) {
+                if (err)
+                {
+                    throw err;
+                }
+                else {
+                    fs.stat(filePathTo, function (err, stats) {
+                        if (err)
+                        {
+                            throw err;
+                        }
+                        else {
+                            var storeField = row[field];
+                            row[field] = data;
+                            row.save().then(cat=>{
+                                var logMessage;
+                                switch (actualTable)
+                                {
+                                    case 'Projects':
+                                        logMessage = 'La catégorie et le répertoire local <strong>' + storeField + '</strong> du projet <strong>' + $('#elementsSelect :selected').text() + '</strong> a été modifiée en <strong> ' + data + '</strong>';
+                                        break;
+
+                                    case 'Realties':
+                                        logMessage = 'La catégorie et le répertoire local <strong>' + storeField + '</strong> du bien <strong>' + $('#elementsSelect :selected').text() + '</strong> a été modifiée en <strong> ' + data + '</strong>';
+                                        break;
+                                }
+                                logThisEvent({
+                                    log_message: logMessage,
+                                    log_action_type: 'update',
+                                    log_status: true,
+                                    log_table_name: 'Librarycategories',
+                                    log_table_id: cat.id
+                                });
+                            });
+                        }
+                        console.log('stats: ' + JSON.stringify(stats));
+                    });
+                }
+            });
+
         }
     );
 }
@@ -255,9 +343,7 @@ function updateCategory(id, data, field)
 function setThisCategory(id)
 {
     $('#catSelect').val(id);
-    $('.select-cat-icon span').removeClass('text-success');
-    $('.select-cat-icon span').removeClass('text-muted');
-    $('.select-cat-icon span').addClass('text-muted');
+    $('.select-cat-icon span').removeClass('text-success').addClass('text-muted');
     $('#select-cat-' + id).find('span').addClass('text-success');
     if($('#catSelect').val() && $('#tableNameSelect').val() && $('#elementsSelect').val())
     {
@@ -270,4 +356,130 @@ function resetCatDisplaySelection()
     $('.select-cat-icon span').removeClass('text-success');
     $('.select-cat-icon span').removeClass('text-muted');
     $('.select-cat-icon span').addClass('text-muted');
+}
+
+function loadLibraries()
+{
+    var request = {where: {library_category_table_name: actualTable, library_category_table_id: $('#elementsSelect').val()}};
+    require(__dirname + '/class/repositories/Librarycategories').findAll(request).then(lC => {
+        actualLibraryCategories = lC;
+        for(var i in lC)
+        {
+            lC[i].getLibraries().then(media =>{
+                actualMediaList = media;
+            });
+        }
+        scanDirs();
+    });
+}
+
+function scanDirs()
+{
+    var allExist = true;
+    var notExistingDirs = [];
+    var pathToDir;
+    for(var i in actualLibraryCategories)
+    {
+        //exist = DesktopManagement.checkIfDirectory(actualTable, actualLibraryCategories[i].Library_category_label, $('#elementsSelect :selected').text());
+        switch (actualTable)
+        {
+            case 'Projects':
+                pathToDir = appParams.system.root_path + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + actualLibraryCategories[i].Library_category_label;
+                console.log(pathToDir);
+                if(!fs.existsSync(pathToDir)){
+                    notExistingDirs.push(actualLibraryCategories[i]);
+                    allExist = false;
+                }
+                break;
+
+            case 'Realties':
+                pathToDir = appParams.system.root_path + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + actualLibraryCategories[i].Library_category_label;
+                if(!fs.existsSync(pathToDir)){
+                    notExistingDirs.push(actualLibraryCategories[i]);
+                    allExist = false;
+                }
+                break;
+        }
+    }
+    var message = '';
+    if(allExist)
+    {
+        message = '<p><span class="text-success fa fa-check"></span> Les répertoires sont synchronisés avec la base de données</p>';
+    }
+    else {
+        for(var i in notExistingDirs)
+        {
+            message += '<p><span class="text-secondary fa fa-exclamation-circle"></span> Le répertoire <strong>' + notExistingDirs[i].Library_category_label + '</strong> n\'existait pas et a été créé.</p>';
+            switch (actualTable)
+            {
+                case 'Projects':
+                    DesktopManagement.addDirectory(notExistingDirs[i].Library_category_label, $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries);
+                    break;
+
+                case 'Realties':
+                    DesktopManagement.addDirectory(notExistingDirs[i].Library_category_label, parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries);
+                    break;
+            }
+            //DesktopManagement.addDirectory(notExistingDirs[i].Library_category_label, )
+        }
+        message += '<p><span class="text-success fa fa-check"></span> Les répertoires sont maintenant synchronisés avec la base de données</p>';
+    }
+    message += '<hr>';
+    $('#dir-checker').html(message);
+}
+
+function setDocumentTree()
+{
+    $("#documents-tree").jstree({
+        "core" : {
+            "themes" : {
+                "responsive": false
+            },
+            // so that create works
+            "check_callback" : true,
+            'data': [{
+                "text": "Projet 06",
+                "state": {"opened": true},
+                "children": [{
+                    "text": "Catégorie 1",
+                    "state": {
+                        "opened": false
+                    },
+                    "children": [
+                        {"text": "doc 01", "icon" : "fa fa-file icon-state-warning"}
+                    ]
+                }, {
+                    "text": "Catégorie 2",
+                    "icon" : "fa fa-folder icon-state-success",
+                    "state": {
+
+                    },
+                    "children": [
+                        {"text": "doc 01", "icon" : "fa fa-file icon-state-warning"}
+                    ]
+                }, {
+                    "text": "Catégorie 3",
+                    "icon": "fa fa-folder icon-state-danger",
+                    "children": [
+                        {"text": "Item 1", "icon" : "fa fa-file icon-state-warning"},
+                        {"text": "Item 2", "icon" : "fa fa-file icon-state-success"},
+                        {"text": "Item 3", "icon" : "fa fa-file icon-state-default"},
+                        {"text": "Item 4", "icon" : "fa fa-file icon-state-danger"},
+                        {"text": "Item 5", "icon" : "fa fa-file icon-state-info"}
+                    ]
+                }]
+            }
+            ]
+        },
+        "types" : {
+            "default" : {
+                "icon" : "fa fa-folder icon-state-warning icon-lg"
+            },
+            "file" : {
+                "icon" : "fa fa-file icon-state-warning icon-lg"
+            }
+        },
+        "state" : { "key" : "demo2" },
+        "plugins" : [ "contextmenu", "dnd", "state", "types" ]
+    });
 }

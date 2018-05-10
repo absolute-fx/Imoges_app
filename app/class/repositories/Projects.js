@@ -10,7 +10,14 @@ class ProjectsRepository
     }
 
     insert(data){
-        return this.models.build(data);
+        const models = this.models;
+        return  new Promise(function(resolve, reject) {
+            models.create(data).then(project =>{
+                resolve(project);
+            }).catch(err =>{
+                reject(err);
+            });
+        });
     }
 
     find(id) {

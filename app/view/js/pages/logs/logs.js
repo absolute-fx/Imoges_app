@@ -1,4 +1,5 @@
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
+var limit = require('electron').remote.getGlobal('appParameters').logs.max_logs_display;
 var logsTable;
 var iconList = {
         add: {icon: 'fa-plus-square', color: 'text-muted'},
@@ -21,7 +22,7 @@ function getLogsList()
 {
     // CALL TO SERVICES
     //var whereQuery = (projectId) ? {where: {ProjectId: projectId, realty_status: 1}} : {where: {realty_status: 1}};
-    require(__dirname + '/class/repositories/Logs').findAll({order: [['id', 'DESC']], limit: 200}).then((logs) => {
+    require(__dirname + '/class/repositories/Logs').findAll({order: [['id', 'DESC']], limit: limit}).then((logs) => {
         console.log(logs);
         setLogsList(logs);
     }).catch((error) => {
@@ -50,11 +51,11 @@ function setLogsList(logs)
     $('#logsList tbody').html(tpl(l));
 
     console.log($(document).width());
-    var fineTunedList = ($(document).width() > 1920) ? 50: 20;
+    var fineTunedList = ($(document).width() > 1920) ? 30: 20;
 
     logsTable = $('#logsList').DataTable({
         pageLength: fineTunedList,
-        lengthMenu: [[10, 20, 50, 100], [10, 20, 50, 100]],
+        lengthMenu: [[10, 20, 30, 60, 100], [10, 20, 30, 60,100]],
         ordering: false,
         language: {
             lengthMenu: "_MENU_",

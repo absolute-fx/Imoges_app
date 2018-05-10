@@ -6,7 +6,7 @@ var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
 var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
 var pageVars = require('electron').remote.getGlobal('pageVars');
-var appParams = require('electron').remote.getGlobal('appParams');
+var appParams = require('electron').remote.getGlobal('appParameters');
 
 // PARAMS SETTERS
 var itemsByRow = 3;
@@ -54,6 +54,10 @@ var realtyFacades = [
     {id: 3, label: 3},
     {id: 4, label: 4}
 ];
+
+var realtyDirLabel = appParams.system.projects_dirs.default.realties;
+var libraryDirLabel = appParams.system.projects_dirs.default.libraries;
+
 
 // SIDE MENU SETTER ~ UNSETTER
 var btns = [ {label: 'Ajouter un bien', icon: 'fa fa-plus', action: 'addRealty'}];
@@ -111,11 +115,10 @@ function loadLibrary(id)
     var whereQuery = {where: {library_category_table_name : 'Realties', library_category_table_id : id}};
     var lib;
     require(__dirname + '/class/repositories/Librarycategories').findAll(whereQuery).then(
-        (library) => {
-            lib = library
+        (categories) => {
             var whereQuery = (projectId) ? {where: {ProjectId: projectId, realty_status: 1}} : {where: {realty_status: 1}};
             require(__dirname + '/class/repositories/Realties').findAll(whereQuery).then((realties) => {
-                setLibraryInterface(id, lib, realties);
+                setLibraryInterface(id, categories, realties);
             }).catch((error) => {
                 alert(error.toString());
             });
@@ -126,22 +129,25 @@ function loadLibrary(id)
 
 function addLibraryCategory(realty, projectTitle)
 {
-    var toInsert = {Library_category_label: 'general',library_category_table_name: 'Realties', library_category_table_id: realty.id}
-    require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
-        (category) =>{
-            realty.category = category;
-            logThisEvent({
-                log_message: 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Categories">' + category.Library_category_label + '</strong> au bien <strong data-id="' + realty.id + '" data-table="Realties">' + realty.realty_title + '</strong>',
-                log_action_type: 'add',
-                log_status: true,
-                log_table_name: 'Categories',
-                log_table_id: category.id
+    var rC = appParams.realty.realties_categories;
+    for(var i in rC)
+    {
+        var toInsert = {Library_category_label: rC[i],library_category_table_name: 'Realties', library_category_table_id: realty.id}
+        require(__dirname + '/class/repositories/Librarycategories').insert(toInsert).then(
+            (category) =>{
+                realty.category = category;
+                logThisEvent({
+                    log_message: 'Ajout de la catégorie <strong data-id="' + category.id + '" data-table="Categories">' + category.Library_category_label + '</strong> au bien <strong data-id="' + realty.id + '" data-table="Realties">' + realty.realty_title + '</strong>',
+                    log_action_type: 'add',
+                    log_status: true,
+                    log_table_name: 'Categories',
+                    log_table_id: category.id
+                });
+                DesktopManagement.addDirectory(category.Library_category_label, projectTitle + '/' + realtyDirLabel + '/' + realty.realty_title + '/'+ libraryDirLabel);
+
+                setEditRealty(realty);
             });
-
-            DesktopManagement.addDirectory(category.Library_category_label, projectTitle + '/Biens/' + realty.realty_title + '/Bibliothèque');
-
-            setEditRealty(realty);
-        });
+    }
 }
 
 // INIT
@@ -224,8 +230,13 @@ function addRealtyAction(realtyName) {
                 log_table_id: realty.id
             });
 
-            DesktopManagement.addDirectory(realty.realty_title, realty.project_title + '/Biens');
-            DesktopManagement.addDirectory('Bibliothèque', realty.project_title + '/Biens/'+ realty.realty_title);
+            DesktopManagement.addDirectory(realty.realty_title, realty.project_title + '/' + realtyDirLabel);
+            DesktopManagement.addDirectory(libraryDirLabel, realty.project_title + '/' + realtyDirLabel + '/'+ realty.realty_title);
+
+            for(var i in appParams.system.realties_dirs.user_defined )
+            {
+                DesktopManagement.addDirectory(appParams.system.realties_dirs.user_defined[i], realty.project_title + '/' + realtyDirLabel + '/'+ realty.realty_title);
+            }
 
             //setEditRealty(realty);
             addLibraryCategory(realty, realty.project_title);
@@ -468,6 +479,7 @@ function setLibraryInterface(realtyId, libraryCategories, realties){
 
     let libraryTemplate = fs.readFileSync( __dirname + '/view/html/pages/libraries.html').toString();
     let tpl = handlebars.compile(libraryTemplate);
+    ipcRenderer.send('unsetAppMenu');
     bootBox.dialog({
         message: tpl(libraryData),
         onEscape: true,
@@ -481,6 +493,8 @@ function setLibraryInterface(realtyId, libraryCategories, realties){
         }
     }).on("shown.bs.modal", function() {
 
+    }).on("hidden.bs.modal", function () {
+        ipcRenderer.send('setAppMenu');
     });
 }
 
@@ -507,10 +521,6 @@ function removeAction(id)
                 log_table_id: realty.id
             });
         });
-}
-
-function arrangeData(){
-
 }
 
 function goToProjects() {

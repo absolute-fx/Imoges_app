@@ -8,6 +8,8 @@ const notifier = require('electron-notification-desktop');
 const app = electron.app;
 const ManageParameters = require('./class/ManageParameters');
 const Connexion = require(__dirname + '/class/Connection.js');
+var {dialog} = require('electron').remote;
+let userData;
 
 $(document).ready(function() {
     ipc.send('html-page-ready');
@@ -51,8 +53,11 @@ function initApp()
 function init_login(parameters){
     let loginTemplate = $('#loginTpl').html();
     let tpl = handlebars.compile(loginTemplate);
-    $('#app-frame').html(tpl({}));
+    let remember_me = '';
+    if(parameters.user.password) remember_me = 'checked';
+    $('#app-frame').html(tpl({remember_me: remember_me}));
 
+    $('input.bootstrap-switch').bootstrapSwitch();
     $('#login').val(parameters.user.login);
     $('#password').val(parameters.user.password);
     //$('.loader').hide();
@@ -62,6 +67,11 @@ function init_login(parameters){
     $('#login-form').submit(function(){
         let login = $('#login').val();
         let pass = $('#password').val();
+        let remember = !!($('#remember-me').is(":checked"));
+        {
+            // it is checked
+        }
+        console.log(remember);
         require(__dirname + '/class/repositories/Users').auth(login, pass).then((user) => {
             if (user.id === undefined)
             {
@@ -70,7 +80,22 @@ function init_login(parameters){
             else
             {
                 ipc.send('setUserSession', user);
-                $('.container').fadeOut(() => {complete: ipc.send('logged-in');});
+                userData = require('electron').remote.getGlobal('user');
+                let params = [
+                    {node: 'user.login', value: login}
+                ];
+                if(remember)
+                {
+                    params.push({node: 'user.password', value: pass});
+                }
+                else {
+                    params.push({node: 'user.password', value: ''});
+                }
+
+                ManageParameters.setParameters(params).then(newParams =>{
+                    ipc.send('setParameters', newParams.data);
+                    $('.container').fadeOut(() => {ipc.send('logged-in')});
+                });
             }
         });
         return false;
@@ -82,19 +107,34 @@ function initUpdate()
     let updateTemplate = $('#updateTpl').html();
     let tpl = handlebars.compile(updateTemplate);
     $('#app-frame').html(tpl({}));
+    $('body').removeClass('infobar-offcanvas').addClass('updater');
 }
 
 function initMain()
 {
-    $('body').removeClass('updater');
-    $('body').addClass('infobar-offcanvas');
+    $('body').removeClass('updater').addClass('infobar-offcanvas');
     let mainTemplate = $('#mainTpl').html();
     let tpl = handlebars.compile(mainTemplate);
     let sessionUser = require('electron').remote.getGlobal('user');
     $('#app-frame').html(tpl({}));
-    $.getScript(__dirname + '/view/js/application.js',(data, tS, jqxhr) =>{
+    $.getScript(__dirname + '/view/js/application.js',(data, tS, jqxhr) =>{});
 
+    $('#modal-system-path-select').click(() =>{
+        dialog.showOpenDialog({properties: ['openDirectory']}, function(dir){
+            if(dir)
+            {
+                let newRootParams = [{node: 'system.root_path', value: dir.toString().replace('\\','/' )}];
+                ManageParameters.setParameters(newRootParams).then(params =>{
+                    console.log(params.data);
+                    ipc.send('setParameters', params.data);
+                    ipc.send('setAppMenu');
+                    $('#modal-system-path-select').unbind('click');
+                    $('#indexModal').modal('hide');
+                });
+            }
+        });
     });
+
     $('#userName').html(sessionUser.firstname);
     $('#userAvatar').attr('src', sessionUser.avatar);
     getPageData();
@@ -110,6 +150,26 @@ function initPage()
     $('#core-app').load('view/html/pages/' + menuItems[0].page + '.html', ()=>{
         setSideMenuListeners();
         ipc.send('initializeMenu');
+
+        if(!require('electron').remote.getGlobal('appParameters').system.root_path)
+        {
+            ipc.send('unsetAppMenu');
+            $('#indexModal').modal({
+                keyboard: false,
+                backdrop: 'static'
+            }).on('show.bs.modal', function (e) {
+                /*$('#modal-system-path-select').click(() =>{
+                    dialog.showOpenDialog({properties: ['openDirectory']}, function(dir){
+                        $('#modal-system-path-select').unbind('click');
+                        ManageParameters.setParameters({node: 'system.root_path', value: dir.toString()}).then((params) =>{
+                            ipc.send('setParameters', params.data);
+                            $('#indexModal').modal('hide');
+                            ipc.send('setAppMenu');
+                        });
+                    });
+                });*/
+            })
+        }
         $('.page-heading h1 i').fadeOut({complete: ()=>{
             $('.page-heading h1 i').remove();
         }});
@@ -133,6 +193,7 @@ function setPageElement(menuItems, pItem)
         ipc.on(menuItems.page, function (event, args) {
             console.log(menuItems.page);
             $('#sideMenuButtons li').removeClass('active');
+            sideMenu.unsetSideMenu();
             $('#core-app').load('view/html/pages/' + menuItems.page + '.html', ()=>{
                 $('#page-heading').html(menuItems.label).hide().fadeIn();
             }).hide().fadeIn();
@@ -177,6 +238,8 @@ function setSideMenuListeners()
 }
 
 
+
+
 // CONSTANTS TOOLS
 function deactivateSideMenu()
 {
@@ -185,8 +248,8 @@ function deactivateSideMenu()
 
 function logThisEvent(data)
 {
-    data.UserId = sessionUser.id;
-    data.log_user_name = sessionUser.firstname + " " + sessionUser.lastname[0] + '.';
+    data.UserId = userData.id;
+    data.log_user_name = userData.firstname + " " + userData.lastname[0] + '.';
     require(__dirname + '/class/repositories/Logs').insert(data).then(
         (log) =>{
 

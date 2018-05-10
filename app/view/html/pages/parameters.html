@@ -16,7 +16,7 @@
                             <button type="button" class="form-control" id="system-path-select">Sélectonner le dossier racine</button>
                         </div>
                         <div class="form-group">
-                            <input type="text" value="{{system.root_path}}" id="system-path-dir" class="form-control" readonly>
+                            <input type="text" value="{{global.system.root_path}}" id="system-path-dir" class="form-control" readonly>
                         </div>
                     </form>
                 </div>
@@ -34,14 +34,14 @@
                         <div class="form-group col-md-6">
                             <label for="max-logs-display"> Nombre maximal de logs</label>
                             <div class="input-group">
-                                <input type="number" value="{{logs.max_logs_display}}" id="max-logs-display" class="form-control">
+                                <input type="number" value="{{global.logs.max_logs_display}}" id="max-logs-display" class="form-control">
                                 <span class="input-group-addon">Logs</span>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="max-logs">Nettoyage des logs après</label>
                             <div class="input-group">
-                                <input type="number" value="{{logs.max_logs_stored}}" id="max-logs" class="form-control">
+                                <input type="number" value="{{global.logs.max_logs_stored}}" id="max-logs" class="form-control">
                                 <span class="input-group-addon">Logs</span>
                             </div>
                         </div>
@@ -54,16 +54,16 @@
                 <div class="panel-heading"><h2>Paramètres prédéfinis</h2></div>
                 <div class="panel-body">
                     <div class="form-group col-md-12">
-                        <label for="default-phases">Phases par défaut</label>
-                        <input type="hidden" id="default-phases" value="1,2"/>
+                        <label for="default-phases">Phases par défaut d'un projet (max 6)</label>
+                        <input type="hidden" id="default-phases" value="{{local.phases_list}}"/>
                     </div>
                     <div class="form-group col-md-12">
-                        <label for="default-projects-categories">Catégorie par défaut des projets</label>
-                        <input type="hidden" id="default-projects-categories" value="1,2"/>
+                        <label for="default-projects-categories">Catégories par défaut des projets</label>
+                        <input type="hidden" id="default-projects-categories" value="{{local.cat_project_list}}"/>
                     </div>
                     <div class="form-group col-md-12">
-                        <label for="default-realties-categories">Catégorie par défaut des biens</label>
-                        <input type="hidden" id="default-realties-categories" value="1"/>
+                        <label for="default-realties-categories">Catégories par défaut des biens</label>
+                        <input type="hidden" id="default-realties-categories" value="{{local.cat_realty_list}}"/>
                     </div>
                 </div>
             </div>
