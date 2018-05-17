@@ -18,6 +18,17 @@ class LibrariesRepository
     findAll(args) {
         return this.libraries.findAll(args);
     }
+
+    findById(id) {
+        const models = this.libraries;
+        return new Promise(function(resolve, reject) {
+            models.findById(id).then(library => {
+                resolve(library);
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
 }
 
 module.exports = new LibrariesRepository();

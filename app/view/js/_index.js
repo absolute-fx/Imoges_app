@@ -238,8 +238,6 @@ function setSideMenuListeners()
 }
 
 
-
-
 // CONSTANTS TOOLS
 function deactivateSideMenu()
 {
@@ -264,3 +262,23 @@ function notifyUser(title, message, duration)
         icon: 'file://' + __dirname + '/view/images/notification-icon.png'
     });
 }
+
+function searchObjectInArray(nameKey, myArray)
+{
+    for (var i=0; i < myArray.length; i++) {
+        if (myArray[i].id === nameKey) {
+            return myArray[i];
+        }
+    }
+}
+
+/*
+$(document).on('dnd_stop.vakata', function (e, data) {
+    console.log(data);
+    console.log(data.data.nodes.length);
+    var targetNode = $('#documents-tree').jstree(true).get_node($(data.event.target));
+    var catId = targetNode.id;
+    var catName = targetNode.text;
+    console.log('Fichier ' + dragingNode.text + " - vers " + catName + " " + catId);
+});
+*/

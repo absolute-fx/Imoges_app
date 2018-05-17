@@ -495,6 +495,7 @@ function setLibraryInterface(realtyId, libraryCategories, realties){
 
     }).on("hidden.bs.modal", function () {
         ipcRenderer.send('setAppMenu');
+        $('#documents-tree').jstree('destroy');
     });
 }
 

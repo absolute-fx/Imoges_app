@@ -119,8 +119,8 @@ $(document).ready(()=>{
 // BOX ACTION SETTERS
 var projectsNavigationData = [
     {btnLabel: 'Infos projet', btnAction: 'infos'},
-    {btnLabel: 'Bibliothèque', btnAction: 'library'},
     {btnLabel: 'Biens', btnAction: 'realty'},
+    {btnLabel: 'Bibliothèque', btnAction: 'library'},
     {btnLabel: 'Clients', btnAction: 'clientsList'},
     {btnLabel: 'Partenaires', btnAction: 'partners'},
     {btnLabel: 'Factures', btnAction: 'invoices'},
@@ -128,7 +128,8 @@ var projectsNavigationData = [
 ];
 
 // PROJECT BOXES INSTANCES
-function setProjectsBoxes(projects) {
+function setProjectsBoxes(projects)
+{
 
     let projectListTemplate = $('#projectListTpl').html();
     let tpl = handlebars.compile(projectListTemplate);
@@ -197,7 +198,8 @@ function projectsNavigation(action, id)
 }
 
 // SIDE NAV ACTIONS
-function addProject() {
+function addProject()
+{
     console.log('Add project');
     ipcRenderer.send('unsetAppMenu');
     bootBox.prompt({
@@ -319,7 +321,8 @@ function loadProjectData(projectId)
 }
 
 // PROJECT EDIT FORM -> SET DATA IN HANDLEBARS + INITIALIZE (dependencies: project-form.html, edit-project.js)
-function setEditProject(projectData){
+function setEditProject(projectData)
+{
     if(projectData.project_active_online) projectData.project_active_online = 'checked';
     if(projectData.project_handicapped_access) projectData.project_handicapped_access = 'checked';
     if(projectData.project_lift) projectData.project_lift = 'checked';
@@ -508,10 +511,12 @@ function setProjLibInterface(projectId, libraryCategories, projects)
 
     }).on("hidden.bs.modal", function () {
         ipcRenderer.send('setAppMenu');
+        $('#documents-tree').jstree('destroy');
     });
 }
 
 // SHOW STATS
-function showStats(){
+function showStats()
+{
     alert("Cette fonctionalité n'est pas encore disponible");
 }

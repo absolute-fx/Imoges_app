@@ -1,4 +1,7 @@
 var appParams = require('electron').remote.getGlobal('appParameters');
+var Op = require('sequelize').Op;
+var Shuffle = require('shufflejs');
+var {shell} = require('electron');
 //var userData = require('electron').remote.getGlobal('user');
 var fs = require('fs');
 var notify = require('bootstrap-notify');
@@ -9,15 +12,35 @@ var uploader;
 var parentElement;
 var actualTable;
 var actualLibraryCategories;
-var actualMediaList;
+var projectFullLibrary = [];
+var jst_instance;
 
 $(document).ready(function(){
     $('.category-edit').hide();
     $(".uploader-zone").hide();
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        switch(e.target.hash)
+        {
+            case '#library-documents':
+                initDocumentList();
+                break;
+
+            case '#library-images':
+
+                if(jst_instance)
+                {
+                    jst_instance.jstree('destroy').empty();
+                }
+                initImageList();
+                break;
+
+        }
+    });
     switch($('#tableNameSelect').val())
     {
         case 'Projects':
-            actualTable = 'Projects'
+            actualTable = 'Projects';
             init();
             break;
 
@@ -37,7 +60,7 @@ $(document).ready(function(){
 function init()
 {
     uploader = $("#fileUploader").dropzone({
-        url: "http://imoges.afxlab.be/upload.php",
+        url: appParams.system.upload_path,
         init: function()
         {
             this.on("complete", function(file) {
@@ -169,8 +192,8 @@ function init()
         $('.category-edit').hide();
     });
 
-    loadLibraries();
-    setDocumentTree();
+    loadCategories();
+    //setDocumentTree();
 }
 
 
@@ -358,17 +381,12 @@ function resetCatDisplaySelection()
     $('.select-cat-icon span').addClass('text-muted');
 }
 
-function loadLibraries()
+function loadCategories()
 {
     var request = {where: {library_category_table_name: actualTable, library_category_table_id: $('#elementsSelect').val()}};
     require(__dirname + '/class/repositories/Librarycategories').findAll(request).then(lC => {
         actualLibraryCategories = lC;
-        for(var i in lC)
-        {
-            lC[i].getLibraries().then(media =>{
-                actualMediaList = media;
-            });
-        }
+        console.log(projectFullLibrary);
         scanDirs();
     });
 }
@@ -385,7 +403,7 @@ function scanDirs()
         {
             case 'Projects':
                 pathToDir = appParams.system.root_path + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + actualLibraryCategories[i].Library_category_label;
-                console.log(pathToDir);
+                //console.log(pathToDir);
                 if(!fs.existsSync(pathToDir)){
                     notExistingDirs.push(actualLibraryCategories[i]);
                     allExist = false;
@@ -428,58 +446,284 @@ function scanDirs()
     $('#dir-checker').html(message);
 }
 
-function setDocumentTree()
+// Liste des documents
+function initDocumentList()
 {
-    $("#documents-tree").jstree({
-        "core" : {
-            "themes" : {
+    //console.log(require(__dirname + '/class/repositories/Libraries'));
+
+    var request = {
+        where: {
+            library_category_table_name: actualTable,
+            library_category_table_id: $('#elementsSelect').val()},
+        include:[
+            {
+                model: require(__dirname + '/class/repositories/Libraries').libraries,
+                where: {library_media_type: {[Op.ne]: "image/jpeg"}}
+            }
+        ]
+    };
+    require(__dirname + '/class/repositories/Librarycategories').findAll(request).then(lC => {
+        console.log(lC);
+        setDocumentTree(lC)
+    });
+}
+
+function setDocumentTree(lC)
+{
+    var categories = [];
+    for(var i in lC)
+    {
+        categories.push({id: 'cat_' + lC[i].id, text: lC[i].Library_category_label, type: 'category', data:{id: lC[i].id}, children: []});
+        console.log(lC[i]);
+        for(var u in lC[i].Libraries)
+        {
+            categories[i].children.push({text: lC[i].Libraries[u].library_media_name, type: 'file', id: lC[i].Libraries[u].id, data: {category_name: lC[i].Library_category_label}});
+        }
+    }
+
+    console.log(categories);
+
+    jst_instance = $("#documents-tree").jstree({
+        "core": {
+            "themes":{
                 "responsive": false
             },
-            // so that create works
-            "check_callback" : true,
-            'data': [{
-                "text": "Projet 06",
-                "state": {"opened": true},
-                "children": [{
-                    "text": "Catégorie 1",
-                    "state": {
-                        "opened": false
-                    },
-                    "children": [
-                        {"text": "doc 01", "icon" : "fa fa-file icon-state-warning"}
-                    ]
-                }, {
-                    "text": "Catégorie 2",
-                    "icon" : "fa fa-folder icon-state-success",
-                    "state": {
+            "check_callback" : function(operation, node, node_parent, node_position, more)
+            {
+                if (operation === 'move_node') {
+                    if (node_parent.type === 'category')
+                    {
+                        return true;
+                    } else return false;
+                }
 
-                    },
-                    "children": [
-                        {"text": "doc 01", "icon" : "fa fa-file icon-state-warning"}
-                    ]
-                }, {
-                    "text": "Catégorie 3",
-                    "icon": "fa fa-folder icon-state-danger",
-                    "children": [
-                        {"text": "Item 1", "icon" : "fa fa-file icon-state-warning"},
-                        {"text": "Item 2", "icon" : "fa fa-file icon-state-success"},
-                        {"text": "Item 3", "icon" : "fa fa-file icon-state-default"},
-                        {"text": "Item 4", "icon" : "fa fa-file icon-state-danger"},
-                        {"text": "Item 5", "icon" : "fa fa-file icon-state-info"}
-                    ]
-                }]
-            }
-            ]
-        },
-        "types" : {
-            "default" : {
-                "icon" : "fa fa-folder icon-state-warning icon-lg"
             },
-            "file" : {
-                "icon" : "fa fa-file icon-state-warning icon-lg"
+            "data":[{
+                "text": $('#elementsSelect :selected').text(),
+                "sort": true,
+                "type":"root",
+                "state": {opened: true},
+                "children": categories
+            }]
+        },
+        "types":{
+            "category": {"icon": 'fa fa-folder icon-state-warning icon-lg', valid_children: ["file"]},
+            "file": {"icon": 'fa fa-file-o icon-state-warning icon-lg', valid_children: []},
+            "root": {"icon":'fa fa-archive icon-lg', valid_children: []},
+            "realty": {"icon": 'fa fa-home'}
+        },
+        "state":{},
+        "dnd": {
+            "is_draggable": (node)=>{
+                if (node[0].type != 'file')
+                {
+                    return false;
+                }
+                else {
+                    return true;
+                }
             }
         },
-        "state" : { "key" : "demo2" },
-        "plugins" : [ "contextmenu", "dnd", "state", "types" ]
+        "contextmenu": {
+            "items" : customMenu
+        },
+        "plugins":['types', 'dnd', 'contextmenu'],
+        "sort": (a, b)=>{
+           //return -1;
+        }
+    }).bind("move_node.jstree", function(e, data)
+    {
+        console.log(data);
+        var oldCatName = data.new_instance._model.data[data.old_parent].text;
+        var newCatName = data.new_instance._model.data[data.parent].text;
+        var newCatId = data.new_instance._model.data[data.parent].data.id;
+        var fileName = data.node.text;
+        var fileId = data.node.id;
+        changeFileCategory(fileName, fileId, newCatName, newCatId, oldCatName);
+        //console.log("fichier " + fileName +  "- id: " + fileId + " dans la catégorie " + newCatName + " id: " + newCatId);
     });
+}
+
+function changeFileCategory(f_n, f_i, c_n, c_i, oc_n)
+{
+    require(__dirname + '/class/repositories/Libraries').findById(f_i).then(
+        (library) => {
+            library.LibrarycategoryId = c_i;
+            library.save().then((library)=>{
+
+                var originPath;
+                var destinationPath;
+                switch(actualTable)
+                {
+                    case 'Projects':
+                        originPath = appParams.system.root_path + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + oc_n + '/' + f_n;
+                        destinationPath = appParams.system.root_path + '/' + $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + c_n + '/' + f_n;
+                        break;
+
+                    case 'Realties':
+                        originPath = appParams.system.root_path + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/'+ $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + oc_n + '/' + f_n;
+                        destinationPath = appParams.system.root_path + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/'+ $('#elementsSelect :selected').text() + '/' + appParams.system.projects_dirs.default.libraries + '/' + c_n + '/' + f_n;
+                        break;
+                }
+
+                fs.rename(originPath, destinationPath, (err) => {
+                    if (err)
+                    {
+                        // log erreur
+                    }
+                    else {
+                        console.log('Rename complete!');
+                        logThisEvent({
+                            log_message: 'Le fichier <strong data-id="' + f_i + '" data-table="Libraries" >' + f_n + '</strong> a été déplacé vers <strong data-id="' + c_i + '" data-table="Librarycategories">' + c_n + '</strong>',
+                            log_action_type: 'update',
+                            log_status: true,
+                            log_table_name: 'Libraries',
+                            log_table_id: library.id
+                        });
+                    }
+                });
+            });
+        });
+}
+
+function customMenu(node)
+{
+    var items;
+
+    if (node.type === 'file') {
+        items = {
+            'item1' : {
+                'label' : 'Ouvrir le fichier',
+                icon: 'fa fa-folder-open-o',
+                'action' : function (obj) {
+                    var inst = $.jstree.reference(obj.reference);
+                    var object = inst.get_node(obj.reference);
+                    console.log(object);
+
+                    shell.openExternal(getPathToLibrary(object.text, object.data.category_name));
+                }
+            },
+            'item8' : {
+                'label' : 'Ouvrir l\'emplacement du fichier',
+                icon: 'fa fa-folder-o',
+                'action' : function (obj) {
+                    var inst = $.jstree.reference(obj.reference);
+                    var object = inst.get_node(obj.reference);
+                    console.log(object);
+                    shell.showItemInFolder(getPathToLibrary(object.text, object.data.category_name));
+                }
+            },
+            'item3' : {
+                'label' : 'Visible par',
+                icon: 'fa fa-eye',
+                submenu:{
+                    'item4':{
+                        label: 'Tout le monde',
+                        icon: 'fa fa-check',
+                        'action' : function () { /* action */ }
+                    },
+                    'item5':{
+                        label: 'Les clients',
+                        'action' : function () { /* action */ }
+                    },
+                    'item7':{
+                        label: 'Les partenaires',
+                        'action' : function () { /* action */ }
+                    },
+                    'item6':{
+                        label: 'Les administrateurs',
+                        'action' : function () { /* action */ }
+                    }
+                }
+            },
+            'item2' : {
+                'label' : 'Supprimer le fichier',
+                icon: 'fa fa-trash-o',
+                'action' : function (obj){
+
+                }
+            }
+        };
+    }
+    else if(node.type === 'category')
+    {
+        items = {
+            'item1' : {
+                'label' : 'Ouvrir l\'emplacement du dossier',
+                icon: 'fa fa-folder-o',
+                'action' : function () { /* action */ }
+            },
+            'item3' : {
+                'label' : 'Visible par',
+                icon: 'fa fa-eye',
+                submenu:{
+                    'item4':{
+                        label: 'Tout le monde',
+                        icon: 'fa fa-check',
+                        'action' : function () { /* action */ }
+                    },
+                    'item5':{
+                        label: 'Les clients',
+                        'action' : function () { /* action */ }
+                    },
+                    'item6':{
+                        label: 'Les administrateurs',
+                        'action' : function () { /* action */ }
+                    }
+                }
+            },
+            'item2' : {
+                'label' : 'Supprimer le dossier',
+                icon: 'fa fa-trash-o',
+                'action' : function () { /* action */ }
+            }
+        };
+    }
+
+    return items;
+}
+
+function getPathToLibrary(file, catName)
+{
+    let root = appParams.system.root_path;
+    let type = $('#tableNameSelect').val();
+    let elementsSelect = $('#elementsSelect :selected').text();
+    let path;
+
+    switch (type)
+    {
+        case 'Projects':
+            path = root + '/' + elementsSelect + '/' + appParams.system.projects_dirs.default.libraries + '/' + catName + '/' + file;
+            break;
+
+        case 'Realties':
+            path = root + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + elementsSelect + '/' + appParams.system.projects_dirs.default.libraries + '/' +  catName + '/' +  file;
+            break;
+    }
+    console.log(path);
+    return path;
+}
+
+// Liste des images
+function initImageList()
+{
+    var request = {
+        where: {
+            library_category_table_name: actualTable,
+            library_category_table_id: $('#elementsSelect').val()},
+        include:[
+            {
+                model: require(__dirname + '/class/repositories/Libraries').libraries,
+                where: {library_media_type: "image/jpeg"}
+            }
+        ]
+    };
+    require(__dirname + '/class/repositories/Librarycategories').findAll(request).then(lC => {
+        setImageGallery(lC);
+    });
+}
+
+function setImageGallery(images)
+{
+    console.log(images);
 }

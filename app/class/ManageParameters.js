@@ -98,6 +98,8 @@ class ManageParameters{
             prod_version: prodVersion,
             system: {
                 root_path: '',
+                upload_path: 'http://imoges.afxlab.be/upload.php',
+                cloud_library_path:"",
                 projects_dirs: {
                     default: {libraries: 'Bibliothèque', realties: 'Biens'},
                     user_defined: []
@@ -109,7 +111,8 @@ class ManageParameters{
             },
             user:{
                 login: '',
-                password: ''
+                password: '',
+                licence_key:''
             },
             project: {
                 project_phases: [],
