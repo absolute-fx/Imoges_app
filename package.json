@@ -79,6 +79,7 @@
     "mysql2": "^1.4.2",
     "nanoscroller": "^0.8.7",
     "notific8": "^4.4.1",
+    "preloader": "^4.0.2",
     "sequelize": "^4.37.6",
     "sequelize-connect": "^2.0.0",
     "sha1": "^1.1.1",

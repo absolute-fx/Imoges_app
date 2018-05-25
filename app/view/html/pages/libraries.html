@@ -1,129 +1,133 @@
-<script type="text/javascript"> $.getScript("./view/js/pages/libraries/libraries.js", function(data){return data;});</script>
-<div class="tab-container tab-default">
-    <ul class="nav nav-tabs"><li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i> </a><ul class="dropdown-menu"></ul></li>
-        <li class="active"><a href="#library-main" data-toggle="tab" aria-expanded="true">Ajouter un fichier</a></li>
-        <li class=""><a href="#library-documents" data-toggle="tab" aria-expanded="true">Liste des documents</a></li>
-        <li class=""><a href="#library-images" data-toggle="tab" aria-expanded="true">Liste des images</a></li>
-        <li class=""><a href="#library-external-media" data-toggle="tab" aria-expanded="true">Media intégrés</a></li>
-    </ul>
-    <div class="tab-content notify-here">
-        <div class="tab-pane active" id="library-main">
-            <div class="row">
-                <div id="dir-checker" class="col-md-12"></div>
-            </div>
-            <div class="row">
-                <div class="col-md-3 form-group">
-                    <label for="tableNameSelect">Type de liaison</label>
-                    <select id="tableNameSelect" class="form-control" {{readonly}}>
-                        <option value="">Choisissez...</option>
-                        {{#each tables}}
-                        <option value="{{value}}" {{selected}}>{{label}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label for="elementsSelect">Liaison à </label>
-                    <select id="elementsSelect" class="form-control" {{readonly}}>
-                        <option value="">Choisissez...</option>
-                        {{#each elements}}
-                        <option value="{{id}}" {{selected}}>{{label}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <div class="col-md-3 form-group">
-                    <label for="mediaResource">Visible pour</label>
-                    <select id="mediaResource" class="form-control">
-                        <option value="guest">Tout le monde</option>
-                        <option value="client">Client</option>
-                        <option value="partner">Partenaire</option>
-                        <option value="admin">Administrateur</option>
-                    </select>
-                </div>
-            </div>
-            <hr class="category-edit">
-            <div class="row category-edit">
-                <form id="addNewCatForm" onsubmit="return false;">
-                    <div class="col-md-6 form-group">
-                        <input type="text" class="form-control" id="newCat" placeholder="Ajouter une catégorie">
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <input type="submit" value="Ajouter" class="btn-primary btn">
-                        <input type="button" id="hide-categories" value="Fermer" class="btn-default btn">
-                    </div>
-                </form>
-            </div>
+<!--<script type="text/javascript"> $.getScript("./view/js/pages/libraries/libraries.js", function(data){return data;});</script>-->
+<div id="libraryWrapper"></div>
 
-            <div class="row category-edit">
-                <div class="col-md-12">
-                    <div class="panel-body panel-no-padding">
-                        <table id="categoriesList" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                            <thead>
-                            <tr>
-                                <th class="dt-center">Sélectionné</th>
-                                <th>Libellé</th>
-                                <th>Visible pour</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {{#each categories}}
-                                <tr>
-                                    <td class="dt-center"><a class="select-cat-icon" id="select-cat-{{id}}" onclick="javascript: setThisCategory({{id}});"><span class="fa fa-check text-muted"></span></a></td>
-                                    <td class="editableTr" data-id="{{id}}">{{Library_category_label}}</td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="guest">Tout le monde</option>
-                                            <option value="client">Client</option>
-                                            <option value="partner">Partenaire</option>
-                                            <option value="admin">Administrateur</option>
-                                        </select>
-                                    </td>
-                                </tr>
+<script id="libraryTpl" type="text/x-handlebars-template">
+    <div class="tab-container tab-default">
+        <ul class="nav nav-tabs"><li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-angle-down"></i> </a><ul class="dropdown-menu"></ul></li>
+            <li class="active"><a href="#library-main" data-toggle="tab" aria-expanded="true">Ajouter un fichier</a></li>
+            <li class=""><a href="#library-documents" data-toggle="tab" aria-expanded="true">Liste des documents</a></li>
+            <li class=""><a href="#library-images" data-toggle="tab" aria-expanded="true">Liste des images</a></li>
+            <li class=""><a href="#library-external-media" data-toggle="tab" aria-expanded="true">Media intégrés</a></li>
+        </ul>
+        <div class="tab-content notify-here">
+            <div class="tab-pane active" id="library-main">
+                <div class="row">
+                    <div id="dir-checker" class="col-md-12"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 form-group">
+                        <label for="tableNameSelect">Type de liaison</label>
+                        <select id="tableNameSelect" class="form-control" {{readonly}}>
+                            <option value="">Choisissez...</option>
+                            {{#each tables}}
+                            <option value="{{value}}" {{selected}}>{{label}}</option>
                             {{/each}}
-                            </tbody>
-                        </table>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="elementsSelect">Liaison à </label>
+                        <select id="elementsSelect" class="form-control" {{readonly}}>
+                            <option value="">Choisissez...</option>
+                            {{#each elements}}
+                            <option value="{{id}}" {{selected}}>{{label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label for="mediaResource">Visible pour</label>
+                        <select id="mediaResource" class="form-control">
+                            <option value="guest">Tout le monde</option>
+                            <option value="client">Client</option>
+                            <option value="partner">Partenaire</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-
-            <div class="row category-selection">
-                <div class="form-group col-md-11">
-                    <select id="catSelect" class="form-control">
-                        <option value="">Choisissez une catégorie ou créez-en une...</option>
-                        {{#each categories}}
-                        <option value="{{id}}" {{selected}}>{{Library_category_label}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <div class="form-group col-md-1">
-                    <button type="button" id="show-categories" class="btn-info btn" data-toggle="tooltip" title="Gérer les catégories"><span class="fa fa-edit"></span></button>
-                </div>
-            </div>
-            <hr class="uploader-zone">
-            <div class="row uploader-zone">
-                <div class="col-md-12">
-                    <form>
-                        <div id="fileUploader" class="form-group dropzone">
-                            <div class="dz-default dz-message"><span>Déposez votre fichier ici</span></div>
+                <hr class="category-edit">
+                <div class="row category-edit">
+                    <form id="addNewCatForm" onsubmit="return false;">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" id="newCat" placeholder="Ajouter une catégorie">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="submit" value="Ajouter" class="btn-primary btn">
+                            <input type="button" id="hide-categories" value="Fermer" class="btn-default btn">
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="library-documents">
-            <div class="row">
-                <div id="documents-tree">
 
+                <div class="row category-edit">
+                    <div class="col-md-12">
+                        <div class="panel-body panel-no-padding">
+                            <table id="categoriesList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                <tr>
+                                    <th class="dt-center">Sélectionné</th>
+                                    <th>Libellé</th>
+                                    <th>Visible pour</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each categories}}
+                                    <tr>
+                                        <td class="dt-center"><a class="select-cat-icon" id="select-cat-{{id}}" onclick="javascript: setThisCategory({{id}});"><span class="fa fa-check text-muted"></span></a></td>
+                                        <td class="editableTr" data-id="{{id}}">{{Library_category_label}}</td>
+                                        <td>
+                                            <select class="form-control">
+                                                <option value="guest">Tout le monde</option>
+                                                <option value="client">Client</option>
+                                                <option value="partner">Partenaire</option>
+                                                <option value="admin">Administrateur</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row category-selection">
+                    <div class="form-group col-md-11">
+                        <select id="catSelect" class="form-control">
+                            <option value="">Choisissez une catégorie ou créez-en une...</option>
+                            {{#each categories}}
+                            <option value="{{id}}" {{selected}}>{{Library_category_label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <button type="button" id="show-categories" class="btn-info btn" data-toggle="tooltip" title="Gérer les catégories"><span class="fa fa-edit"></span></button>
+                    </div>
+                </div>
+                <hr class="uploader-zone">
+                <div class="row uploader-zone">
+                    <div class="col-md-12">
+                        <form>
+                            <div id="fileUploader" class="form-group dropzone">
+                                <div class="dz-default dz-message"><span>Déposez votre fichier ici</span></div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane" id="library-images">
-            <p>Images</p>
-        </div>
-        <div class="tab-pane" id="library-external-media">
-            <p>medias externes</p>
+            <div class="tab-pane" id="library-documents">
+                <div class="row">
+                    <div id="documents-tree">
+
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="library-images">
+                <div id="gallery-wrapper"></div>
+            </div>
+            <div class="tab-pane" id="library-external-media">
+                <p>medias externes</p>
+            </div>
         </div>
     </div>
-</div>
+</script>
 
 <script id="catListTpl" type="text/x-handlebars-template">
     <tr>
@@ -138,4 +142,35 @@
             </select>
         </td>
     </tr>
+</script>
+
+<script id="imagesGallery" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="clearfix">
+                <div class="btn-group pull-left" id="galleryfilter">
+                    <button class="btn btn-default active" data-group="all">Toutes</button>
+                    {{#each cat_galleries}}
+                    <button class="btn btn-default" data-group="{{Library_category_label}}">{{Library_category_label}}</button>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <hr style="mt0 mb10">
+            <ul class="gallery row">
+                {{#each cat_galleries}}
+                {{#each Libraries}}
+                <div data-groups='["{{../Library_category_label}}"]' class="item-wrapper col-md-3" data-name="{{library_media_name}}">
+                    <div class="item">
+                        <img src="{{path}}" class="img-responsive">
+                        <h3>{{library_media_name}}</h3>
+                    </div>
+                </div>
+                {{/each}}
+                {{/each}}
+            </ul>
+        </div>
+    </div>
 </script>

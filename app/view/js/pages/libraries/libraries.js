@@ -1,6 +1,7 @@
 var appParams = require('electron').remote.getGlobal('appParameters');
 var Op = require('sequelize').Op;
 var Shuffle = require('shufflejs');
+var preloader = require('preloader');
 var {shell} = require('electron');
 //var userData = require('electron').remote.getGlobal('user');
 var fs = require('fs');
@@ -37,6 +38,20 @@ $(document).ready(function(){
 
         }
     });
+
+    $('a[data-toggle="tab"]').on('hidden.bs.tab', function (e) {
+        switch(e.target.hash)
+        {
+            case '#library-documents':
+                break;
+
+            case '#library-images':
+                $('#gallery-wrapper').html('');
+                break;
+
+        }
+    });
+
     switch($('#tableNameSelect').val())
     {
         case 'Projects':
@@ -719,11 +734,80 @@ function initImageList()
         ]
     };
     require(__dirname + '/class/repositories/Librarycategories').findAll(request).then(lC => {
-        setImageGallery(lC);
+        //setImageGallery(lC);
+        preloadImages(lC);
     });
 }
 
-function setImageGallery(images)
+function preloadImages(library)
 {
-    console.log(images);
+    var loadingBar = '<div class="contextual-progress">';
+    loadingBar += '    <div class="clearfix">';
+    loadingBar += '        <div class="progress-title">Chargement</div>';
+    loadingBar += '        <div id="progress-pc-txt" class="progress-percentage">0%</div>';
+    loadingBar += '    </div>';
+    loadingBar += '    <div class="progress">';
+    loadingBar += '        <div id="progress-pc-bar" aria-valuenow="0" class="progress-bar progress-bar-info"></div>';
+    loadingBar += '    </div>';
+    loadingBar += '</div>';
+
+
+    var loader = preloader({xhrImages: false});
+    let libraryList = {cat_galleries: library};
+    let count = 0;
+    for(var i in libraryList.cat_galleries)
+    {
+        for(var u in libraryList.cat_galleries[i].Libraries)
+        {
+            libraryList.cat_galleries[i].Libraries[u]['path'] = getPathToLibrary(libraryList.cat_galleries[i].Libraries[u].library_media_name, libraryList.cat_galleries[i].Library_category_label);
+            loader.addImage(libraryList.cat_galleries[i].Libraries[u]['path']);
+            count++;
+        }
+    }
+
+    if(count > 0)
+    {
+        $('#gallery-wrapper').html(loadingBar);
+        loader.on('complete',function() {
+            console.log('all content loaded!');
+            setTimeout(()=>{setImageGallery(libraryList);}, 600);
+        });
+
+        loader.on('progress',function(progress) {
+            console.log(progress);
+            $('#progress-pc-txt').html((progress*100) + '%');
+            $('#progress-pc-bar').css("width", (progress*100) + '%').attr("aria-valuenow", (progress*100));
+        });
+
+        loader.load();
+    }
+    else {
+        $('#gallery-wrapper').html("Aucune image actuellement");
+    }
+}
+
+function setImageGallery(libraryList)
+{
+    let imagestListTemplate = $('#imagesGallery').html();
+    let tpl = handlebars.compile(imagestListTemplate);
+    $('#gallery-wrapper').html(tpl(libraryList));
+
+    var grid = $('.gallery');
+
+    var shuffleInstance = new Shuffle(grid, {
+        itemSelector: '.item-wrapper' // the selector for the items in the grid
+    });
+
+    $('#galleryfilter button').click(function (e) {
+        e.preventDefault();
+        // set active class
+        $('#galleryfilter button').removeClass('active');
+        $(this).addClass('active');
+        // get group name from clicked item
+        var groupName = $(this).attr('data-group');
+        // reshuffle grid
+        shuffleInstance.filter(groupName );
+    });
+
+    console.log(libraryList);
 }

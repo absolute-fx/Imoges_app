@@ -478,10 +478,10 @@ function setLibraryInterface(realtyId, libraryCategories, realties){
     libraryData.Library_category_label = '{{Library_category_label}}';
 
     let libraryTemplate = fs.readFileSync( __dirname + '/view/html/pages/libraries.html').toString();
-    let tpl = handlebars.compile(libraryTemplate);
+    //let tpl = handlebars.compile(libraryTemplate);
     ipcRenderer.send('unsetAppMenu');
     bootBox.dialog({
-        message: tpl(libraryData),
+        message: libraryTemplate,
         onEscape: true,
         title: 'Librairie',
         size: "large",
@@ -492,7 +492,12 @@ function setLibraryInterface(realtyId, libraryCategories, realties){
             }
         }
     }).on("shown.bs.modal", function() {
-
+        let tabContent = $('#libraryTpl').html();
+        let tplTab = handlebars.compile(tabContent);
+        $('#libraryWrapper').html(tplTab(libraryData));
+        $('.category-edit').hide();
+        $('.uploader-zone').hide();
+        $.getScript("./view/js/pages/libraries/libraries.js", function(data){return data;});
     }).on("hidden.bs.modal", function () {
         ipcRenderer.send('setAppMenu');
         $('#documents-tree').jstree('destroy');
