@@ -34526,7 +34526,7 @@ fieldset[disabled] .panel .fc-header .fc-button.active
 .gallery
 {
     padding-left: 0;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 .gallery .item

@@ -164,8 +164,25 @@
                 {{#each Libraries}}
                 <div data-groups='["{{../Library_category_label}}"]' class="item-wrapper col-md-3" data-name="{{library_media_name}}">
                     <div class="item">
-                        <img src="{{path}}" class="img-responsive">
-                        <h3>{{library_media_name}}</h3>
+                        <img src="{{thumb_path}}" class="img-responsive">
+                        <input type="checkbox">
+                        <div class="btn-group dropup mt-xs" role="group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="fa fa-bars"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-left">
+                                <li class="dropdown-submenu"><a href="#" data-action="{{btnAction}}">Déplacer vers</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" data-action="{{btnAction}}">autre cat</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#" data-action="{{btnAction}}">Visible par</a></li>
+                                <li><a href="#" data-action="{{btnAction}}">Supprimer</a></li>
+                                {{# each navigation}}
+                                <li><a href="#" data-action="{{btnAction}}">{{btnLabel}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 {{/each}}

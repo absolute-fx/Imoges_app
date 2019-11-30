@@ -107,7 +107,8 @@ class ManageParameters{
                 realties_dirs: {
                     default: {library: 'Bibliothèque'},
                     user_defined: []
-                }
+                },
+                resize_img_delay_ratio: 0.1
             },
             user:{
                 login: '',
@@ -124,6 +125,22 @@ class ManageParameters{
             logs:{
                 max_logs_display: 200,
                 max_logs_stored: 10000
+            },
+            libraries:{
+                images:{
+                    thumb: {
+                        width: 200,
+                        height: 200,
+                        quality: 100,
+                        suffix: '_thumb'
+                    },
+                    web_default:{
+                        width: 1920,
+                        height: 1080,
+                        quality: 100,
+                        suffix: '_web'
+                    }
+                }
             }
         };
         return appParameters;

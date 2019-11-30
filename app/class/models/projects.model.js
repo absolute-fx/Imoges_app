@@ -11,6 +11,9 @@
                 }
             }
         },
+        project_ref:{
+            type: DataTypes.TEXT
+        },
         project_type: {
             type: DataTypes.INTEGER
         },

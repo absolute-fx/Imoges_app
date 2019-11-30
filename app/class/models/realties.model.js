@@ -55,7 +55,7 @@ module.exports = function (sequelize, DataTypes) {
             },
             realty_status: {
                 type: DataTypes.INTEGER,
-                defaultValue: 1
+                defaultValue: 0
             },
             realty_availability: {
                 type: DataTypes.DATE

@@ -3,8 +3,13 @@ var Op = require('sequelize').Op;
 var Shuffle = require('shufflejs');
 var preloader = require('preloader');
 var {shell} = require('electron');
-//var userData = require('electron').remote.getGlobal('user');
 var fs = require('fs');
+//var ImageResize = require('node-image-resize');
+//var iM = require('imagemagick');
+//var sharp = require('sharp');
+var electronImageResize = require('electron-image-resize');
+
+
 var notify = require('bootstrap-notify');
 var DesktopManagement = require('./view/js/widgets/DesktopManagement').DesktopManagement;
 var Jstree = require('jstree');
@@ -122,8 +127,12 @@ function init()
                             log_table_id: library.id
                         });
 
-                        // placement du fichier en local
-                        fs.createReadStream(file.path).pipe(fs.createWriteStream(appParams.system.root_path + '/' + localDirPath + '/' + file.name));
+                        let destFullPath = appParams.system.root_path + '/' + localDirPath;
+                        saveFileToDisk(file, destFullPath).then((f)=>{
+                            if(f.type === 'image/jpeg') resizeImage(file, destFullPath);
+                        }).catch((err)=>{
+                            // prob à l'écriture du fichier
+                        });
                         this.removeFile(file);
                     });
 
@@ -698,27 +707,6 @@ function customMenu(node)
     return items;
 }
 
-function getPathToLibrary(file, catName)
-{
-    let root = appParams.system.root_path;
-    let type = $('#tableNameSelect').val();
-    let elementsSelect = $('#elementsSelect :selected').text();
-    let path;
-
-    switch (type)
-    {
-        case 'Projects':
-            path = root + '/' + elementsSelect + '/' + appParams.system.projects_dirs.default.libraries + '/' + catName + '/' + file;
-            break;
-
-        case 'Realties':
-            path = root + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + elementsSelect + '/' + appParams.system.projects_dirs.default.libraries + '/' +  catName + '/' +  file;
-            break;
-    }
-    console.log(path);
-    return path;
-}
-
 // Liste des images
 function initImageList()
 {
@@ -741,26 +729,23 @@ function initImageList()
 
 function preloadImages(library)
 {
-    var loadingBar = '<div class="contextual-progress">';
-    loadingBar += '    <div class="clearfix">';
-    loadingBar += '        <div class="progress-title">Chargement</div>';
-    loadingBar += '        <div id="progress-pc-txt" class="progress-percentage">0%</div>';
-    loadingBar += '    </div>';
-    loadingBar += '    <div class="progress">';
-    loadingBar += '        <div id="progress-pc-bar" aria-valuenow="0" class="progress-bar progress-bar-info"></div>';
-    loadingBar += '    </div>';
-    loadingBar += '</div>';
+    var loadingBar = '<span class="fa fa-cog fa-spin"></span>';
 
 
     var loader = preloader({xhrImages: false});
     let libraryList = {cat_galleries: library};
     let count = 0;
+    //let r = /.jpg/i;
+
     for(var i in libraryList.cat_galleries)
     {
         for(var u in libraryList.cat_galleries[i].Libraries)
         {
             libraryList.cat_galleries[i].Libraries[u]['path'] = getPathToLibrary(libraryList.cat_galleries[i].Libraries[u].library_media_name, libraryList.cat_galleries[i].Library_category_label);
-            loader.addImage(libraryList.cat_galleries[i].Libraries[u]['path']);
+            let r = /.jpg/i;
+            libraryList.cat_galleries[i].Libraries[u]['thumb_path'] = libraryList.cat_galleries[i].Libraries[u]['path'].replace(r, appParams.libraries.images.thumb.suffix + '.jpg');
+            loader.addImage(libraryList.cat_galleries[i].Libraries[u]['thumb_path']);
+            //console.log(libraryList.cat_galleries[i].Libraries[u]['path'].replace(r, '_thumb.jpg'));
             count++;
         }
     }
@@ -770,13 +755,13 @@ function preloadImages(library)
         $('#gallery-wrapper').html(loadingBar);
         loader.on('complete',function() {
             console.log('all content loaded!');
-            setTimeout(()=>{setImageGallery(libraryList);}, 600);
+            setImageGallery(libraryList);
         });
 
         loader.on('progress',function(progress) {
             console.log(progress);
-            $('#progress-pc-txt').html((progress*100) + '%');
-            $('#progress-pc-bar').css("width", (progress*100) + '%').attr("aria-valuenow", (progress*100));
+            //$('#progress-pc-txt').html(precisionRound(progress*100, 1) + '%');
+            //$('#progress-pc-bar').css("width", precisionRound((progress*100), 1) + '%').attr("aria-valuenow", (progress*100));
         });
 
         loader.load();
@@ -810,4 +795,77 @@ function setImageGallery(libraryList)
     });
 
     console.log(libraryList);
+}
+
+// tools
+
+function getPathToLibrary(file, catName)
+{
+    let root = appParams.system.root_path;
+    let type = $('#tableNameSelect').val();
+    let elementsSelect = $('#elementsSelect :selected').text();
+    let path;
+
+    switch (type)
+    {
+        case 'Projects':
+            path = root + '/' + elementsSelect + '/' + appParams.system.projects_dirs.default.libraries + '/' + catName + '/' + file;
+            break;
+
+        case 'Realties':
+            path = root + '/' + parentElement.project_title + '/' + appParams.system.projects_dirs.default.realties + '/' + elementsSelect + '/' + appParams.system.projects_dirs.default.libraries + '/' +  catName + '/' +  file;
+            break;
+    }
+    console.log(path);
+    return path;
+}
+
+function saveFileToDisk(f, destination)
+{
+    let file;
+    return new Promise((resolve, reject)=>{
+        file = fs.createReadStream(f.path).pipe(fs.createWriteStream(destination + '/' + f.name));
+        file.on("finish", ()=>{
+            resolve(f);
+        });
+        file.on("error", ()=>{
+            reject();
+        });
+    });
+}
+
+function resizeImage(f, destination)
+{
+    let isLandscape = (f.width > f.height);
+    let delay = precisionRound((f.size /1000) * appParams.system.resize_img_delay_ratio, -1);
+    let imageDataThumb = {url: 'file://' + f.path, delay: delay};
+    let imageDataWeb = imageDataThumb;
+    console.log(f);
+    if(isLandscape)
+    {
+        imageDataThumb.width = appParams.libraries.images.thumb.width;
+        imageDataWeb.width = appParams.libraries.images.web_default.width;
+    }
+    else{
+        imageDataThumb.height = appParams.libraries.images.thumb.height;
+        imageDataWeb.height = appParams.libraries.images.web_default.height;
+    }
+
+    let r = /.jpg/i;
+    let thumbImageName = f.name.replace(r, appParams.libraries.images.thumb.suffix + '.jpg');
+    let webImageName = f.name.replace(r, appParams.libraries.images.web_default.suffix + '.jpg');
+
+    // THUMB
+    electronImageResize(imageDataThumb).then(img => {
+        fs.writeFileSync(destination + '/' + thumbImageName, img.toPng());
+    });
+    // WEB
+    electronImageResize(imageDataWeb).then(img => {
+        fs.writeFileSync(destination + '/' + webImageName, img.toPng());
+    });
+}
+
+function precisionRound(number, precision) {
+    var factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
 }
