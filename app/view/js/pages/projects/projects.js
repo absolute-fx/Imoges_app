@@ -1,6 +1,6 @@
 // DEPENDENCIES
 var bootBox = require('bootbox');
-var fs = require('fs');
+//var fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 var MenuActions = require('./view/js/widgets/MenuActions').MenuActions;
 var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;

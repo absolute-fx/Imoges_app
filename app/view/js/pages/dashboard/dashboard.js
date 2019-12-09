@@ -1,4 +1,4 @@
-﻿const appParams = require('electron').remote.getGlobal('appParameters');
+﻿const appParamsB = require('electron').remote.getGlobal('appParameters');
 const fs = require('fs');
 
 $(document).ready(()=>{
@@ -19,7 +19,7 @@ function getProjectsList()
 
 
 function createLibDir(){
-    const rootPath = appParams.system.root_path;
+    const rootPath = appParamsB.system.root_path;
     if(!fs.existsSync(rootPath)){
         fs.mkdirSync('C:/Immowaze');
         fs.mkdirSync('C:/Immowaze/demo');

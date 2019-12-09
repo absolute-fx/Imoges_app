@@ -3,7 +3,7 @@ var FormEdition = require('./view/js/widgets/FormEdition').FormEdition;
 var realtyId;
 var appParams = require('electron').remote.getGlobal('appParams');
 //var userData = require('electron').remote.getGlobal('user');
-var fs = require('fs');
+//var fs = require('fs');
 
 $(document).ready(function () {
     realtyId = $('#realty_id').val();
