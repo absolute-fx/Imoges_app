@@ -36,7 +36,7 @@ ipc.on('init-mMain', function (event){
 });
 
 ipc.on('message', function(event, text) {
-    notifyUser('ImmoEngine Updater', text, 10);
+    notifyUser('ImmoWaze Updater', text, 10);
 });
 
 // INITS
