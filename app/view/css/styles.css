@@ -21968,22 +21968,22 @@ body.layout-boxed .infobar-wrapper
 
 #topnav.navbar-default .navbar-brand
 {
-    background: url("../images/logo.png") no-repeat -40px bottom;
+    background: url("../images/logo_immowaze.png") no-repeat -40px bottom;
 }
 
 #topnav .navbar-brand
 {
-    background: url("../images/logo.png") no-repeat -40px top;
+    background: url("../images/logo_immowaze.png") no-repeat -40px top;
 }
 
 body.topnav-collapsed #topnav.navbar-default .navbar-brand
 {
-    background: url("../images/logo.png") no-repeat -40px bottom;
+    background: url("../images/logo_immowaze.png") no-repeat -40px bottom;
 }
 
 body.topnav-collapsed #topnav .navbar-brand
 {
-    background: url("../images/logo.png") no-repeat -40px top;
+    background: url("../images/logo_immowaze.png") no-repeat -40px top;
 }
 
 @media print

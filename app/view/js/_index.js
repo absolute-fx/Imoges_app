@@ -173,7 +173,7 @@ function initPage()
         $('.page-heading h1 i').fadeOut({complete: ()=>{
             $('.page-heading h1 i').remove();
         }});
-    }).hide().fadeIn();
+    }).hide().fadeIn();;
 }
 
 // MENU CONSTRUCT

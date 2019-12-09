@@ -9,13 +9,22 @@ const sessionUser = require('electron').remote.getGlobal('user');
 const app = electron.app;
 const ManageParameters = require('./class/ManageParameters');
 const Connexion = require(__dirname + '/class/Connection.js');
+const fs = require('fs');
 
 $(document).ready(function() {
     $('#userName').html(sessionUser.firstname);
     $('#userAvatar').attr('src', sessionUser.avatar);
     getPageData();
     initPage();
+    createLibDir();
 });
+
+function createLibDir(){
+    const rootPath = appParams.system.root_path;
+    if(!fs.existsSync(rootPath)){
+        console.log('---------------------------------------> NOT EXISTING!!!!!!!!!!!!!!!!!!!!')
+    }
+}
 
 function initPage()
 {

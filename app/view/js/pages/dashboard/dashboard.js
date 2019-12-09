@@ -1,4 +1,6 @@
-﻿
+﻿const appParams = require('electron').remote.getGlobal('appParameters');
+const fs = require('fs');
+
 $(document).ready(()=>{
     getProjectsList()
 });
@@ -12,6 +14,18 @@ function getProjectsList()
     }).catch((error) => {
         alert(error.toString());
     });
+    createLibDir();
 }
 
 
+function createLibDir(){
+    const rootPath = appParams.system.root_path;
+    if(!fs.existsSync(rootPath)){
+        fs.mkdirSync('C:/Immowaze');
+        fs.mkdirSync('C:/Immowaze/demo');
+        $('.sync-board').html('Dossier des librairies créé dans: ' + rootPath);
+    }
+    else{
+        $('.sync-board').html('Dossier des librairies existant');
+    }
+}
