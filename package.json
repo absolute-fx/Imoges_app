@@ -84,7 +84,7 @@
     "node-image-resize": "0.0.2",
     "notific8": "^4.4.1",
     "preloader": "^4.0.2",
-    "sequelize": "^4.37.6",
+    "sequelize": "^5.15.1",
     "sequelize-connect": "^2.0.0",
     "sha1": "^1.1.1",
     "shufflejs": "^5.1.2",
