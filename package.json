@@ -95,7 +95,7 @@
     "asar": "^0.13.0",
     "devtron": "^1.4.0",
     "electron": "^1.8.1",
-    "electron-builder": "^19.28.4",
+    "electron-builder": "^23.6.0",
     "electron-debug": "^1.4.0",
     "electron-packager": "^8.7.2",
     "grunt-contrib-clean": "^1.1.0",
